@@ -6,7 +6,13 @@ import router from './router'
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 
+// Fontawesome setup
+import FontAwesomeIcon from './FontAwesomeSetup'
+
 const app = createApp(App)
+
+// adding font awesome icon as component
+app.component('font-awesome-icon', FontAwesomeIcon)
 
 app.use(router)
 
