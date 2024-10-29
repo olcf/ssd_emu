@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  storage: 9.99
+  cores: 1
+  cpus: 1
+  nodes: 1
+  gpus: 1
+  modules_list: 
+
+two:
+  name: MyString
+  storage: 9.99
+  cores: 1
+  cpus: 1
+  nodes: 1
+  gpus: 1
+  modules_list: 
