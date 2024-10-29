@@ -8,11 +8,15 @@ import Aura from '@primevue/themes/aura'
 
 const app = createApp(App)
 
+app.use(router)
+
 app.use(PrimeVue, {
   theme: {
     preset: Aura,
+    options: {
+      darkModeSelector: 'system', // Can be changed later with specific class for toggle option
+    },
   },
 })
 
-app.use(router)
 app.mount('#app')
