@@ -10,9 +10,41 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_28_184549) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_29_140054) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "jobs", force: :cascade do |t|
+    t.string "projectName"
+    t.integer "nodes"
+    t.integer "walltime"
+    t.integer "cores"
+    t.string "mail_type"
+    t.string "mail_user"
+    t.string "state"
+    t.string "job_reason_code"
+    t.text "script"
+    t.text "output"
+    t.text "errors"
+    t.bigint "machine_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["machine_id"], name: "index_jobs_on_machine_id"
+    t.index ["user_id"], name: "index_jobs_on_user_id"
+  end
+
+  create_table "machines", force: :cascade do |t|
+    t.string "name"
+    t.decimal "storage", precision: 9, scale: 2
+    t.integer "cores"
+    t.integer "cpus"
+    t.integer "nodes"
+    t.integer "gpus"
+    t.json "modules_list"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "first_name"
@@ -24,4 +56,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_28_184549) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "jobs", "machines"
+  add_foreign_key "jobs", "users"
 end
