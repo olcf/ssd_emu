@@ -4,6 +4,9 @@ import LeftNavigationMenu from './components/LeftNavigation/LeftNavigationMenu.v
 </script>
 
 <template>
+  <!-- Creating single Confirm Dialog so that it won't repeat for each call -->
+  <ConfirmDialog></ConfirmDialog>
+
   <!-- Here we can create header -->
   <Splitter layout="vertical" class="h-screen">
     <SplitterPanel :min-size="30">

@@ -8,6 +8,7 @@ import router from './router'
 // PrimeVue themes and components
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
+import ConfirmationService from 'primevue/confirmationservice'
 
 // Fontawesome setup
 import FontAwesomeIcon from './FontAwesomeSetup'
@@ -26,6 +27,7 @@ app.use(PrimeVue, {
     },
   },
 })
+app.use(ConfirmationService)
 
 app.use(router)
 app.mount('#app')
