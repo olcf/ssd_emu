@@ -77,20 +77,8 @@
       />
     </div>
   </div>
-  <Button
-    class="m-3"
-    @click="previewMachine = true"
-    icon="pi pi-expand"
-    label="Preview Your Machine"
-  />
-
-  <Dialog
-    v-model:visible="previewMachine"
-    modal
-    header="Preview your Build"
-    class="min-w-96"
-  >
-  </Dialog>
+  <ConfirmDialog></ConfirmDialog>
+  <Button class="m-3" icon="pi pi-hammer" label="Build Your Machine" />
 </template>
 
 <script>
@@ -107,11 +95,9 @@ export default {
       gpus: 1,
       modules_list: [],
     })
-    const previewMachine = ref(false)
 
     return {
       machineData,
-      previewMachine,
     }
   },
 }

@@ -4,6 +4,8 @@ import './assets/tailwind.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+
+// PrimeVue themes and components
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 
@@ -15,8 +17,7 @@ const app = createApp(App)
 // adding font awesome icon as component
 app.component('font-awesome-icon', FontAwesomeIcon)
 
-app.use(router)
-
+// All Prime vue plugins
 app.use(PrimeVue, {
   theme: {
     preset: Aura,
@@ -26,4 +27,5 @@ app.use(PrimeVue, {
   },
 })
 
+app.use(router)
 app.mount('#app')
