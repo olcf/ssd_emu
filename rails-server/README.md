@@ -10,6 +10,7 @@ Things you may want to cover:
 * System dependencies
 
 * Configuration
+1. Configure Cors for your development machine by going to `/config/initializers/cors.rb`. Currently it is setup for `http://localhost:5173` where frontend(vuejs app) runs
 
 * Database creation
 
