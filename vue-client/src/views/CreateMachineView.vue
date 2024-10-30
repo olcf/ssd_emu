@@ -77,12 +77,17 @@
       />
     </div>
   </div>
-  <ConfirmDialog></ConfirmDialog>
-  <Button class="m-3" icon="pi pi-hammer" label="Build Your Machine" />
+  <Button
+    class="m-3"
+    icon="pi pi-hammer"
+    label="Build Your Machine"
+    @click="onConfirmCreateMachine"
+  />
 </template>
 
 <script>
 import { ref } from 'vue'
+import { useConfirm } from 'primevue/useconfirm'
 
 export default {
   setup() {
@@ -95,10 +100,27 @@ export default {
       gpus: 1,
       modules_list: [],
     })
+    const confirmCreateMachine = useConfirm()
 
     return {
       machineData,
+      confirmCreateMachine,
     }
+  },
+  methods: {
+    handleConfirmation: function () {
+      // Call Rails API
+    },
+    onConfirmCreateMachine: function () {
+      this.confirmCreateMachine.require({
+        message: 'Are you sure you want to proceed?',
+        header: 'Machine Creation Confirmation',
+        icon: 'pi pi-question-circle',
+        acceptIcon: 'pi pi-save',
+        rejectIcon: 'pi pi-times',
+        accept: this.handleConfirmation,
+      })
+    },
   },
 }
 </script>
