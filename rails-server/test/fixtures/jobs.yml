@@ -10,8 +10,8 @@ one:
   state: MyString
   job_reason_code: MyString
   script: MyText
-  output: MyText
-  errors: MyText
+  out: MyText
+  err: MyText
   machine: one
   user: one
 
@@ -25,7 +25,7 @@ two:
   state: MyString
   job_reason_code: MyString
   script: MyText
-  output: MyText
-  errors: MyText
+  out: MyText
+  err: MyText
   machine: two
   user: two
