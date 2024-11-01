@@ -13,6 +13,10 @@ import ConfirmationService from 'primevue/confirmationservice'
 // Fontawesome setup
 import FontAwesomeIcon from './FontAwesomeSetup'
 
+// Axios and Vue Axios
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
 const app = createApp(App)
 
 // adding font awesome icon as component
@@ -28,6 +32,10 @@ app.use(PrimeVue, {
   },
 })
 app.use(ConfirmationService)
+
+// axios setup
+axios.defaults.baseURL = 'http://localhost:3000'
+app.use(VueAxios, axios)
 
 app.use(router)
 app.mount('#app')
