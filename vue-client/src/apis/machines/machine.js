@@ -13,7 +13,7 @@ export const getAllMachines = async () => {
 
 export const getMachine = async id => {
   const userStore = useUserStore()
-  const allMachineRequest = await axios.get('/machines', {
+  const allMachineRequest = await axios.get('/machines/' + id, {
     user_id: userStore.user_id,
     id,
   })

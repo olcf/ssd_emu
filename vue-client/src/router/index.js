@@ -24,7 +24,7 @@ const router = createRouter({
     },
     {
       path: '/machines/:id',
-      name: 'machine',
+      name: 'SingleMachine',
       component: () => import('@/views/Machines/SingleMachine.vue'),
     },
   ],

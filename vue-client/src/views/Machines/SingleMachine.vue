@@ -49,6 +49,7 @@
 <script>
 import { api } from '@/apis'
 import { defineComponent } from 'vue'
+
 export default defineComponent({
   name: 'SingleMachine',
   data() {
@@ -56,9 +57,16 @@ export default defineComponent({
       machine: {},
     }
   },
-  mounted: async function () {
+  created: async function () {
     const machineDetails = await api.Machine.getMachine(this.$route.params.id)
-    this.machine = machineDetails[0]
+    this.machine = machineDetails
+  },
+  // here we are watching route id so that we can update the UI accordingly
+  watch: {
+    async '$route.params.id'(to, from) {
+      const machineDetails = await api.Machine.getMachine(this.$route.params.id)
+      this.machine = machineDetails
+    },
   },
 })
 </script>
