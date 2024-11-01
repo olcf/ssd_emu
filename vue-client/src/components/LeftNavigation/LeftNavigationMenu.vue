@@ -1,20 +1,31 @@
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useUserStore } from '@/stores/user'
-const menuItems = [
+import { onMounted, ref } from 'vue'
+import { api } from '@/apis'
+const menuItems = ref([
   {
     label: 'Machines',
     icon: 'pi pi-microchip-ai',
-    items: [
-      {
-        label: 'Create a machine',
-        icon: 'pi pi-plus',
-        route: '/createNewMachine',
-      },
-    ],
+    items: [],
   },
-]
+])
 const userStore = useUserStore()
+onMounted(async () => {
+  const machines = await api.Machine.getAllMachines()
+  console.log(machines)
+  machines.forEach(element => {
+    element.label = element.name
+    element.icon = 'pi pi-microchip-ai'
+    element.route = '/machines/' + element.id
+  })
+  machines.unshift({
+    label: 'Create a machine',
+    icon: 'pi pi-plus',
+    route: '/createNewMachine',
+  })
+  menuItems.value[0].items = machines
+})
 </script>
 
 <template>

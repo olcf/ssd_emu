@@ -1,9 +1,8 @@
 import axios from 'axios'
 import { useUserStore } from '@/stores/user'
 
-const userStore = useUserStore()
-
 export const getAllMachines = async () => {
+  const userStore = useUserStore()
   const allMachineRequest = await axios.get('/machines', {
     user_id: userStore.user_id,
   })
