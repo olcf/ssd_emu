@@ -1,5 +1,6 @@
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { useUserStore } from '@/stores/user'
 const menuItems = [
   {
     label: 'Machines',
@@ -13,6 +14,7 @@ const menuItems = [
     ],
   },
 ]
+const userStore = useUserStore()
 </script>
 
 <template>
@@ -24,6 +26,7 @@ const menuItems = [
       </span>
       <Button>
         <FontAwesomeIcon icon="fa-regular fa-user" />
+        {{ userStore.username }}
       </Button>
     </div>
   </div>

@@ -1,6 +1,13 @@
 <script setup>
+import { onMounted } from 'vue'
 import { RouterView } from 'vue-router'
 import LeftNavigationMenu from './components/LeftNavigation/LeftNavigationMenu.vue'
+import { useUserStore } from './stores/user'
+const userStore = useUserStore()
+
+onMounted(async () => {
+  await userStore.login()
+})
 </script>
 
 <template>
