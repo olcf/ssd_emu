@@ -88,6 +88,7 @@
 <script>
 import { ref } from 'vue'
 import { useConfirm } from 'primevue/useconfirm'
+import { api } from '@/apis'
 
 export default {
   setup() {
@@ -108,8 +109,11 @@ export default {
     }
   },
   methods: {
-    handleConfirmation: function () {
+    handleConfirmation: async function () {
       // Call Rails API
+      const newMachine = await api.Machine.create(this.machineData)
+      // :name, :storage, :cores, :cpus, :nodes, :gpus, :modules_list
+      console.log(newMachine)
     },
     onConfirmCreateMachine: function () {
       this.confirmCreateMachine.require({
