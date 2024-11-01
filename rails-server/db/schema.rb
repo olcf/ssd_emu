@@ -15,7 +15,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_29_140054) do
   enable_extension "plpgsql"
 
   create_table "jobs", force: :cascade do |t|
-    t.string "projectName"
+    t.string "project_name"
     t.integer "nodes"
     t.integer "walltime"
     t.integer "cores"
@@ -50,7 +50,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_29_140054) do
     t.string "first_name"
     t.string "last_name"
     t.string "username"
-    t.string "email_address"
+    t.string "email"
     t.string "password"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
