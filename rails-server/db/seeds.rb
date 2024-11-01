@@ -15,3 +15,8 @@ User.create(first_name: "John", last_name: "doe", username: "doejohn", email: "j
 # For Machines:
 Machine.create(name:"Frontier Sample", storage:9999999, cores:64, cpus: 1, nodes:9402, gpus: 8, modules_list:{}, user_id:1 )
 # :name, :storage, :cores, :cpus, :nodes, :gpus, :modules_list
+
+
+# For specific Job
+Job.create(project_name:"GEN007RATS", nodes:2, walltime:500,cores:1,script:'Run C++ Codes',machine_id: 3, user_id: 1, state:'CD')
+# :project_name, :nodes, :walltime, :cores, :mail_type, :mail_user, :state, :job_reason_code, :script, :out, :err, :machine_id, :user_id
