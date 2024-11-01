@@ -1,0 +1,19 @@
+import axios from 'axios'
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
+
+export const getAllMachines = async () => {
+  const allMachineRequest = await axios.get('/machines', {
+    user_id: userStore.user_id,
+  })
+  const machinesResult = await allMachineRequest.data
+
+  return machinesResult
+}
+
+export const create = async machine => {
+  // update this later to create machine
+  const newMachine = await axios.post('/machines', machine)
+  return newMachine
+}
