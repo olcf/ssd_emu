@@ -5,6 +5,9 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 
+// Pinia
+import { createPinia } from 'pinia'
+
 // PrimeVue themes and components
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
@@ -36,6 +39,10 @@ app.use(ConfirmationService)
 // axios setup
 axios.defaults.baseURL = 'http://localhost:3000'
 app.use(VueAxios, axios)
+
+// Pinia setup
+const pinia = createPinia()
+app.use(pinia)
 
 app.use(router)
 app.mount('#app')
