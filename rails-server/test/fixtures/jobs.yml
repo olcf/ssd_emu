@@ -1,7 +1,7 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  projectName: MyString
+  project_name: MyString
   nodes: 1
   walltime: 1
   cores: 1
@@ -16,7 +16,7 @@ one:
   user: one
 
 two:
-  projectName: MyString
+  project_name: MyString
   nodes: 1
   walltime: 1
   cores: 1
