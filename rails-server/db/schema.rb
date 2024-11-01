@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_01_214739) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_01_223619) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,8 +21,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_01_214739) do
     t.integer "cores"
     t.string "mail_type"
     t.string "mail_user"
-    t.string "state"
-    t.string "job_reason_code"
+    t.string "state", default: "NA"
+    t.string "job_reason_code", default: "None"
     t.text "script"
     t.text "out"
     t.text "err"
