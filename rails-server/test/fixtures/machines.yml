@@ -8,6 +8,7 @@ one:
   nodes: 1
   gpus: 1
   modules_list: 
+  user: one
 
 two:
   name: MyString
@@ -17,3 +18,4 @@ two:
   nodes: 1
   gpus: 1
   modules_list: 
+  user: two

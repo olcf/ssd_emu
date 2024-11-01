@@ -46,6 +46,6 @@ class MachinesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def machine_params
-      params.require(:machine).permit(:name, :storage, :cores, :cpus, :nodes, :gpus, :modules_list)
+      params.require(:machine).permit(:name, :storage, :cores, :cpus, :nodes, :gpus, :modules_list, :user_id)
     end
 end

@@ -12,7 +12,7 @@ class MachinesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create machine" do
     assert_difference("Machine.count") do
-      post machines_url, params: { machine: { cores: @machine.cores, cpus: @machine.cpus, gpus: @machine.gpus, modules_list: @machine.modules_list, name: @machine.name, nodes: @machine.nodes, storage: @machine.storage } }, as: :json
+      post machines_url, params: { machine: { cores: @machine.cores, cpus: @machine.cpus, gpus: @machine.gpus, modules_list: @machine.modules_list, name: @machine.name, nodes: @machine.nodes, storage: @machine.storage, user_id: @machine.user_id } }, as: :json
     end
 
     assert_response :created
@@ -24,7 +24,7 @@ class MachinesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update machine" do
-    patch machine_url(@machine), params: { machine: { cores: @machine.cores, cpus: @machine.cpus, gpus: @machine.gpus, modules_list: @machine.modules_list, name: @machine.name, nodes: @machine.nodes, storage: @machine.storage } }, as: :json
+    patch machine_url(@machine), params: { machine: { cores: @machine.cores, cpus: @machine.cpus, gpus: @machine.gpus, modules_list: @machine.modules_list, name: @machine.name, nodes: @machine.nodes, storage: @machine.storage, user_id: @machine.user_id } }, as: :json
     assert_response :success
   end
 
