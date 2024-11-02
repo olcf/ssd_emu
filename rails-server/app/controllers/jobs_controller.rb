@@ -3,7 +3,14 @@ class JobsController < ApplicationController
 
   # GET /jobs
   def index
-    @jobs = Job.all
+    query_parameters = request.query_parameters;
+    if query_parameters["machine_id"] != nil
+      @jobs = Job.where(machine_id: query_parameters["machine_id"]);
+    else
+      @jobs = Job.all
+    end
+
+
 
     render json: @jobs
   end
