@@ -132,7 +132,9 @@ export default defineComponent({
       const machineDetails = await api.Machine.getMachine(this.$route.params.id)
       this.machine = machineDetails
 
-      const allJobsForThisMachine = await api.Job.getAllJobs()
+      const allJobsForThisMachine = await api.Job.getAllJobsForMachine(
+        this.machine.id,
+      )
       this.jobs = allJobsForThisMachine
     },
     formatDate: function (date) {
