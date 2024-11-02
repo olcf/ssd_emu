@@ -18,5 +18,6 @@ Machine.create(name:"Frontier Sample", storage:9999999, cores:64, cpus: 1, nodes
 
 
 # For specific Job
-Job.create(project_name:"GEN007RATS", nodes:2, walltime:500,cores:1,script:'Run C++ Codes',machine_id: 3, user_id: 1, state:'CD')
+Job.create(project_name:"GEN007RATS", nodes:2, walltime:500,cores:1,script:'Run C++ Codes',machine_id: 1, user_id: 1, state:'NA')
+Job.create(project_name:"TRN025", nodes:8, walltime:7,cores:10,script:'long list of commands',machine_id: 1, user_id: 1, state:'CA', job_reason_code:'NonZeroExitCode')
 # :project_name, :nodes, :walltime, :cores, :mail_type, :mail_user, :state, :job_reason_code, :script, :out, :err, :machine_id, :user_id
