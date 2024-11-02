@@ -18,7 +18,7 @@
     </template>
     <Column field="name" header="Machine Name">
       <template #body="slotProps">
-        <RouterLink :to="'/machines/' + slotProps.data.id" class="underline">{{
+        <RouterLink :to="'/machine/' + slotProps.data.id" class="underline">{{
           slotProps.data.name
         }}</RouterLink>
       </template>

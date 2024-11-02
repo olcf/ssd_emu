@@ -22,7 +22,7 @@ onMounted(async () => {
   machines.forEach(element => {
     element.label = element.name
     element.icon = 'pi pi-microchip-ai'
-    element.route = '/machines/' + element.id
+    element.route = '/machine/' + element.id
   })
   machines.unshift({
     label: 'Create a machine',
