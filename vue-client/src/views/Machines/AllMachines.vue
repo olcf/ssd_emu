@@ -34,7 +34,12 @@
     <Column field="gpus" header="Cores"></Column>
     <Column field="modules_list" header="Modules List">
       <template #body>
-        <Button icon="pi pi-file" rounded raised />
+        <Button
+          icon="pi pi-file"
+          v-tooltip.bottom="'View Modules List for this machine'"
+          rounded
+          raised
+        />
       </template>
     </Column>
     <Column field="created_at" header="Created At">

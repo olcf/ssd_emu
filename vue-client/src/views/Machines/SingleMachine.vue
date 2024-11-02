@@ -57,12 +57,23 @@
       <template #header>
         <div class="flex flex-wrap items-center justify-between gap-2">
           <span class="text-xl font-bold">List of Jobs</span>
-          <Button
-            icon="pi pi-refresh"
-            rounded
-            raised
-            @click="updateNecessaryData"
-          />
+          <div class="flex gap-4">
+            <Button
+              icon="pi pi-plus"
+              rounded
+              raised
+              v-tooltip.bottom="'Create a new Job'"
+            />
+
+            <Button
+              icon="pi pi-refresh"
+              rounded
+              raised
+              @click="updateNecessaryData"
+              tooltip="Refresh"
+              v-tooltip.bottom="'Refresh jobs list'"
+            />
+          </div>
         </div>
       </template>
       <Column field="id" header="Job Id"></Column>
@@ -70,7 +81,12 @@
       <Column field="nodes" header="Nodes"></Column>
       <Column field="script" header="Script">
         <template #body>
-          <Button icon="pi pi-file-edit" rounded />
+          <Button
+            icon="pi pi-file-edit"
+            rounded
+            raised
+            v-tooltip.bottom="'View and Edit the Script'"
+          />
         </template>
       </Column>
       <Column field="walltime" header="walltime"></Column>
@@ -95,9 +111,27 @@
               v-if="slotProps.data.state !== 'R'"
               icon="pi pi-play"
               rounded
-            /><Button v-else icon="pi pi-pause" rounded />
-            <Button icon="pi pi-pencil" rounded />
-            <Button icon="pi pi-times" severity="danger" rounded />
+              v-tooltip.bottom="'Run this Job'"
+            /><Button
+              v-else
+              icon="pi pi-pause"
+              v-tooltip.bottom="'Stop this Job'"
+              rounded
+              raised
+            />
+            <Button
+              icon="pi pi-pencil"
+              v-tooltip.bottom="'Edit this Job'"
+              rounded
+              raised
+            />
+            <Button
+              icon="pi pi-times"
+              severity="danger"
+              v-tooltip.bottom="'Cancel this job'"
+              rounded
+              raised
+            />
           </span>
         </template>
       </Column>
