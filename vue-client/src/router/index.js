@@ -23,6 +23,11 @@ const router = createRouter({
       component: () => import('../views/CreateMachineView.vue'),
     },
     {
+      path: '/machines/all',
+      name: 'AllMachines',
+      component: () => import('@/views/Machines/AllMachines.vue'),
+    },
+    {
       path: '/machines/:id',
       name: 'SingleMachine',
       component: () => import('@/views/Machines/SingleMachine.vue'),

@@ -9,6 +9,11 @@ const menuItems = ref([
     icon: 'pi pi-microchip-ai',
     items: [],
   },
+  {
+    label: 'List all machines',
+    icon: 'pi pi-eye',
+    route: '/machines/all',
+  },
 ])
 const userStore = useUserStore()
 onMounted(async () => {
