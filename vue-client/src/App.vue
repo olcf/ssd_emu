@@ -13,6 +13,7 @@ onMounted(async () => {
 <template>
   <!-- Creating single Confirm Dialog so that it won't repeat for each call -->
   <ConfirmDialog></ConfirmDialog>
+  <Toast></Toast>
 
   <!-- Here we can create header -->
   <Splitter layout="vertical" class="h-screen">

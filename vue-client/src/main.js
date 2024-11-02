@@ -12,6 +12,7 @@ import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 import ConfirmationService from 'primevue/confirmationservice'
+import ToastService from 'primevue/toastservice'
 
 // Fontawesome setup
 import FontAwesomeIcon from './FontAwesomeSetup'
@@ -35,6 +36,7 @@ app.use(PrimeVue, {
   },
 })
 app.use(ConfirmationService)
+app.use(ToastService)
 
 // axios setup
 axios.defaults.baseURL = 'http://localhost:3000'
