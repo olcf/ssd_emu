@@ -111,9 +111,34 @@ export default {
   methods: {
     handleConfirmation: async function () {
       // Call Rails API
-      const newMachine = await api.Machine.create(this.machineData)
+      try {
+        await api.Machine.create(this.machineData)
+
+        this.$toast.add({
+          severity: 'success',
+          summary: 'Success Message',
+          detail: `Creating ${this.machineData.name} was successfull.`,
+          life: 3000,
+        })
+      } catch (error) {
+        this.$toast.add({
+          severity: 'warn',
+          summary: 'Warning Message',
+          detail: "Coudldn't create machine. " + error,
+          life: 3000,
+        })
+      }
       // :name, :storage, :cores, :cpus, :nodes, :gpus, :modules_list
+
       console.log(newMachine)
+    },
+    handleCancelation: function () {
+      this.$toast.add({
+        severity: 'info',
+        summary: 'Info Message',
+        detail: 'Creating new machine was canceled.',
+        life: 3000,
+      })
     },
     onConfirmCreateMachine: function () {
       this.confirmCreateMachine.require({
@@ -123,6 +148,7 @@ export default {
         acceptIcon: 'pi pi-save',
         rejectIcon: 'pi pi-times',
         accept: this.handleConfirmation,
+        reject: this.handleCancelation,
       })
     },
   },
