@@ -128,9 +128,6 @@ export default {
           life: 3000,
         })
       }
-      // :name, :storage, :cores, :cpus, :nodes, :gpus, :modules_list
-
-      console.log(newMachine)
     },
     handleCancelation: function () {
       this.$toast.add({
