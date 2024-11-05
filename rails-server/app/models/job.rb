@@ -1,6 +1,7 @@
 class Job < ApplicationRecord
   belongs_to :machine
   belongs_to :user
+  belongs_to :project
   
   
   # all of job reason codes are from frontier docs. None means it has not been run/ created
@@ -11,6 +12,8 @@ class Job < ApplicationRecord
   validates :state, inclusion: { in: Job::VALID_JOB_STATES, :message => "Value %{value} is not a valid state"}
   validates :job_reason_code, inclusion: { in: Job::VALID_JOB_REASON_CODES, :message => "Value %{value} is not a valid job reason code" }
 
-  
+  # TODO: Add validation for Mail type 
+  # Send email for certain job actions. Can be a comma-separated list. Actions include BEGIN, END, FAIL, REQUEUE, INVALID_DEPEND, STAGE_OUT, ALL, and more.
+   
 
 end
