@@ -1,4 +1,103 @@
 <template>
+  <!-- REVIEW: Change this code to separate place or make it as a component -->
+  <Dialog :visible="CREATE_NEW_JOB" modal maximizable>
+    <template #header>
+      <span class="font-bold text-xl">
+        {{ 'Create a New Job for ' + machine.name }}</span
+      >
+    </template>
+    <Form @submit.prevent="onConfirmCreateJob" class="flex flex-col">
+      <div class="flex flex-wrap gap-12">
+        <!-- Job NAME -->
+        <div class="flex flex-col gap-2">
+          <label for="job-project-name">Enter Project Name</label>
+          <!-- TODO: Make a table of available project name and use drop down menu instead-->
+          <InputText
+            id="job-project-name"
+            type="text"
+            v-model="newJob.project_name"
+          />
+        </div>
+
+        <!-- Job Nodes -->
+        <div class="flex flex-col gap-2">
+          <label for="job-nodes">Enter number of Nodes to use</label>
+          <InputNumber
+            id="job-nodes"
+            input-id="integeronly"
+            :min="1"
+            :max="machine.nodes"
+            :use-grouping="false"
+            v-model="newJob.nodes"
+          />
+        </div>
+
+        <!-- Job Time -->
+        <div class="flex flex-col gap-2">
+          <label for="job-walltime">Enter time to allocate for the job</label>
+          <InputNumber
+            id="job-walltime"
+            input-id="integeronly"
+            :min="1"
+            :max="86400"
+            suffix=" sec"
+            :use-grouping="false"
+            v-model="newJob.walltime"
+          />
+          <small
+            >Time: {{ convertToHoursMinutesSeconds(newJob.walltime) }}</small
+          >
+        </div>
+
+        <!-- Job Mail Type -->
+        <div class="flex flex-col gap-2">
+          <label for="job-mail-type">Type of trigger sending email</label>
+          <MultiSelect
+            v-model="newJob.mail_type"
+            :options="VALID_MAIL_TYPE"
+            optionLabel="label"
+            placeholder="Select Mail Type"
+            filter
+            :maxSelectedLabels="VALID_MAIL_TYPE.length - 1"
+          ></MultiSelect>
+        </div>
+
+        <!-- Job Mail User -->
+        <div class="flex flex-col gap-2">
+          <label for="job-mail-user">Enter the email to send email</label>
+          <InputText
+            v-model="newJob.mail_user"
+            placeholder="mail@example.com"
+          ></InputText>
+        </div>
+      </div>
+
+      <div class="flex flex-col">
+        <span class="text-xl font-bold">Write script for the file here</span>
+        <!-- Job Script -->
+        <!-- TODO: Implement code/preview script component -->
+        <Textarea></Textarea>
+        <Textarea></Textarea>
+      </div>
+
+      <Button class="m-3" icon="pi pi-hammer" label="Create your Job" />
+    </Form>
+    <!-- TODO: implement uploading a new job -->
+    <template #footer>
+      <Button
+        label="Cancel"
+        text
+        severity="secondary"
+        @click="CREATE_NEW_JOB = false"
+        icon="pi pi-times"
+      ></Button>
+      <Button
+        label="Create your Job"
+        @click="CREATE_NEW_JOB = false"
+        icon="pi pi-save"
+      ></Button>
+    </template>
+  </Dialog>
   <div class="flex justify-center">
     <table class="text-left">
       <thead>
@@ -52,6 +151,7 @@
       iconPos="top"
       label="Create new Job"
       class="max-w-64"
+      @click="CREATE_NEW_JOB = true"
     >
       <i class="pi pi-plus"></i>
       <span>Create a Job</span>
@@ -161,8 +261,21 @@ export default defineComponent({
   name: 'SingleMachine',
   data() {
     return {
+      CREATE_NEW_JOB: false,
+      VALID_MAIL_TYPE: [
+        { label: 'BEGIN' },
+        { label: 'END' },
+        { label: 'FAIL' },
+        { label: 'REQUEUE' },
+        { label: 'INVALID_DEPEND' },
+        { label: 'STAGE_OUT' },
+        { label: 'ALL' },
+      ],
       machine: {},
       jobs: [],
+      newJob: {
+        mail_type: null,
+      },
     }
   },
   created: async function () {
@@ -176,6 +289,8 @@ export default defineComponent({
     },
   },
   methods: {
+    onConfirmCreateJob: async function () {},
+
     updateNecessaryData: async function () {
       const machineDetails = await api.Machine.getMachine(this.$route.params.id)
       this.machine = machineDetails
@@ -188,6 +303,24 @@ export default defineComponent({
     formatDate: function (date) {
       const givenDate = new Date(date)
       return givenDate.toLocaleString()
+    },
+    convertToHoursMinutesSeconds: function (time) {
+      if (!time) {
+        return '0 sec'
+      } else {
+        const hour = Math.floor(time / 3600)
+        const minutes = Math.floor((time - hour * 3600) / 60)
+        const seconds = Math.floor(time - hour * 3600 - minutes * 60)
+
+        return (
+          hour.toString().padStart(2, '0') +
+          ':' +
+          minutes.toString().padStart(2, '0') +
+          ':' +
+          seconds.toString().padStart(2, '0') +
+          ' (hh:mm:ss)'
+        )
+      }
     },
   },
 })
