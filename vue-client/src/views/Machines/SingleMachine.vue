@@ -46,7 +46,21 @@
       </caption>
     </table>
   </div>
-
+  <div class="p-10 flex gap-10">
+    <Button
+      icon="pi pi-plus"
+      iconPos="top"
+      label="Create new Job"
+      class="max-w-64"
+    >
+      <i class="pi pi-plus"></i>
+      <span>Create a Job</span>
+      <small>
+        Create a new job for this machine. You can alternatively use `this
+        command` to do manually through command line.</small
+      >
+    </Button>
+  </div>
   <div class="p-10 flex gap-10">
     <DataTable
       :value="jobs"
