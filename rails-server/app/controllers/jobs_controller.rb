@@ -4,10 +4,12 @@ class JobsController < ApplicationController
   # GET /jobs
   def index
     query_parameters = request.query_parameters;
+    # REVIEW: Ask on SSD group for efficient and correct way to do this and update this code.
     if query_parameters["machine_id"] != nil
-      @jobs = Job.where(machine_id: query_parameters["machine_id"]);
+      @jobs = Job.select("jobs.*,projects.name as project_name").
+      joins("INNER JOIN projects on projects.id = jobs.project_id").where(machine_id: query_parameters["machine_id"]);
     else
-      @jobs = Job.all
+      @jobs = Job.select("jobs.*,projects.name as project_name").joins("INNER JOIN projects on projects.id = jobs.project_id")
     end
 
 
