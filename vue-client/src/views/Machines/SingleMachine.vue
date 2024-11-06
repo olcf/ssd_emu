@@ -207,7 +207,6 @@
       <Column field="cores" header="cores"></Column>
       <Column field="state" header="state"></Column>
       <Column field="job_reason_code" header="Job Reason Code"></Column>
-      <Column field="machine_id" header="Machine Name"></Column>
       <Column field="created_at" header="Created">
         <template #body="slotProps">
           {{ formatDate(slotProps.data.created_at) }}
