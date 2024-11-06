@@ -6,20 +6,63 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
+puts "Seeding Started!"
 
-User.create(first_name: "Bishwo", last_name: "Dahal", username: "bishwodahal", email: "someemail@gmail.com", password: "abcd")
-User.create(first_name: "John", last_name: "doe", username: "doejohn", email: "johndoe@gmail.com", password: "strong")
-
+firstUser = User.find_or_create_by(first_name: "Bishwo", last_name: "Dahal", username: "bishwodahal", email: "someemail@gmail.com", password: "abcd")
+secondUser = User.find_or_create_by(first_name: "John", last_name: "doe", username: "doejohn", email: "johndoe@gmail.com", password: "strong")
 
 
 # For Machines:
-Machine.create(name:"Frontier Sample", storage:9999999, cores:64, cpus: 1, nodes:9402, gpus: 8, modules_list:{}, user_id:1 )
+default_machines = [
+{  name: "Frontier 2nd sample", storage: 9999999, cores:64, cpus:1, nodes:9402, gpus: 8, user_id:firstUser.id},
+{  name: "Odo Sample", storage: 9999999, cores:64, cpus:1, nodes:32, gpus: 8,  user_id:firstUser.id},
+{  name: "Andes Sample", storage: 9999999, cores:32, cpus:1, nodes:504, gpus: 8, user_id:secondUser.id},
+{  name: "Summit Sample", storage: 9999999, cores:32, cpus:3, nodes:5000, gpus: 8, user_id:firstUser.id},
+{  name: "Defiant Sample", storage: 9999999, cores:16, cpus:1, nodes:64, gpus: 8, user_id:firstUser.id}
+]
+machines = []
+puts "\nCreating Machines!"
+default_machines.each do |machine|
+  currMachine = Machine.find_or_create_by(machine)
+  machines.push(currMachine)
+  puts "Machine Name: #{machines[machines.length()-1].name}"
+end
+puts "Completed Creating #{machines.length()} Machines!"
+
 # :name, :storage, :cores, :cpus, :nodes, :gpus, :modules_list
 
+# For Projects:
+projects_name = [
+  {name: "GEN007RATS"},
+  {name: "TRN023"},
+  {name: "GEN243"},
+  {name: "GEN007"}
+]
+projects = []
 
-# For specific Job
-Job.create(project_name:"GEN007RATS", nodes:2, walltime:500,cores:1,script:'Run C++ Codes',machine_id: 1, user_id: 1, state:'NA')
-Job.create(project_name:"TRN025", nodes:8, walltime:7,cores:10,script:'long list of commands',machine_id: 1, user_id: 1, state:'CA', job_reason_code:'NonZeroExitCode')
-Job.create(project_name:"GEN007", nodes:8, walltime:8000,cores:7,script:'run long job',machine_id: 1, user_id: 1, state:'NA')
-Job.create(project_name:"TRN023", nodes:1, walltime:1500,cores:1,script:'run simple job',machine_id: 1, user_id: 1, state:'CD', job_reason_code:'None')
-# :project_name, :nodes, :walltime, :cores, :mail_type, :mail_user, :state, :job_reason_code, :script, :out, :err, :machine_id, :user_id
+
+puts "\nCreating Projects! "
+projects_name.each do |project|
+  currProject = Project.find_or_create_by(project)
+  projects.push(currProject)
+  puts "Project id: #{currProject.id.to_i} name: #{currProject.name}"
+end
+puts "Completed creating #{projects.length()} projects! "
+
+
+puts "\nCreating Jobs! "
+
+jobs = []
+
+machines.each do |machine|
+  projects.each do |project|
+    currJob = Job.find_or_create_by(project_id: project.id, nodes:2, walltime:56000, cores: 3, script: "Some genuine script", machine_id:machine.id, user_id: firstUser.id )
+    jobs.push(currJob)
+  end
+end
+
+
+puts "Completed creating #{jobs.length()} jobs!"
+
+
+puts "\nSeeding Completed!"
