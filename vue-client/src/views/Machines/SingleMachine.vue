@@ -161,74 +161,9 @@ export default defineComponent({
   name: 'SingleMachine',
   data() {
     return {
-      CREATE_NEW_JOB: false,
-      VALID_MAIL_TYPE: [
-        { label: 'BEGIN' },
-        { label: 'END' },
-        { label: 'FAIL' },
-        { label: 'REQUEUE' },
-        { label: 'INVALID_DEPEND' },
-        { label: 'STAGE_OUT' },
-      ],
       machine: {},
       jobs: [],
-      newJob: {
-        script_body: ``,
-        project: null,
-        mail: {
-          user: null,
-          type: null,
-        },
-      },
-      projects: [],
     }
-  },
-  computed: {
-    combinedScript: function () {
-      let topScriptPart = '#!/bin/bash\n\n'
-      if (this.newJob.project) {
-        topScriptPart += `#SBATCH -A ${this.newJob.project.name} \n`
-      }
-      if (this.newJob.nodes) {
-        topScriptPart += `#SBATCH -N ${this.newJob.nodes} \n`
-      }
-      if (this.newJob.walltime) {
-        topScriptPart += `#SBATCH -t ${this.formattedTime} \n`
-      }
-      if (this.newJob.mail.user) {
-        topScriptPart += `#SBATCH --mail-user=${this.newJob.mail.user} \n`
-      }
-      if (this.newJob.mail.type) {
-        const mailTypes = this.newJob.mail.type
-        let allMailType = ''
-        mailTypes.forEach(mailType => {
-          allMailType += mailType.label + ','
-        })
-        allMailType = allMailType.slice(0, -1)
-        topScriptPart += `#SBATCH --mail-type=${allMailType} \n`
-      }
-      // mail,
-      return topScriptPart + this.newJob.script_body
-    },
-
-    formattedTime: function () {
-      const givenTime = this.newJob.walltime
-      if (!givenTime) {
-        return '00:00:00'
-      } else {
-        const hour = Math.floor(givenTime / 3600)
-        const minutes = Math.floor((givenTime - hour * 3600) / 60)
-        const seconds = Math.floor(givenTime - hour * 3600 - minutes * 60)
-
-        return (
-          hour.toString().padStart(2, '0') +
-          ':' +
-          minutes.toString().padStart(2, '0') +
-          ':' +
-          seconds.toString().padStart(2, '0')
-        )
-      }
-    },
   },
   created: async function () {
     await this.updateNecessaryData()
