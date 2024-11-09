@@ -1,0 +1,195 @@
+<template>
+  <span class="font-bold text-xl">
+    {{ 'Create a New Job for ' + this.machine.name }}</span
+  >
+
+  <Form @submit.prevent="onConfirmCreateJob" class="flex flex-col">
+    <div class="flex flex-wrap gap-12">
+      <!-- Job NAME -->
+      <div class="flex flex-col gap-2">
+        <label for="job-project-name">Enter Project Name</label>
+        <Select
+          id="job-project-name"
+          v-model="newJob.project"
+          :options="projects"
+          optionLabel="name"
+          placeholder="Select a Project"
+        />
+      </div>
+
+      <!-- Job Nodes -->
+      <div class="flex flex-col gap-2">
+        <label for="job-nodes">Enter number of Nodes to use</label>
+        <InputNumber
+          id="job-nodes"
+          input-id="integeronly"
+          :min="1"
+          :max="this.machine.nodes"
+          :use-grouping="false"
+          v-model="newJob.nodes"
+        />
+      </div>
+
+      <!-- Job Time -->
+      <div class="flex flex-col gap-2">
+        <label for="job-walltime">Enter time to allocate for the job</label>
+        <InputNumber
+          id="job-walltime"
+          input-id="integeronly"
+          :min="1"
+          :max="86400"
+          suffix=" sec"
+          :use-grouping="false"
+          v-model="newJob.walltime"
+        />
+        <small>Time: {{ formattedTime + ' (hh:mm:ss)' }}</small>
+      </div>
+
+      <!-- Job Mail Type -->
+      <div class="flex flex-col gap-2">
+        <label for="job-mail-type">Type of trigger sending email</label>
+        <MultiSelect
+          v-model="newJob.mail.type"
+          :options="VALID_MAIL_TYPE"
+          optionLabel="label"
+          placeholder="Select Mail Type"
+          filter
+          :maxSelectedLabels="VALID_MAIL_TYPE.length - 1"
+        ></MultiSelect>
+      </div>
+
+      <!-- Job Mail User -->
+      <div class="flex flex-col gap-2">
+        <label for="job-mail-user">Enter the email to send email</label>
+        <InputText
+          v-model="newJob.mail.user"
+          placeholder="mail@example.com"
+        ></InputText>
+      </div>
+    </div>
+
+    <div class="flex flex-col">
+      <span class="text-xl font-bold">Script File</span>
+      <!-- Job Script -->
+      <!-- TODO: Implement code/preview script component -->
+      <Splitter class="min-h-64">
+        <SplitterPanel class="flex flex-col">
+          <span class="p-2 text-center text-xl font-bold">
+            Edit your Script here
+          </span>
+          <textarea
+            v-model="newJob.script_body"
+            class="p-2 resize-none h-full"
+          ></textarea>
+        </SplitterPanel>
+        <SplitterPanel>
+          <VCodeBlock
+            highlightjs
+            :code="combinedScript"
+            lang="bash"
+          ></VCodeBlock>
+        </SplitterPanel>
+      </Splitter>
+    </div>
+  </Form>
+  <!-- TODO: implement uploading a new job -->
+  <div class="p-3 text-right">
+    <Button
+      label="Cancel"
+      text
+      severity="secondary"
+      icon="pi pi-times"
+      @click="this.$router.back()"
+    ></Button>
+    <Button label="Create your Job" icon="pi pi-save"></Button>
+  </div>
+</template>
+
+<script>
+import { api } from '@/apis'
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: 'CreateNewJob',
+  data() {
+    return {
+      VALID_MAIL_TYPE: [
+        { label: 'BEGIN' },
+        { label: 'END' },
+        { label: 'FAIL' },
+        { label: 'REQUEUE' },
+        { label: 'INVALID_DEPEND' },
+        { label: 'STAGE_OUT' },
+      ],
+      newJob: {
+        script_body: ``,
+        project: null,
+        mail: {
+          user: null,
+          type: null,
+        },
+      },
+      projects: [],
+      machine: {},
+    }
+  },
+  computed: {
+    combinedScript: function () {
+      let topScriptPart = '#!/bin/bash\n\n'
+      if (this.newJob.project) {
+        topScriptPart += `#SBATCH -A ${this.newJob.project.name} \n`
+      }
+      if (this.newJob.nodes) {
+        topScriptPart += `#SBATCH -N ${this.newJob.nodes} \n`
+      }
+      if (this.newJob.walltime) {
+        topScriptPart += `#SBATCH -t ${this.formattedTime} \n`
+      }
+      if (this.newJob.mail.user) {
+        topScriptPart += `#SBATCH --mail-user=${this.newJob.mail.user} \n`
+      }
+      if (this.newJob.mail.type) {
+        const mailTypes = this.newJob.mail.type
+        let allMailType = ''
+        mailTypes.forEach(mailType => {
+          allMailType += mailType.label + ','
+        })
+        allMailType = allMailType.slice(0, -1)
+        topScriptPart += `#SBATCH --mail-type=${allMailType} \n`
+      }
+      // mail,
+      return topScriptPart + this.newJob.script_body
+    },
+
+    formattedTime: function () {
+      const givenTime = this.newJob.walltime
+      if (!givenTime) {
+        return '00:00:00'
+      } else {
+        const hour = Math.floor(givenTime / 3600)
+        const minutes = Math.floor((givenTime - hour * 3600) / 60)
+        const seconds = Math.floor(givenTime - hour * 3600 - minutes * 60)
+
+        return (
+          hour.toString().padStart(2, '0') +
+          ':' +
+          minutes.toString().padStart(2, '0') +
+          ':' +
+          seconds.toString().padStart(2, '0')
+        )
+      }
+    },
+  },
+  created: async function () {
+    // since, we don't need to update project name on every other machine, we will be loading projects only once
+    const allProjects = await api.Project.getAllProjects()
+    this.projects = allProjects
+    this.machine.name = this.$route.query.machine
+    this.machine.nodes = parseInt(this.$route.query.nodes)
+    // TODO: if machine.nodes and machine.name are not available, load the machine again.
+  },
+  methods: {
+    onConfirmCreateJob: async function () {},
+  },
+})
+</script>

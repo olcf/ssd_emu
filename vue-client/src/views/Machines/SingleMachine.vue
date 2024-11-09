@@ -1,118 +1,4 @@
 <template>
-  <!-- REVIEW: Change this code to separate place or make it as a component -->
-  <Dialog :visible="CREATE_NEW_JOB" modal maximizable>
-    <template #header>
-      <span class="font-bold text-xl">
-        {{ 'Create a New Job for ' + machine.name }}</span
-      >
-    </template>
-    <Form @submit.prevent="onConfirmCreateJob" class="flex flex-col">
-      <div class="flex flex-wrap gap-12">
-        <!-- Job NAME -->
-        <div class="flex flex-col gap-2">
-          <label for="job-project-name">Enter Project Name</label>
-          <Select
-            id="job-project-name"
-            v-model="newJob.project"
-            :options="projects"
-            optionLabel="name"
-            placeholder="Select a Project"
-          />
-        </div>
-
-        <!-- Job Nodes -->
-        <div class="flex flex-col gap-2">
-          <label for="job-nodes">Enter number of Nodes to use</label>
-          <InputNumber
-            id="job-nodes"
-            input-id="integeronly"
-            :min="1"
-            :max="machine.nodes"
-            :use-grouping="false"
-            v-model="newJob.nodes"
-          />
-        </div>
-
-        <!-- Job Time -->
-        <div class="flex flex-col gap-2">
-          <label for="job-walltime">Enter time to allocate for the job</label>
-          <InputNumber
-            id="job-walltime"
-            input-id="integeronly"
-            :min="1"
-            :max="86400"
-            suffix=" sec"
-            :use-grouping="false"
-            v-model="newJob.walltime"
-          />
-          <small>Time: {{ formattedTime + ' (hh:mm:ss)' }}</small>
-        </div>
-
-        <!-- Job Mail Type -->
-        <div class="flex flex-col gap-2">
-          <label for="job-mail-type">Type of trigger sending email</label>
-          <MultiSelect
-            v-model="newJob.mail.type"
-            :options="VALID_MAIL_TYPE"
-            optionLabel="label"
-            placeholder="Select Mail Type"
-            filter
-            :maxSelectedLabels="VALID_MAIL_TYPE.length - 1"
-          ></MultiSelect>
-        </div>
-
-        <!-- Job Mail User -->
-        <div class="flex flex-col gap-2">
-          <label for="job-mail-user">Enter the email to send email</label>
-          <InputText
-            v-model="newJob.mail.user"
-            placeholder="mail@example.com"
-          ></InputText>
-        </div>
-      </div>
-
-      <div class="flex flex-col">
-        <span class="text-xl font-bold">Script File</span>
-        <!-- Job Script -->
-        <!-- TODO: Implement code/preview script component -->
-        <Splitter class="min-h-64">
-          <SplitterPanel class="flex flex-col">
-            <span class="p-2 text-center text-xl font-bold">
-              Edit your Script here
-            </span>
-            <textarea
-              v-model="newJob.script_body"
-              class="p-2 resize-none h-full"
-            ></textarea>
-          </SplitterPanel>
-          <SplitterPanel>
-            <VCodeBlock
-              highlightjs
-              :code="combinedScript"
-              lang="bash"
-            ></VCodeBlock>
-          </SplitterPanel>
-        </Splitter>
-      </div>
-
-      <Button class="m-3" icon="pi pi-hammer" label="Create your Job" />
-    </Form>
-    <!-- TODO: implement uploading a new job -->
-    <template #footer>
-      <Button
-        label="Cancel"
-        text
-        severity="secondary"
-        @click="CREATE_NEW_JOB = false"
-        icon="pi pi-times"
-      ></Button>
-      <Button
-        label="Create your Job"
-        @click="CREATE_NEW_JOB = false"
-        icon="pi pi-save"
-      ></Button>
-    </template>
-  </Dialog>
   <div class="flex justify-center">
     <table class="text-left">
       <thead>
@@ -166,7 +52,7 @@
       iconPos="top"
       label="Create new Job"
       class="max-w-64"
-      @click="CREATE_NEW_JOB = true"
+      @click="navigateToCreateNewJob"
     >
       <i class="pi pi-plus"></i>
       <span>Create a Job</span>
@@ -373,6 +259,15 @@ export default defineComponent({
     formatDate: function (date) {
       const givenDate = new Date(date)
       return givenDate.toLocaleString()
+    },
+    navigateToCreateNewJob: function () {
+      this.$router.push({
+        name: 'CreateNewJob',
+        query: {
+          machine: this.machine.name,
+          nodes: this.machine.nodes,
+        },
+      })
     },
   },
 })

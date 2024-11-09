@@ -32,6 +32,11 @@ const router = createRouter({
       name: 'SingleMachine',
       component: () => import('@/views/Machines/SingleMachine.vue'),
     },
+    {
+      path: '/machine/:id/createNewJob',
+      name: 'CreateNewJob',
+      component: () => import('@/components/Machines/CreateNewJob.vue'),
+    },
   ],
 })
 
