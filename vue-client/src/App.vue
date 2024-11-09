@@ -22,7 +22,7 @@ onMounted(async () => {
         <SplitterPanel :size="10" :min-size="10">
           <LeftNavigationMenu />
         </SplitterPanel>
-        <SplitterPanel :min-size="50" class="p-2">
+        <SplitterPanel :min-size="50" class="p-2" style="overflow-y: scroll">
           <RouterView />
         </SplitterPanel>
       </Splitter>
