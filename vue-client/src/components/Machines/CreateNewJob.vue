@@ -30,6 +30,19 @@
         />
       </div>
 
+      <!-- Job Cores -->
+      <div class="flex flex-col gap-2">
+        <label for="job-cores">Enter number of Cores to use</label>
+        <InputNumber
+          id="job-cores"
+          input-id="integeronly"
+          :min="1"
+          :max="this.machine.cores"
+          :use-grouping="false"
+          v-model="newJob.cores"
+        />
+      </div>
+
       <!-- Job Time -->
       <div class="flex flex-col gap-2">
         <label for="job-walltime">Enter time to allocate for the job</label>
@@ -104,7 +117,11 @@
       icon="pi pi-times"
       @click="this.$router.back()"
     ></Button>
-    <Button label="Create your Job" icon="pi pi-save"></Button>
+    <Button
+      label="Create your Job"
+      icon="pi pi-save"
+      @click="onConfirmCreateJob"
+    ></Button>
   </div>
 </template>
 
@@ -152,18 +169,27 @@ export default defineComponent({
         topScriptPart += `#SBATCH --mail-user=${this.newJob.mail.user} \n`
       }
       if (this.newJob.mail.type) {
-        const mailTypes = this.newJob.mail.type
-        let allMailType = ''
-        mailTypes.forEach(mailType => {
-          allMailType += mailType.label + ','
-        })
-        allMailType = allMailType.slice(0, -1)
-        topScriptPart += `#SBATCH --mail-type=${allMailType} \n`
+        topScriptPart += `#SBATCH --mail-type=${this.mailTypeSeparatedByComma} \n`
       }
-      // mail,
       return topScriptPart + this.newJob.script_body
     },
-
+    mailTypeSeparatedByComma: function () {
+      if (this.newJob.mail.type) {
+        const mailTypes = this.newJob.mail.type
+        if (mailTypes.length >= 6) {
+          return 'ALL'
+        } else {
+          let allMailType = ''
+          mailTypes.forEach(mailType => {
+            allMailType += mailType.label + ','
+          })
+          allMailType = allMailType.slice(0, -1)
+          return allMailType
+        }
+      } else {
+        return ''
+      }
+    },
     formattedTime: function () {
       const givenTime = this.newJob.walltime
       if (!givenTime) {
@@ -189,10 +215,37 @@ export default defineComponent({
     this.projects = allProjects
     this.machine.name = this.$route.query.machine
     this.machine.nodes = parseInt(this.$route.query.nodes)
+    this.machine.cores = parseInt(this.$route.query.cores)
     // TODO: if machine.nodes and machine.name are not available, load the machine again.
   },
   methods: {
-    onConfirmCreateJob: async function () {},
+    onConfirmCreateJob: async function () {
+      try {
+        const sendingJob = {}
+        sendingJob.nodes = this.newJob.nodes
+        sendingJob.cores = this.newJob.cores
+        sendingJob.mail_type = this.mailTypeSeparatedByComma
+        sendingJob.mail_user = this.newJob.mail.user
+        sendingJob.script = this.newJob.script_body
+        sendingJob.project_id = this.newJob.project.id
+        sendingJob.machine_id = this.$route.params.id
+        await api.Job.create(sendingJob)
+        this.$toast.add({
+          severity: 'success',
+          summary: 'Success Message',
+          detail: `New Job created successfully.`,
+          life: 3000,
+        })
+        this.$router.back()
+      } catch (error) {
+        this.$toast.add({
+          severity: 'warn',
+          summary: 'Warning Message',
+          detail: "Coudldn't create new Job. " + error,
+          life: 3000,
+        })
+      }
+    },
   },
 })
 </script>

@@ -201,6 +201,7 @@ export default defineComponent({
         query: {
           machine: this.machine.name,
           nodes: this.machine.nodes,
+          cores: this.machine.cores,
         },
       })
     },

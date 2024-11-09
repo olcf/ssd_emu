@@ -23,3 +23,11 @@ export const getAllJobs = async () => {
 
   return allJobs
 }
+
+export const create = async newJob => {
+  const userStore = useUserStore()
+  newJob.user_id = userStore.user_id
+
+  const newJobRequest = await axios.post('/jobs', newJob)
+  return newJobRequest
+}
