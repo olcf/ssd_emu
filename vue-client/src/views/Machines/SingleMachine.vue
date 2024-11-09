@@ -91,8 +91,8 @@
           </div>
         </div>
       </template>
-      <Column field="id" header="Job Id"></Column>
-      <Column field="project" header="Project Name"></Column>
+      <Column field="name" header="Job Name"></Column>
+      <Column field="project_name" header="Project Name"></Column>
       <Column field="nodes" header="Nodes"></Column>
       <Column field="script" header="Script">
         <template #body>
@@ -106,8 +106,11 @@
       </Column>
       <Column field="walltime" header="walltime"></Column>
       <Column field="cores" header="cores"></Column>
+      <Column field="slurm_cores" header="Slurm Cores"></Column>
       <Column field="state" header="state"></Column>
       <Column field="job_reason_code" header="Job Reason Code"></Column>
+      <Column field="out_file" header="Output File"></Column>
+      <Column field="err_file" header="Error File"></Column>
       <Column field="created_at" header="Created">
         <template #body="slotProps">
           {{ formatDate(slotProps.data.created_at) }}
