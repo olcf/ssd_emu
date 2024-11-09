@@ -1,0 +1,31 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  project_name: MyString
+  nodes: 1
+  walltime: 1
+  cores: 1
+  mail_type: MyString
+  mail_user: MyString
+  state: MyString
+  job_reason_code: MyString
+  script: MyText
+  out: MyText
+  err: MyText
+  machine: one
+  user: one
+
+two:
+  project_name: MyString
+  nodes: 1
+  walltime: 1
+  cores: 1
+  mail_type: MyString
+  mail_user: MyString
+  state: MyString
+  job_reason_code: MyString
+  script: MyText
+  out: MyText
+  err: MyText
+  machine: two
+  user: two
