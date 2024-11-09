@@ -56,7 +56,7 @@ jobs = []
 
 machines.each do |machine|
   projects.each do |project|
-    currJob = Job.find_or_create_by(project_id: project.id, nodes:2, walltime:56000, cores: 3, script: "Some genuine script", machine_id:machine.id, user_id: firstUser.id )
+    currJob = Job.find_or_create_by(name:"Sample Job",project_id: project.id, nodes:2, walltime:56000, cores: 3, script: "Some genuine script", machine_id:machine.id, user_id: firstUser.id )
     jobs.push(currJob)
   end
 end
