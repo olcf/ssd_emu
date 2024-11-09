@@ -13,7 +13,7 @@
           <label for="job-project-name">Enter Project Name</label>
           <Select
             id="job-project-name"
-            v-model="newJob.project_name"
+            v-model="newJob.project"
             :options="projects"
             optionLabel="name"
             placeholder="Select a Project"
@@ -45,16 +45,14 @@
             :use-grouping="false"
             v-model="newJob.walltime"
           />
-          <small
-            >Time: {{ convertToHoursMinutesSeconds(newJob.walltime) }}</small
-          >
+          <small>Time: {{ formattedTime + ' (hh:mm:ss)' }}</small>
         </div>
 
         <!-- Job Mail Type -->
         <div class="flex flex-col gap-2">
           <label for="job-mail-type">Type of trigger sending email</label>
           <MultiSelect
-            v-model="newJob.mail_type"
+            v-model="newJob.mail.type"
             :options="VALID_MAIL_TYPE"
             optionLabel="label"
             placeholder="Select Mail Type"
@@ -67,18 +65,34 @@
         <div class="flex flex-col gap-2">
           <label for="job-mail-user">Enter the email to send email</label>
           <InputText
-            v-model="newJob.mail_user"
+            v-model="newJob.mail.user"
             placeholder="mail@example.com"
           ></InputText>
         </div>
       </div>
 
       <div class="flex flex-col">
-        <span class="text-xl font-bold">Write script for the file here</span>
+        <span class="text-xl font-bold">Script File</span>
         <!-- Job Script -->
         <!-- TODO: Implement code/preview script component -->
-        <Textarea></Textarea>
-        <Textarea></Textarea>
+        <Splitter class="min-h-64">
+          <SplitterPanel class="flex flex-col">
+            <span class="p-2 text-center text-xl font-bold">
+              Edit your Script here
+            </span>
+            <textarea
+              v-model="newJob.script_body"
+              class="p-2 resize-none h-full"
+            ></textarea>
+          </SplitterPanel>
+          <SplitterPanel>
+            <VCodeBlock
+              highlightjs
+              :code="combinedScript"
+              lang="bash"
+            ></VCodeBlock>
+          </SplitterPanel>
+        </Splitter>
       </div>
 
       <Button class="m-3" icon="pi pi-hammer" label="Create your Job" />
@@ -192,7 +206,7 @@
         </div>
       </template>
       <Column field="id" header="Job Id"></Column>
-      <Column field="project_name" header="Project Name"></Column>
+      <Column field="project" header="Project Name"></Column>
       <Column field="nodes" header="Nodes"></Column>
       <Column field="script" header="Script">
         <template #body>
@@ -274,10 +288,56 @@ export default defineComponent({
       machine: {},
       jobs: [],
       newJob: {
-        mail_type: null,
+        script_body: ``,
+        project: null,
+        mail: {
+          user: null,
+          type: null,
+        },
       },
       projects: [],
     }
+  },
+  computed: {
+    combinedScript: function () {
+      let topScriptPart = '#!/bin/bash\n'
+      if (this.newJob.project) {
+        topScriptPart += `#SBATCH -A ${this.newJob.project.name} \n`
+      }
+      if (this.newJob.nodes) {
+        topScriptPart += `#SBATCH -N ${this.newJob.nodes} \n`
+      }
+      if (this.newJob.walltime) {
+        topScriptPart += `#SBATCH -t ${this.formattedTime} \n`
+      }
+      if (this.newJob.mail.user) {
+        topScriptPart += `#SBATCH --mail-user=${this.newJob.mail.user} \n`
+      }
+      if (this.newJob.mail.type) {
+        topScriptPart += `#SBATCH --mail-type=${this.newJob.mail.type} \n`
+      }
+      // mail,
+      return topScriptPart + this.newJob.script_body
+    },
+
+    formattedTime: function () {
+      const givenTime = this.newJob.walltime
+      if (!givenTime) {
+        return '00:00:00'
+      } else {
+        const hour = Math.floor(givenTime / 3600)
+        const minutes = Math.floor((givenTime - hour * 3600) / 60)
+        const seconds = Math.floor(givenTime - hour * 3600 - minutes * 60)
+
+        return (
+          hour.toString().padStart(2, '0') +
+          ':' +
+          minutes.toString().padStart(2, '0') +
+          ':' +
+          seconds.toString().padStart(2, '0')
+        )
+      }
+    },
   },
   created: async function () {
     await this.updateNecessaryData()
@@ -308,24 +368,6 @@ export default defineComponent({
     formatDate: function (date) {
       const givenDate = new Date(date)
       return givenDate.toLocaleString()
-    },
-    convertToHoursMinutesSeconds: function (time) {
-      if (!time) {
-        return '0 sec'
-      } else {
-        const hour = Math.floor(time / 3600)
-        const minutes = Math.floor((time - hour * 3600) / 60)
-        const seconds = Math.floor(time - hour * 3600 - minutes * 60)
-
-        return (
-          hour.toString().padStart(2, '0') +
-          ':' +
-          minutes.toString().padStart(2, '0') +
-          ':' +
-          seconds.toString().padStart(2, '0') +
-          ' (hh:mm:ss)'
-        )
-      }
     },
   },
 })
