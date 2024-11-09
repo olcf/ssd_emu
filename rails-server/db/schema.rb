@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_06_004136) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_09_185616) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -30,6 +30,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_06_004136) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "project_id"
+    t.string "name"
+    t.string "out_file"
+    t.string "err_file"
+    t.integer "slurm_cores", default: 8
     t.index ["machine_id"], name: "index_jobs_on_machine_id"
     t.index ["user_id"], name: "index_jobs_on_user_id"
   end
