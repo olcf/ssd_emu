@@ -11,11 +11,12 @@
         <!-- Job NAME -->
         <div class="flex flex-col gap-2">
           <label for="job-project-name">Enter Project Name</label>
-          <!-- TODO: Make a table of available project name and use drop down menu instead-->
-          <InputText
+          <Select
             id="job-project-name"
-            type="text"
             v-model="newJob.project_name"
+            :options="projects"
+            optionLabel="name"
+            placeholder="Select a Project"
           />
         </div>
 
@@ -275,10 +276,15 @@ export default defineComponent({
       newJob: {
         mail_type: null,
       },
+      projects: [],
     }
   },
   created: async function () {
     await this.updateNecessaryData()
+
+    // since, we don't need to update project name on every other machine, we will be loading projects only once
+    const allProjects = await api.Project.getAllProjects()
+    this.projects = allProjects
   },
   // here we are watching route id so that we can update the UI accordingly
   watch: {
