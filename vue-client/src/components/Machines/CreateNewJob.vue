@@ -162,6 +162,9 @@ export default defineComponent({
       if (this.newJob.nodes) {
         topScriptPart += `#SBATCH -N ${this.newJob.nodes} \n`
       }
+      if (this.newJob.cores) {
+        topScriptPart += `#SBATCH --threads-per-core=${this.newJob.cores} \n`
+      }
       if (this.newJob.walltime) {
         topScriptPart += `#SBATCH -t ${this.formattedTime} \n`
       }
