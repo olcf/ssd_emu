@@ -82,7 +82,10 @@
             class="p-2 resize-none h-full"
           ></textarea>
         </SplitterPanel>
-        <SplitterPanel>
+        <SplitterPanel class="flex flex-col">
+          <span class="p-2 text-center text-xl font-bold">
+            Preview your Script here
+          </span>
           <VCodeBlock
             highlightjs
             :code="combinedScript"
