@@ -23,10 +23,19 @@ export const getMachine = async id => {
 }
 
 export const create = async machine => {
-  // update this later to create machine
-  const userStore = useUserStore()
-  machine.user_id = userStore.user_id
+  if (
+    machine.name &&
+    machine.storage &&
+    machine.cores &&
+    machine.nodes &&
+    machine.gpus
+  ) {
+    const userStore = useUserStore()
+    machine.user_id = userStore.user_id
 
-  const newMachine = await axios.post('/machines', machine)
-  return newMachine
+    const newMachine = await axios.post('/machines', machine)
+    return newMachine
+  } else {
+    throw new Error('Please fill all details for creating machine')
+  }
 }

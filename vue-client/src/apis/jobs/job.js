@@ -25,9 +25,19 @@ export const getAllJobs = async () => {
 }
 
 export const create = async newJob => {
-  const userStore = useUserStore()
-  newJob.user_id = userStore.user_id
+  if (
+    newJob.cores &&
+    newJob.script &&
+    newJob.project_id &&
+    newJob.machine_id &&
+    newJob.name
+  ) {
+    const userStore = useUserStore()
+    newJob.user_id = userStore.user_id
 
-  const newJobRequest = await axios.post('/jobs', newJob)
-  return newJobRequest
+    const newJobRequest = await axios.post('/jobs', newJob)
+    return newJobRequest
+  } else {
+    throw new Error('Please provide all necessary fields')
+  }
 }
