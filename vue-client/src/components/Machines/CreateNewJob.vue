@@ -7,6 +7,11 @@
     <div class="flex flex-wrap gap-12">
       <!-- Job NAME -->
       <div class="flex flex-col gap-2">
+        <label for="job-name">Enter the name of the Job</label>
+        <InputText id="job-name" v-model="newJob.name"></InputText>
+      </div>
+
+      <div class="flex flex-col gap-2">
         <label for="job-project-name">Enter Project Name</label>
         <Select
           id="job-project-name"
@@ -15,6 +20,18 @@
           optionLabel="name"
           placeholder="Select a Project"
         />
+      </div>
+
+      <!-- Job Output File-->
+      <div class="flex flex-col gap-2">
+        <label for="job-name">Enter output file name</label>
+        <InputText id="job-err-file" v-model="newJob.out_file"></InputText>
+      </div>
+
+      <!-- Job Error File -->
+      <div class="flex flex-col gap-2">
+        <label for="job-name">Enter error file name</label>
+        <InputText id="job-out-file" v-model="newJob.err_file"></InputText>
       </div>
 
       <!-- Job Nodes -->
@@ -40,6 +57,19 @@
           :max="this.machine.cores"
           :use-grouping="false"
           v-model="newJob.cores"
+        />
+      </div>
+
+      <!-- Number of Slurm Cores -->
+      <div class="flex flex-col gap-2">
+        <label for="job-cores">Enter number of Slurm Cores to use</label>
+        <InputNumber
+          id="job-slurm-cores"
+          input-id="integeronly"
+          :min="1"
+          :max="this.machine.cores"
+          :use-grouping="false"
+          v-model="newJob.slurm_cores"
         />
       </div>
 
@@ -156,6 +186,9 @@ export default defineComponent({
   computed: {
     combinedScript: function () {
       let topScriptPart = '#!/bin/bash\n\n'
+      if (this.newJob.name) {
+        topScriptPart += `#SBATCH -J ${this.newJob.name} \n`
+      }
       if (this.newJob.project) {
         topScriptPart += `#SBATCH -A ${this.newJob.project.name} \n`
       }
@@ -164,6 +197,9 @@ export default defineComponent({
       }
       if (this.newJob.cores) {
         topScriptPart += `#SBATCH --threads-per-core=${this.newJob.cores} \n`
+      }
+      if (this.newJob.slurm_cores) {
+        topScriptPart += `#SBATCH -S ${this.newJob.slurm_cores} \n`
       }
       if (this.newJob.walltime) {
         topScriptPart += `#SBATCH -t ${this.formattedTime} \n`
@@ -174,6 +210,14 @@ export default defineComponent({
       if (this.newJob.mail.type) {
         topScriptPart += `#SBATCH --mail-type=${this.mailTypeSeparatedByComma} \n`
       }
+
+      if (this.newJob.out_file) {
+        topScriptPart += `#SBATCH -o ${this.newJob.out_file} \n`
+      }
+      if (this.newJob.err_file) {
+        topScriptPart += `#SBATCH -e ${this.newJob.err_file} \n`
+      }
+
       return topScriptPart + this.newJob.script_body
     },
     mailTypeSeparatedByComma: function () {
@@ -232,11 +276,16 @@ export default defineComponent({
         sendingJob.script = this.newJob.script_body
         sendingJob.project_id = this.newJob.project.id
         sendingJob.machine_id = this.$route.params.id
+        sendingJob.slurm_cores = this.newJob.slurm_cores
+        sendingJob.out_file = this.newJob.out_file
+        sendingJob.err_file = this.newJob.err_file
+        sendingJob.name = this.newJob.name
+
         await api.Job.create(sendingJob)
         this.$toast.add({
           severity: 'success',
           summary: 'Success Message',
-          detail: `New Job created successfully.`,
+          detail: `New Job ${sendingJob.name} created successfully.`,
           life: 3000,
         })
         this.$router.back()
@@ -244,7 +293,7 @@ export default defineComponent({
         this.$toast.add({
           severity: 'warn',
           summary: 'Warning Message',
-          detail: "Coudldn't create new Job. " + error,
+          detail: `Coudldn't create new Job  ${error}`,
           life: 3000,
         })
       }
