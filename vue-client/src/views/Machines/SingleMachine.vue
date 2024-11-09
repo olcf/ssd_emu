@@ -283,7 +283,6 @@ export default defineComponent({
         { label: 'REQUEUE' },
         { label: 'INVALID_DEPEND' },
         { label: 'STAGE_OUT' },
-        { label: 'ALL' },
       ],
       machine: {},
       jobs: [],
@@ -300,7 +299,7 @@ export default defineComponent({
   },
   computed: {
     combinedScript: function () {
-      let topScriptPart = '#!/bin/bash\n'
+      let topScriptPart = '#!/bin/bash\n\n'
       if (this.newJob.project) {
         topScriptPart += `#SBATCH -A ${this.newJob.project.name} \n`
       }
@@ -314,7 +313,13 @@ export default defineComponent({
         topScriptPart += `#SBATCH --mail-user=${this.newJob.mail.user} \n`
       }
       if (this.newJob.mail.type) {
-        topScriptPart += `#SBATCH --mail-type=${this.newJob.mail.type} \n`
+        const mailTypes = this.newJob.mail.type
+        let allMailType = ''
+        mailTypes.forEach(mailType => {
+          allMailType += mailType.label + ','
+        })
+        allMailType = allMailType.slice(0, -1)
+        topScriptPart += `#SBATCH --mail-type=${allMailType} \n`
       }
       // mail,
       return topScriptPart + this.newJob.script_body
