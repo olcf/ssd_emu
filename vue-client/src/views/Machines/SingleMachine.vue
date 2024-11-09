@@ -109,8 +109,16 @@
       <Column field="slurm_cores" header="Slurm Cores"></Column>
       <Column field="state" header="state"></Column>
       <Column field="job_reason_code" header="Job Reason Code"></Column>
-      <Column field="out_file" header="Output File"></Column>
-      <Column field="err_file" header="Error File"></Column>
+      <Column field="out_file" header="Output File">
+        <template #body="slotProps">
+          {{ slotProps.data.out_file || 'STDOUT' }}
+        </template>
+      </Column>
+      <Column field="err_file" header="Error File">
+        <template #body="slotProps">
+          {{ slotProps.data.err_file || 'STDERR' }}
+        </template>
+      </Column>
       <Column field="created_at" header="Created">
         <template #body="slotProps">
           {{ formatDate(slotProps.data.created_at) }}
