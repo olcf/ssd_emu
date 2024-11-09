@@ -14,6 +14,9 @@ import Aura from '@primevue/themes/aura'
 import ConfirmationService from 'primevue/confirmationservice'
 import ToastService from 'primevue/toastservice'
 
+// Importing Vue Code Block Package
+import { VCodeBlock } from '@wdns/vue-code-block'
+
 // Fontawesome setup
 import FontAwesomeIcon from './FontAwesomeSetup'
 
@@ -37,6 +40,9 @@ app.use(PrimeVue, {
 })
 app.use(ConfirmationService)
 app.use(ToastService)
+
+// Using VueCodeBlock
+app.component('VCodeBlock', VCodeBlock)
 
 // axios setup
 axios.defaults.baseURL = 'http://localhost:3000'
