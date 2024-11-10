@@ -1,5 +1,14 @@
 <template>
   <div class="flex justify-center">
+    <Dialog
+      maximizable
+      v-model:visible="VIEW_SCRIPT"
+      modal
+      header="Preview your script"
+      :style="{ width: '80rem' }"
+    >
+      <StyleldScript :job="jobs[CURRENT_VIEWING_ID]"></StyleldScript>
+    </Dialog>
     <table class="text-left">
       <thead>
         <tr>
@@ -95,12 +104,13 @@
       <Column field="project_name" header="Project Name"></Column>
       <Column field="nodes" header="Nodes"></Column>
       <Column field="script" header="Script">
-        <template #body>
+        <template #body="slotProps">
           <Button
             icon="pi pi-file-edit"
             rounded
             raised
             v-tooltip.bottom="'View and Edit the Script'"
+            @click="viewScriptClicked(slotProps.data.id)"
           />
         </template>
       </Column>
@@ -166,12 +176,16 @@
 
 <script>
 import { api } from '@/apis'
+import StyleldScript from '@/components/Jobs/StyleldScript.vue'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'SingleMachine',
+  components: { StyleldScript },
   data() {
     return {
+      VIEW_SCRIPT: false,
+      CURRENT_VIEWING_ID: null,
       machine: {},
       jobs: [],
     }
@@ -192,6 +206,10 @@ export default defineComponent({
   },
   methods: {
     onConfirmCreateJob: async function () {},
+    viewScriptClicked: function (id) {
+      this.VIEW_SCRIPT = true
+      this.CURRENT_VIEWING_ID = this.jobs.findIndex(job => job.id === id)
+    },
 
     updateNecessaryData: async function () {
       const machineDetails = await api.Machine.getMachine(this.$route.params.id)
