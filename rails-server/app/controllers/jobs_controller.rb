@@ -42,6 +42,21 @@ class JobsController < ApplicationController
     end
   end
 
+  # PATCH /jobs/run/1
+  def run
+    user_id = job_params["user_id"]
+    job_id = params["id"]
+    job = Job.where(id: job_id, user_id: user_id).first
+    if !job.nil?
+      # Perform when all the queue of current job is free.
+      RunUserJobInDockerJob.perform_later(params["id"])
+      
+      render json: {status:"running"}
+    else
+      render json:{"exception":"Can't find job with given information for your user."}, status: :unprocessable_entity
+    end
+  end
+  
   # DELETE /jobs/1
   def destroy
     @job.destroy
