@@ -33,4 +33,6 @@ Things you may want to cover:
          "BuildTime"=>"2024-09-20T11:41:01.000000000+00:00",
          "Experimental"=>"false",
       ```
+   3. If you have installed `docker-desktop`, you might be using different socket than default socket. You might want to update it with default socket so that you are using same socket either via rails api or docker-desktop.
+     - You can use command `docker context ls` to show all the context that are available in your system. If desktop-linux is selected, you can change it by using `docker context use default`. 
     
