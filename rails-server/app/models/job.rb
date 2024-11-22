@@ -12,6 +12,10 @@ class Job < ApplicationRecord
   validates :state, inclusion: { in: Job::VALID_JOB_STATES, :message => "Value %{value} is not a valid state"}
   validates :job_reason_code, inclusion: { in: Job::VALID_JOB_REASON_CODES, :message => "Value %{value} is not a valid job reason code" }
 
+  # REVIEW: make sure the regex is 100% accurate. 
+  # \/ means / character is not allowed as a folder name.
+  # \0 means null character is not allowed for a folder name.
+  validates :name, presence: true, format: {with: /\A[^\/\\0]+\z/, message:'job name should be similar to valid folder name' }
   # TODO: Add validation for Mail type 
   # Send email for certain job actions. Can be a comma-separated list. Actions include BEGIN, END, FAIL, REQUEUE, INVALID_DEPEND, STAGE_OUT, ALL, and more.
    
