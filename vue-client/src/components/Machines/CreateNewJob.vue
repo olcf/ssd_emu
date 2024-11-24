@@ -293,7 +293,7 @@ export default defineComponent({
         this.$toast.add({
           severity: 'warn',
           summary: 'Warning Message',
-          detail: `Coudldn't create new Job  ${error}`,
+          detail: `Couldn't create new Job  ${error}`,
           life: 3000,
         })
       }
