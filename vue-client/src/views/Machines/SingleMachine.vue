@@ -7,7 +7,7 @@
       header="Preview your script"
       :style="{ width: '80rem' }"
     >
-      <StyleldScript :job="jobs[CURRENT_VIEWING_ID]"></StyleldScript>
+      <StyledScript :job="jobs[CURRENT_VIEWING_ID]"></StyledScript>
     </Dialog>
     <Dialog
       maximizable
@@ -195,13 +195,13 @@
 
 <script>
 import { api } from '@/apis'
-import StyleldScript from '@/components/Jobs/StyleldScript.vue'
+import StyledScript from '@/components/Jobs/StyledScript.vue'
 import StyledOutput from '@/components/Jobs/StyledOutput.vue'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'SingleMachine',
-  components: { StyleldScript, StyledOutput },
+  components: { StyledScript, StyledOutput },
   data() {
     return {
       VIEW_SCRIPT: false,
