@@ -9,6 +9,18 @@
     >
       <StyleldScript :job="jobs[CURRENT_VIEWING_ID]"></StyleldScript>
     </Dialog>
+    <Dialog
+      maximizable
+      v-model:visible="VIEW_EXECUTION"
+      modal
+      header="View the output of your script"
+      :style="{ width: '80rem' }"
+    >
+      <StyledOutput
+        :output="selectedJob.output"
+        :error="selectedJob.error"
+      ></StyledOutput>
+    </Dialog>
     <table class="text-left">
       <thead>
         <tr>
@@ -147,12 +159,19 @@
               icon="pi pi-play"
               rounded
               v-tooltip.bottom="'Run this Job'"
+              @click="runJob(slotProps.data.id)"
             /><Button
               v-else
               icon="pi pi-pause"
               v-tooltip.bottom="'Stop this Job'"
               rounded
               raised
+            />
+            <Button
+              icon="pi pi-eye"
+              rounded
+              v-tooltip.bottom="'View the execution'"
+              @click="viewExecution(slotProps.data.id)"
             />
             <Button
               icon="pi pi-pencil"
@@ -177,17 +196,24 @@
 <script>
 import { api } from '@/apis'
 import StyleldScript from '@/components/Jobs/StyleldScript.vue'
+import StyledOutput from '@/components/Jobs/StyledOutput.vue'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'SingleMachine',
-  components: { StyleldScript },
+  components: { StyleldScript, StyledOutput },
   data() {
     return {
       VIEW_SCRIPT: false,
+      VIEW_EXECUTION: false,
       CURRENT_VIEWING_ID: null,
       machine: {},
       jobs: [],
+      // selected job is used to store data for any actions pressed in specific job.
+      selectedJob: {
+        output: null,
+        error: null,
+      },
     }
   },
   created: async function () {
@@ -210,7 +236,30 @@ export default defineComponent({
       this.VIEW_SCRIPT = true
       this.CURRENT_VIEWING_ID = this.jobs.findIndex(job => job.id === id)
     },
+    runJob: async function (jobId) {
+      await api.Job.run(jobId)
+    },
+    // When we view the execution, we will pull out modal window where we will display either output or error found in the script.
+    // If it is empty, we will just say, 'You have to run the script to see the output'
+    viewExecution: async function (jobId) {
+      try {
+        const singleJobRequest = await api.Job.getById(jobId)
+        const singleJob = await singleJobRequest.data
+        this.VIEW_EXECUTION = true
 
+        // If output is empty, we are going to show error
+        if (singleJob.out) {
+          this.selectedJob.output = singleJob.out
+          this.selectedJob.error = null
+        } else {
+          this.selectedJob.output = null
+          this.selectedJob.error = singleJob.err
+        }
+      } catch (error) {
+        // REVIEW: Add mechanism to show the toast warning!
+        alert('Error found' + error)
+      }
+    },
     updateNecessaryData: async function () {
       const machineDetails = await api.Machine.getMachine(this.$route.params.id)
       this.machine = machineDetails
