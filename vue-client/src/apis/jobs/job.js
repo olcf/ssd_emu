@@ -41,3 +41,29 @@ export const create = async newJob => {
     throw new Error('Please provide all necessary fields')
   }
 }
+
+export const getById = async jobId => {
+  if (jobId) {
+    const userStore = useUserStore()
+    let user = {}
+    user.user_id = userStore.user_id
+
+    const singleJobRequest = await axios.get(`/jobs/${jobId}`, user)
+    return singleJobRequest
+  } else {
+    throw new Error('Please provide all necessary fields')
+  }
+}
+
+export const run = async jobId => {
+  if (jobId) {
+    const userStore = useUserStore()
+    let user = {}
+    user.user_id = userStore.user_id
+
+    const jobRunRequest = await axios.patch(`/jobs/run/${jobId}`, user)
+    return jobRunRequest
+  } else {
+    throw new Error('Please provide all necessary fields')
+  }
+}
