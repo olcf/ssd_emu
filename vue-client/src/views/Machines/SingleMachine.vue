@@ -237,7 +237,22 @@ export default defineComponent({
       this.CURRENT_VIEWING_ID = this.jobs.findIndex(job => job.id === id)
     },
     runJob: async function (jobId) {
-      await api.Job.run(jobId)
+      try {
+        await api.Job.run(jobId)
+        this.$toast.add({
+          severity: 'success',
+          summary: 'Success Message',
+          detail: 'Job scheduled to run',
+          life: 3000,
+        })
+      } catch (error) {
+        this.$toast.add({
+          severity: 'warn',
+          summary: 'Warn Message',
+          detail: "Couldn't run the job! " + error,
+          life: 3000,
+        })
+      }
     },
     // When we view the execution, we will pull out modal window where we will display either output or error found in the script.
     // If it is empty, we will just say, 'You have to run the script to see the output'
@@ -256,8 +271,12 @@ export default defineComponent({
           this.selectedJob.error = singleJob.err
         }
       } catch (error) {
-        // REVIEW: Add mechanism to show the toast warning!
-        alert('Error found' + error)
+        this.$toast.add({
+          severity: 'warn',
+          summary: 'Warn Message',
+          detail: "Couldn't fetch updated job! " + error,
+          life: 3000,
+        })
       }
     },
     updateNecessaryData: async function () {
