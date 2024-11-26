@@ -21,11 +21,8 @@ export const useUserStore = defineStore('user', {
         const singleUser = await loginApiRequest.data[0]
         this.username = singleUser.username
         this.user_id = singleUser.id
-
-        console.log(singleUser)
       } catch (error) {
         alert(error)
-        console.log(error)
       }
     },
   },

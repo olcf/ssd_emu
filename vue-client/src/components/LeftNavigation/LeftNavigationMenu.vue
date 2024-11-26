@@ -18,7 +18,6 @@ const menuItems = ref([
 const userStore = useUserStore()
 onMounted(async () => {
   const machines = await api.Machine.getAllMachines()
-  console.log(machines)
   machines.forEach(element => {
     element.label = element.name
     element.icon = 'pi pi-microchip-ai'
