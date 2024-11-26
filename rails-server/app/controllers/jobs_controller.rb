@@ -63,7 +63,8 @@ class JobsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_job
-      @job = Job.find(params[:id])
+      # we are using first method since where will return array of jobs
+      @job = Job.joins(:project).select("jobs.*,projects.name as project_name").where(id:params[:id]).first
     end
 
     # Only allow a list of trusted parameters through.
