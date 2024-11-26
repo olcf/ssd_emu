@@ -20,7 +20,7 @@ const router = createRouter({
     {
       path: '/createNewMachine',
       name: 'createNewMachine',
-      component: () => import('../views/CreateMachineView.vue'),
+      component: () => import('../views/Machines/CreateMachineView.vue'),
     },
     {
       path: '/machines/all',
