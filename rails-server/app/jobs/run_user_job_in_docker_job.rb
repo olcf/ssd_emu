@@ -38,11 +38,11 @@ class RunUserJobInDockerJob < ApplicationJob
         # First value from result is output which is an array
         job.out = result[0].join("\n")
         # If success, no error
-        job.err = ""
+        job.err = nil
       else
         job.err = result[1].join('\n')
         # If Error, no success
-        job.out = ""
+        job.out = nil
       end
       job.save
 
