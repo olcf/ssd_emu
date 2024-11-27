@@ -7,7 +7,10 @@
       header="Preview your script"
       :style="{ width: '80rem' }"
     >
-      <StyledScript :job="jobs[CURRENT_VIEWING_ID]"></StyledScript>
+      <StyledScript
+        v-if="CURRENT_VIEWING_ID != null"
+        :job="jobs[CURRENT_VIEWING_ID]"
+      ></StyledScript>
     </Dialog>
     <Dialog
       maximizable
@@ -17,8 +20,8 @@
       :style="{ width: '80rem' }"
     >
       <StyledOutput
-        :output="selectedJob.output"
-        :error="selectedJob.error"
+        v-if="CURRENT_VIEWING_ID != null"
+        :job="jobs[CURRENT_VIEWING_ID]"
       ></StyledOutput>
     </Dialog>
     <table class="text-left">
@@ -209,11 +212,6 @@ export default defineComponent({
       CURRENT_VIEWING_ID: null,
       machine: {},
       jobs: [],
-      // selected job is used to store data for any actions pressed in specific job.
-      selectedJob: {
-        output: null,
-        error: null,
-      },
     }
   },
   created: async function () {
@@ -260,16 +258,11 @@ export default defineComponent({
       try {
         const singleJobRequest = await api.Job.getById(jobId)
         const singleJob = await singleJobRequest.data
-        this.VIEW_EXECUTION = true
+        this.CURRENT_VIEWING_ID = this.jobs.findIndex(job => job.id === jobId)
+        this.jobs[this.CURRENT_VIEWING_ID] = singleJob
 
-        // If output is empty, we are going to show error
-        if (singleJob.out) {
-          this.selectedJob.output = singleJob.out
-          this.selectedJob.error = null
-        } else {
-          this.selectedJob.output = null
-          this.selectedJob.error = singleJob.err
-        }
+        // ready to show the dialog
+        this.VIEW_EXECUTION = true
       } catch (error) {
         this.$toast.add({
           severity: 'warn',
