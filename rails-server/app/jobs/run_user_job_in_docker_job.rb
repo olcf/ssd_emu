@@ -29,14 +29,11 @@ class RunUserJobInDockerJob < ApplicationJob
       # Execute the script.sh file
       result = serverContainer.exec(["bin/bash","-c", "cd #{username}/#{job.name} && /bin/bash ./script.sh"])
       
-      puts "output from given script "
-      puts result
       # Re looking job because at the time of execution, user could edit job details when we are executing this code
       job = Job.find(job_id);
       
       # Error is saved in 1st column, if the exit code is other than 0
       exit_code = result[2] 
-      puts "Exit code = #{exit_code}"
       
       if exit_code == 0
         # NO ERROR
@@ -49,10 +46,12 @@ class RunUserJobInDockerJob < ApplicationJob
         # If Error, no success
         job.out = nil
       end
-      job.save
 
-    
+    rescue Exception
+      job.out = nil
+      job.err = "Error with connecting to simulation machine! Open issue on official repository or report to contributors."
+    ensure
+      job.save
     end
-    
   end
 end
