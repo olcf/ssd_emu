@@ -40,16 +40,45 @@ class JobsController < ApplicationController
     end
   end
 
+  # requested is considered as job
+  # available is considered as machine to check with
+  def invalid_job_machine_available_generator(property,requested_job,available)
+    return "User requested #{requested_job[property]} #{property} but, the requested machine '#{available.name}' only has #{available[property]} #{property}. Make sure you are not requesting #{property} more than your machine have.\n"
+  end
   # PATCH /jobs/run/1
   def run
     user_id = job_params["user_id"]
     job_id = params["id"]
-    job = Job.where(id: job_id, user_id: user_id).first
+    job = Job.joins(:project).select("jobs.*,projects.name as project_name").where(id:job_id,user_id:user_id).first
     if !job.nil?
-      # Perform when all the queue of current job is free.
-      RunUserJobInDockerJob.perform_later(params["id"])
+      # If job passes all the requirements(number of nodes, cpu, etc from the requested machine configuration.)
       
-      render json: {status:"running"}
+      # Checking if given script is allowed to run
+      machine_requested = job.machine
+      errors = ""
+
+      if job.nodes >= machine_requested.nodes
+        errors += invalid_job_machine_available_generator("nodes",job,machine_requested)
+      end
+      if job.cores >= machine_requested.cores
+        errors += invalid_job_machine_available_generator("cores",job,machine_requested)
+      end
+
+      if errors.length >0
+        job.state = "CA" #Canceled
+        job.job_reason_code = "ReqNodeNotAvail"
+        job.out = nil
+        job.err = errors
+        job.save
+      else
+        job.state = "PD" #Pending
+        job.save
+        # Perform when all the queue of current job is free.
+        RunUserJobInDockerJob.perform_later(params["id"])
+      end
+
+      render json: job
+      
     else
       render json:{"exception":"Can't find job with given information for your user."}, status: :unprocessable_entity
     end

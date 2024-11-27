@@ -7,7 +7,11 @@ class RunUserJobInDockerJob < ApplicationJob
     job = Job.find(job_id)
     username = job.user.username
 
-    
+    # preparing job by updating state to 'R'
+    job.state = 'R'
+    job.save
+
+
     begin     
       # Create user folder if not available(silent mode)
       serverContainer.exec(["mkdir", "-p",username])
@@ -39,10 +43,15 @@ class RunUserJobInDockerJob < ApplicationJob
         # NO ERROR
         # First value from result is output which is an array
         job.out = result[0].join("\n")
+        job.state = "CD" #CD means completed
+        job.job_reason_code = "None"
+        
         # If success, no error
         job.err = nil
       else
         job.err = result[1].join('\n')
+        job.state = "CD"
+        job.job_reason_code = "NonZeroExitCode"
         # If Error, no success
         job.out = nil
       end
@@ -50,6 +59,8 @@ class RunUserJobInDockerJob < ApplicationJob
     rescue Exception
       job.out = nil
       job.err = "Error with connecting to simulation machine! Open issue on official repository or report to contributors."
+      job.job_reason_code="JobLaunchFailure"
+      job.state = "CD"
     ensure
       job.save
     end
