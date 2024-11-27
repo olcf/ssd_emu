@@ -16,7 +16,12 @@ class RunUserJobInDockerJob < ApplicationJob
       serverContainer.exec(["mkdir","-p",username+'/'+job.name])
       
       # Copy the script to some script.sh file
-      serverContainer.exec(['bash','-c',"echo #{job.script} > #{username}/#{job.name}/script.sh"])
+      # cat <<'EOF' > filename.txt content \nEOF\n 
+      # <<'EOF' is used as here Tag (WITH QUOTATION), as it interpret everything as normal string with no substitution.
+      # > is used to copy content to file that we will pass 
+      # EOF is delimiter; Important thing to note about EOF is that it should not have any preceding or trailing commands.
+      # More at: https://pubs.opengroup.org/onlinepubs/9699919799.2018edition/utilities/V3_chap02.html#tag_18_07_04
+      serverContainer.exec(['bash','-c',"cat <<'EOF_NO_GUESS' > #{username}/#{job.name}/script.sh #{job.script} \nEOF_NO_GUESS\n "])
       
       # Change the permission for script.sh to +x so that we can execute it
       serverContainer.exec(["chmod","+x","#{username}/#{job.name}/script.sh"])
