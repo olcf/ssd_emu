@@ -157,17 +157,19 @@
       <Column header="Actions">
         <template #body="slotProps">
           <span class="flex gap-1">
+            <!-- If job doesn't have state of Running or Pending, just show run this job button else pause button -->
             <Button
-              v-if="slotProps.data.state !== 'R'"
+              v-if="!['R', 'PD'].includes(slotProps.data.state)"
               icon="pi pi-play"
               rounded
               v-tooltip.bottom="'Run this Job'"
               @click="runJob(slotProps.data.id)"
             /><Button
               v-else
-              icon="pi pi-pause"
+              icon="pi pi-spin pi-spinner"
               v-tooltip.bottom="'Stop this Job'"
               rounded
+              @click="stopJob(slotProps.data.id)"
               raised
             />
             <Button
@@ -229,6 +231,15 @@ export default defineComponent({
     },
   },
   methods: {
+    getExecutionIcon: function (jobState) {
+      let icon = 'pi '
+      if (jobState === 'R' || jobState === 'PD') {
+        icon += 'pi-spin pi-spinner'
+      } else {
+        icon += 'pi-play'
+      }
+      return icon
+    },
     onConfirmCreateJob: async function () {},
     viewScriptClicked: function (id) {
       this.VIEW_SCRIPT = true
@@ -236,7 +247,11 @@ export default defineComponent({
     },
     runJob: async function (jobId) {
       try {
-        await api.Job.run(jobId)
+        const jobRequest = await api.Job.run(jobId)
+        const job = await jobRequest.data
+        this.CURRENT_VIEWING_ID = this.jobs.findIndex(job => job.id === jobId)
+        this.jobs[this.CURRENT_VIEWING_ID] = job
+
         this.$toast.add({
           severity: 'success',
           summary: 'Success Message',
@@ -248,6 +263,24 @@ export default defineComponent({
           severity: 'warn',
           summary: 'Warn Message',
           detail: "Couldn't run the job! " + error,
+          life: 3000,
+        })
+      }
+    },
+    stopJob: async function (jobId) {
+      // TODO: implement stop job process.
+      try {
+        this.$toast.add({
+          severity: 'success',
+          summary: 'Success Message',
+          detail: 'Stop request sent for the job sent.',
+          life: 3000,
+        })
+      } catch (error) {
+        this.$toast.add({
+          severity: 'warn',
+          summary: 'Warn Message',
+          detail: "Couldn't stop the job! " + error,
           life: 3000,
         })
       }
