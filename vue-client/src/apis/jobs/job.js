@@ -36,7 +36,8 @@ export const create = async newJob => {
     newJob.user_id = userStore.user_id
 
     const newJobRequest = await axios.post('/jobs', newJob)
-    return newJobRequest
+    const newJobFromServer = await newJobRequest.data
+    return newJobFromServer
   } else {
     throw new Error('Please provide all necessary fields')
   }
@@ -49,7 +50,8 @@ export const getById = async jobId => {
     user.user_id = userStore.user_id
 
     const singleJobRequest = await axios.get(`/jobs/${jobId}`, user)
-    return singleJobRequest
+    const singleJob = await singleJobRequest.data
+    return singleJob
   } else {
     throw new Error('Please provide all necessary fields')
   }
@@ -62,7 +64,8 @@ export const run = async jobId => {
     user.user_id = userStore.user_id
 
     const jobRunRequest = await axios.patch(`/jobs/run/${jobId}`, user)
-    return jobRunRequest
+    const jobRun = await jobRunRequest.data
+    return jobRun
   } else {
     throw new Error('Please provide all necessary fields')
   }

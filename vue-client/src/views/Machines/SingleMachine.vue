@@ -247,8 +247,7 @@ export default defineComponent({
     },
     runJob: async function (jobId) {
       try {
-        const jobRequest = await api.Job.run(jobId)
-        const job = await jobRequest.data
+        const job = await api.Job.run(jobId)
         this.CURRENT_VIEWING_ID = this.jobs.findIndex(job => job.id === jobId)
         this.jobs[this.CURRENT_VIEWING_ID] = job
 
@@ -289,8 +288,7 @@ export default defineComponent({
     // If it is empty, we will just say, 'You have to run the script to see the output'
     viewExecution: async function (jobId) {
       try {
-        const singleJobRequest = await api.Job.getById(jobId)
-        const singleJob = await singleJobRequest.data
+        const singleJob = await api.Job.getById(jobId)
         this.CURRENT_VIEWING_ID = this.jobs.findIndex(job => job.id === jobId)
         this.jobs[this.CURRENT_VIEWING_ID] = singleJob
 
