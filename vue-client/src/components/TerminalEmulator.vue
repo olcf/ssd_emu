@@ -6,20 +6,28 @@
   ></Terminal>
 </template>
 <script setup>
+import { api } from '@/apis'
 import Terminal from 'primevue/terminal'
 import TerminalService from 'primevue/terminalservice'
 
-TerminalService.on('command', command => {
-  if (command === 'info') {
-    TerminalService.emit(
-      'response',
-      'Emu is supercomputer emulation project developed for Oak Ridge National Laboratory Interns(ORNL) by Software Service Department. See https://github.com/olcf/ssd_emu for more information.',
-    )
-  } else {
-    TerminalService.emit(
-      'response',
-      'This command is not available. Commands available: info',
-    )
+TerminalService.on('command', async command => {
+  let commandList = command.split(' ')
+  switch (commandList[0]) {
+    case 'info':
+      TerminalService.emit(
+        'response',
+        'Emu is supercomputer emulation project developed for Oak Ridge National Laboratory Interns(ORNL) by Software Service Department. See https://github.com/olcf/ssd_emu for more information.',
+      )
+      break
+    case 'ls':
+      if (commandList[1] == 'machines') {
+        const machines = await api.Machine.getAllMachines()
+        const machineName = machines.map(machine => machine.name)
+
+        TerminalService.emit('response', 'Available machines: ' + machineName)
+      }
+      break
   }
+  // TODO: Implement default methods and more commands after asking SSD.
 })
 </script>
