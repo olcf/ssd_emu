@@ -3,6 +3,7 @@ import { onMounted } from 'vue'
 import { RouterView } from 'vue-router'
 import LeftNavigationMenu from './components/LeftNavigation/LeftNavigationMenu.vue'
 import { useUserStore } from './stores/user'
+import TerminalEmulator from './components/TerminalEmulator.vue'
 const userStore = useUserStore()
 
 onMounted(async () => {
@@ -27,10 +28,8 @@ onMounted(async () => {
         </SplitterPanel>
       </Splitter>
     </SplitterPanel>
-    <SplitterPanel :min-size="15" class="p-2">
-      <pre>
-// cmd demo
-      </pre>
+    <SplitterPanel :min-size="15" class="p-0">
+      <TerminalEmulator></TerminalEmulator>
     </SplitterPanel>
   </Splitter>
 
