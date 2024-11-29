@@ -30,7 +30,8 @@ export const create = async newJob => {
     newJob.script &&
     newJob.project_id &&
     newJob.machine_id &&
-    newJob.name
+    newJob.name &&
+    newJob.walltime
   ) {
     const userStore = useUserStore()
     newJob.user_id = userStore.user_id
@@ -39,7 +40,9 @@ export const create = async newJob => {
     const newJobFromServer = await newJobRequest.data
     return newJobFromServer
   } else {
-    throw new Error('Please provide all necessary fields')
+    throw new Error(
+      'Please provide all necessary fields for creating new job! It includes: Cores, Script, Project, Name, Time',
+    )
   }
 }
 

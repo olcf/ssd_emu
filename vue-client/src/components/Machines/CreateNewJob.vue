@@ -278,6 +278,7 @@ export default defineComponent({
         sendingJob.machine_id = this.$route.params.id
         sendingJob.slurm_cores = this.newJob.slurm_cores
         sendingJob.out_file = this.newJob.out_file
+        sendingJob.walltime = this.newJob.walltime
         sendingJob.err_file = this.newJob.err_file
         sendingJob.name = this.newJob.name
 
