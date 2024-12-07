@@ -5,9 +5,51 @@ Emu is a simulation software designed to show the architecture and operational m
 
 
 ## How to install and setup Frontend and Backend
-### Frontend
-### Backend
+1. Download local copy of source code from `https://github.com/olcf/ssd_emu` using `git clone git@github.com:olcf/ssd_emu.git` 
 
+### Backend
+1. Install ruby with rbenv (Fedora)
+    - Install rbenv dependency from [Fedora rbenv](https://developer.fedoraproject.org/start/sw/web-app/rails.html)
+    - When installing rbenv from fedora official repository, it won't have `3.2.2` which is why we need to re install `rbenv` manually.
+    - Clone [ruby-build](https://github.com/rbenv/ruby-build) by `git clone https://github.com/rbenv/ruby-build.git`
+    - Run following command to install `ruby-build`
+    - ```
+        cd ruby-build
+        chmod u+x ./install.sh
+        ./install.sh
+        rbenv install 3.2.2
+      ```
+    - Check the version by running `rbenv --version`
+2. Setup postgresql
+    - Install postgres following instruction at [fedora-postgresql docs](https://docs.fedoraproject.org/en-US/quick-docs/postgresql/).
+    - Install `postgresql-devel` package by `sudo dnf install postgresql-devel` (bundle installer won't work without this package)
+    - Make sure you provide all the privileges to current user.
+3. Install ruby dependencies using Bundler
+    - `cd ssd_emu/rails-server`
+    - `rbenv local 3.2.2`
+    - `bundle install`
+4. Install and setup docker if you haven't already
+    - Install docker following the setup from [Docker Docs](https://docs.docker.com/engine/install/fedora/#install-using-the-repository)
+    - Create a user by `sudo usermod -aG docker $USER`
+    - `newgrp docker`
+    - Restart docker to apply changes `systemctl restart docker`
+5. Setup databases
+    - Create database using `bin/rails db:create`
+    - Load database seed using `bin/rails db:seed`
+    - Migrate database `bin/rails db:migrate`
+6. Launch server
+    - `bin/rails server`
+
+### Frontend
+1. Install Node.js and node modules required for this project.
+    - Install node js using `sudo dnf install nodejs` for Fedora (Our project uses node with version of `v22.11.0`)
+    - Confirm Node.js installation by `node --version` which outputs something like `v22.11.0`.
+2. Install node modules
+    - `cd ssd_emu/vue-client`
+    - Install node modules by running `npm i`.
+3. Run the project
+    - `npm run dev`
+    - Check [localhost:5173](http://localhost:5173) to make sure it is running. 
 
 ##  How to use 
 ### Creating new machine
