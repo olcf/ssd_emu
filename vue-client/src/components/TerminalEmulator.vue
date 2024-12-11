@@ -19,7 +19,6 @@
   </div>
 </template>
 <script setup>
-import { api } from '@/apis'
 import Terminal from './Terminal/Terminal.vue'
 import { ref } from 'vue'
 const maximizedWindow = ref(false)
