@@ -185,11 +185,12 @@
               raised
             />
             <Button
-              icon="pi pi-times"
+              icon="pi pi-trash"
               severity="danger"
-              v-tooltip.bottom="'Cancel this job'"
+              v-tooltip.bottom="'Delete this job'"
               rounded
               raised
+              @click="deleteJob(slotProps.data.id)"
             />
           </span>
         </template>
@@ -203,10 +204,15 @@ import { api } from '@/apis'
 import StyledScript from '@/components/Jobs/StyledScript.vue'
 import StyledOutput from '@/components/Jobs/StyledOutput.vue'
 import { defineComponent } from 'vue'
+import { useConfirm } from 'primevue/useconfirm'
 
 export default defineComponent({
   name: 'SingleMachine',
   components: { StyledScript, StyledOutput },
+  setup() {
+    const confirmDeleteMachine = useConfirm()
+    return { confirmDeleteMachine }
+  },
   data() {
     return {
       VIEW_SCRIPT: false,
@@ -280,6 +286,42 @@ export default defineComponent({
           severity: 'warn',
           summary: 'Warn Message',
           detail: "Couldn't stop the job! " + error,
+          life: 3000,
+        })
+      }
+    },
+    deleteJob: async function (jobId) {
+      try {
+        this.confirmDeleteMachine.require({
+          message: 'Are you sure you want to delete this job?',
+          header: 'Confirmation',
+          icon: 'pi pi-exclamation-triangle',
+          accept: async () => {
+            await api.Job.deleteById(jobId)
+            const deletedJobId = this.jobs.findIndex(job => job.id == jobId)
+            // delete the job from jobs array
+            this.jobs.splice(deletedJobId, 1)
+            this.$toast.add({
+              severity: 'success',
+              summary: 'Success Message',
+              detail: 'Job deleted successfully!',
+              life: 3000,
+            })
+          },
+          reject: () => {
+            this.$toast.add({
+              severity: 'info',
+              summary: 'Info Message',
+              detail: 'You canceled to delete the job!',
+              life: 3000,
+            })
+          },
+        })
+      } catch (error) {
+        this.$toast.add({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: "Couldn't delete the Job! " + error,
           life: 3000,
         })
       }

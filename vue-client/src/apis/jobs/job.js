@@ -46,6 +46,20 @@ export const create = async newJob => {
   }
 }
 
+export const deleteById = async jobId => {
+  if (jobId) {
+    const userStore = useUserStore()
+    let user = {}
+    user.user_id = userStore.user_id
+
+    const deleteJobRequest = await axios.delete(`/jobs/${jobId}`, user)
+    const deletedJob = await deleteJobRequest.data
+    return deletedJob
+  } else {
+    throw new Error('Please provide all necessary fields')
+  }
+}
+
 export const getById = async jobId => {
   if (jobId) {
     const userStore = useUserStore()
