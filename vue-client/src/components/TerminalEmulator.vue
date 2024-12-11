@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%; position: relative">
     <div
       :class="{
         'maximized-window': maximizedWindow,
@@ -63,16 +63,15 @@ TerminalService.on('command', async command => {
   left: 0px;
   height: 100vh;
   width: 100vw;
-  z-index: 100;
+  z-index: 2;
 }
 .minimized-window {
-  position: relative;
   height: 100vh;
 }
 .max-min-icon {
-  position: absolute;
+  position: absolute !important;
   right: 1rem;
   top: 1rem;
-  cursor: pointer;
+  z-index: 3;
 }
 </style>
