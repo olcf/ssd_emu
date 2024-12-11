@@ -40,7 +40,12 @@ const selectTerminal = function () {
 const onKeyDown = function (event) {
   if (event.key === 'Enter' && commandText.value) {
     // execute command
-    commands.value.push({ command: commandText.value, response: 'response' })
+
+    const commandResponse = executeCommand(commandText.value)
+    commands.value.push({
+      command: commandText.value,
+      response: commandResponse,
+    })
 
     // we will reset previous command counter to length  and input value to empty string as next prompt will be new command.
     previousCommandCounter.value = commands.value.length
@@ -49,7 +54,6 @@ const onKeyDown = function (event) {
     if (previousCommandCounter.value > 0) {
       previousCommandCounter.value--
     }
-    console.log('Previous command counter ' + previousCommandCounter.value)
     commandText.value = commands.value[previousCommandCounter.value].command
     console.log(previousCommandCounter.value)
   } else if (event.key === 'ArrowDown') {
@@ -57,6 +61,43 @@ const onKeyDown = function (event) {
       previousCommandCounter.value++
     }
     commandText.value = commands.value[previousCommandCounter.value].command
+  }
+}
+
+const executeCommand = function (command) {
+  const validCommands = [
+    {
+      command: 'info',
+      docs: 'Info command is used to show information about this software!',
+      execute: () => {
+        return 'This application is EMU(Supercomputer emulation program)!'
+      },
+    },
+    {
+      command: 'ls',
+      docs: 'ls works similar to other `ls` command on other applications',
+      execute: () => {
+        throw new Error("Ls don't work with no params")
+      },
+    },
+  ]
+
+  try {
+    const givenMainCommand = command.split(' ')[0]
+    const toBeExecuted = validCommands.find(
+      eachCommand => eachCommand.command == givenMainCommand,
+    )
+    let executedOutput = ''
+    if (toBeExecuted) {
+      executedOutput = toBeExecuted.execute()
+    } else {
+      // error message for command not recognized
+      executedOutput = 'Command not found' + command
+    }
+    return executedOutput
+  } catch (error) {
+    // This is place where we know there was problem with syntax/
+    return 'Error found within command! ' + error
   }
 }
 </script>
