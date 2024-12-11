@@ -1,5 +1,8 @@
 <template>
-  <div class="bg-black h-full flex flex-col p-1" @click="selectTerminal">
+  <div
+    class="bg-black h-full flex flex-col p-1 font-mono"
+    @click="selectTerminal"
+  >
     <span>Welcome to Emu Sim</span>
     <div v-for="(command, index) of commands" :key="index + '-' + command">
       <div class="command-response grid">
@@ -10,14 +13,20 @@
         <span v-html="command.response"> </span>
       </div>
     </div>
-    <div class="user-prompt">
+    <div class="user-prompt flex items-center">
       <span>{{ username }} $:</span>
       <input
         ref="input"
         v-model="commandText"
         autocomplete="off"
         @keydown="onKeyDown"
+        :style="{
+          width: inputWidth,
+          caretColor: 'transparent',
+        }"
+        @input="resizeInput"
       />
+      <span class="blinking-cursor"></span>
     </div>
   </div>
 </template>
@@ -33,9 +42,14 @@ let commands = ref([
 
 const previousCommandCounter = ref(commands.value.length)
 const commandInput = useTemplateRef('input')
+const inputWidth = ref('1ch')
 
 const selectTerminal = function () {
   commandInput.value.focus()
+}
+const resizeInput = function () {
+  const inputLength = commandText.value.length
+  inputWidth.value = `${inputLength}ch`
 }
 const onKeyDown = function (event) {
   if (event.key === 'Enter' && commandText.value) {
@@ -50,6 +64,7 @@ const onKeyDown = function (event) {
     // we will reset previous command counter to length  and input value to empty string as next prompt will be new command.
     previousCommandCounter.value = commands.value.length
     commandText.value = ''
+    resizeInput()
   } else if (event.key === 'ArrowUp') {
     if (previousCommandCounter.value > 0) {
       previousCommandCounter.value--
@@ -101,3 +116,32 @@ const executeCommand = function (command) {
   }
 }
 </script>
+<style scoped>
+input {
+  /* remove all formatting for this input */
+  /* caret property is for controlling the cursor of input */
+  caret-color: rgba(0, 0, 0, 0);
+  all: unset;
+  transition: width 0ms ease;
+}
+.blinking-cursor {
+  display: inline-block;
+  height: 1rem;
+  width: 0.5rem;
+  align-items: end;
+  background-color: white;
+  opacity: 1;
+  animation: blink 1s infinite step-end;
+}
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+</style>

@@ -28,9 +28,6 @@ const maximizeMinimizeTerminal = function () {
 }
 </script>
 <style>
-.terminal-window {
-  font-family: 'Courier New', Courier, monospace;
-}
 .maximized-window {
   position: fixed;
   top: 0px;
