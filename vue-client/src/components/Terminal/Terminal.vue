@@ -1,6 +1,7 @@
 <template>
   <div
-    class="bg-black h-full flex flex-col p-1 font-mono overflow-y-scroll"
+    class="h-full flex flex-col p-1 font-mono overflow-y-scroll"
+    style="background-color: #282a36"
     @click="selectTerminal"
   >
     <span>Welcome to Emu Sim</span>

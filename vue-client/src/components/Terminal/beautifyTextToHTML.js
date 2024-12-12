@@ -36,7 +36,7 @@ export const beautifyTextToHTML = response => {
   // More of this here: https://superuser.com/a/1749987
   finalHTML = finalHTML.replace(
     /\*\*(.*?)\*\*/g,
-    '<cmd style="color:#BD93F9 !important; background-color:#282a36">$1</cmd>',
+    '<cmd style="color:#BD93F9 !important; background-color:#3c3e4a">$1</cmd>',
   )
 
   return finalHTML
