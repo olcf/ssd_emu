@@ -7,7 +7,9 @@
     <div v-for="(command, index) of commands" :key="index + '-' + command">
       <div class="command-response grid">
         <span>
-          <span class="username-prompt"> {{ username + '@emu' }}</span>
+          <span class="username-prompt">
+            {{ userStore.username + '@emu' }}</span
+          >
           <b class="pr-2">$</b>{{ command.command }}
         </span>
         <span v-html="command.response"> </span>
@@ -15,7 +17,7 @@
     </div>
     <div class="user-prompt flex items-center">
       <span
-        ><span class="username-prompt"> {{ username + '@emu' }}</span
+        ><span class="username-prompt"> {{ userStore.username + '@emu' }}</span
         ><b class="pr-2">$ </b>
       </span>
       <input
@@ -37,9 +39,10 @@
 import { ref, useTemplateRef } from 'vue'
 import { validCommands } from './commandController'
 import { parseCommand } from './commandParser'
+import { useUserStore } from '@/stores/user'
 
 let commandText = ref('')
-const username = 'username'
+let username = 'username'
 let commands = ref([
   { command: 'hello', response: '<b>Printed new info</b>' },
   { command: 'hi', response: 'hello' },
@@ -48,6 +51,7 @@ let commands = ref([
 const previousCommandCounter = ref(commands.value.length)
 const commandInput = useTemplateRef('input')
 const inputWidth = ref('0ch')
+const userStore = useUserStore()
 
 const selectTerminal = function () {
   commandInput.value.focus()
