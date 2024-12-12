@@ -12,7 +12,7 @@
           >
           <b class="pr-2">$</b>{{ command.command }}
         </span>
-        <span v-html="command.response"> </span>
+        <span v-html="command.response" class="response"> </span>
       </div>
     </div>
     <div class="user-prompt flex items-center">
@@ -142,5 +142,9 @@ input {
   100% {
     opacity: 1;
   }
+}
+/* styles for cmd components */
+.response key {
+  color: red;
 }
 </style>
