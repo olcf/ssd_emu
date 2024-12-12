@@ -42,7 +42,6 @@ import { parseCommand } from './commandParser'
 import { useUserStore } from '@/stores/user'
 
 let commandText = ref('')
-let username = 'username'
 let commands = ref([
   { command: 'hello', response: '<b>Printed new info</b>' },
   { command: 'hi', response: 'hello' },
