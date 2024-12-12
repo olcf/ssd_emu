@@ -19,7 +19,7 @@
   </div>
 </template>
 <script setup>
-import Terminal from './Terminal/Terminal.vue'
+import Terminal from '@/components/Terminal/Terminal.vue'
 import { ref } from 'vue'
 const maximizedWindow = ref(false)
 

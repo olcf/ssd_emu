@@ -3,7 +3,7 @@ import { onMounted } from 'vue'
 import { RouterView } from 'vue-router'
 import LeftNavigationMenu from './components/LeftNavigation/LeftNavigationMenu.vue'
 import { useUserStore } from './stores/user'
-import TerminalEmulator from './components/TerminalEmulator.vue'
+import TerminalEmulator from './components/Terminal/TerminalEmulator.vue'
 const userStore = useUserStore()
 
 onMounted(async () => {
