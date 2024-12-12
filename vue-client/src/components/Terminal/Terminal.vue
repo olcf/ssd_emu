@@ -1,20 +1,23 @@
 <template>
   <div
-    class="bg-black h-full flex flex-col p-1 font-mono"
+    class="bg-black h-full flex flex-col p-1 font-mono overflow-y-scroll"
     @click="selectTerminal"
   >
     <span>Welcome to Emu Sim</span>
     <div v-for="(command, index) of commands" :key="index + '-' + command">
       <div class="command-response grid">
         <span>
-          {{ username }} $:
-          {{ command.command }}
+          <span class="username-prompt"> {{ username + '@emu' }}</span>
+          <b class="pr-2">$</b>{{ command.command }}
         </span>
         <span v-html="command.response"> </span>
       </div>
     </div>
     <div class="user-prompt flex items-center">
-      <span>{{ username }} $:</span>
+      <span
+        ><span class="username-prompt"> {{ username + '@emu' }}</span
+        ><b class="pr-2">$ </b>
+      </span>
       <input
         ref="input"
         v-model="commandText"
@@ -42,7 +45,7 @@ let commands = ref([
 
 const previousCommandCounter = ref(commands.value.length)
 const commandInput = useTemplateRef('input')
-const inputWidth = ref('1ch')
+const inputWidth = ref('0ch')
 
 const selectTerminal = function () {
   commandInput.value.focus()
@@ -123,6 +126,9 @@ input {
   caret-color: rgba(0, 0, 0, 0);
   all: unset;
   transition: width 0ms ease;
+}
+.username-prompt {
+  color: #189261;
 }
 .blinking-cursor {
   display: inline-block;
