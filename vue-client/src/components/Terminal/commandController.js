@@ -120,6 +120,12 @@ export const validCommands = [
           }
           manSpecificCommandOut +=
             validCommands[askedCommandDocs].docs + '<br/>'
+
+          // if example exists, include it
+          if (validCommands[askedCommandDocs].example) {
+            manSpecificCommandOut += 'Example--<br/>'
+            manSpecificCommandOut += validCommands[askedCommandDocs].example
+          }
         })
       }
 
