@@ -56,11 +56,11 @@ const resizeInput = function () {
   const inputLength = commandText.value.length
   inputWidth.value = `${inputLength}ch`
 }
-const onKeyDown = function (event) {
+const onKeyDown = async function (event) {
   if (event.key === 'Enter' && commandText.value) {
     // execute command
 
-    const commandResponse = executeCommand(commandText.value)
+    const commandResponse = await executeCommand(commandText.value)
     commands.value.push({
       command: commandText.value,
       response: commandResponse,
@@ -88,7 +88,7 @@ const onKeyDown = function (event) {
   }
 }
 
-const executeCommand = function (command) {
+const executeCommand = async function (command) {
   try {
     const parsedCommand = parseCommand(command)
     const toBeExecuted = validCommands.find(
@@ -96,7 +96,7 @@ const executeCommand = function (command) {
     )
     let executedOutput = ''
     if (toBeExecuted) {
-      executedOutput = toBeExecuted.execute(parsedCommand)
+      executedOutput = await toBeExecuted.execute(parsedCommand)
     } else {
       // error message for command not recognized
       executedOutput = 'Command not found' + command
