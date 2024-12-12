@@ -7,6 +7,9 @@
  * }
  */
 
+import { api } from '@/apis'
+import { generateCmdList } from './styleCmdResponse'
+
 export const validCommands = [
   {
     name: 'info',
@@ -17,9 +20,16 @@ export const validCommands = [
   },
   {
     name: 'ls',
-    docs: 'ls works similar to other `ls` command on other applications',
-    execute: command => {
-      throw new Error(command.name + ' Feature on progress')
+    docs: 'ls works similar to other `ls` command on other applications<br/> ls machine: Displays list of all machines that user created',
+    execute: async command => {
+      let lsOutput = ''
+      if (command._args.length === 0 || command._args.includes('machine')) {
+        lsOutput += 'List of machine for your user: <br/>'
+        let listOfMachines = await api.Machine.getAllMachines()
+        listOfMachines = listOfMachines.map(machine => machine.name)
+        lsOutput += generateCmdList(listOfMachines, { numbered: true })
+      }
+      return lsOutput
     },
   },
   {
