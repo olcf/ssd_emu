@@ -1,5 +1,7 @@
 import { api } from '@/apis'
 import { generateCmdList } from './styleCmdResponse'
+import { useCLIStore } from '@/stores/commandLine'
+import { useUserStore } from '@/stores/user'
 
 const loginInformation = `<br/>
 ****************************************************************************<br/>
@@ -73,20 +75,44 @@ export const validCommands = [
       // arguments will be in format username@host, hence splitting by @ and getting second element
       const splittedUserHost = command._args[0].split('@')
       const user = splittedUserHost[0]
-      const host = splittedUserHost[1]
+      let host = splittedUserHost[1] //something like frontier.olcf.ornl.gov
 
+      // if it doesn't include olcf.ornl.gov, we should show them the error
+      if (!host.includes('.olcf.ornl.gov')) {
+        let hostErrorMessage = `You should always add **olcf.ornl.gov** at the end of machine that you are trying to login.<br/> Example: **ssh username@frontier.olcf.ornl.gov** is Valid<br/> **ssh username@frontier** is InValid.<br/>
+        <br/> You may also use login nodes name before **olcf.ornl.gov** like **ssh username@login1.odo.olcf.ornl.gov**
+        Some of the list of popular machine and their login commands could be:<br/>
+        `
+        let listOfValidSSH = [
+          'Frontier: **ssh USERNAME@frontier.olcf.ornl.gov**',
+          'Ascent: **ssh USERNAME@ascent.olcf.ornl.gov**',
+          'Andes: **ssh USERNAME@andes.olcf.ornl.gov**',
+          'Odo: $ **ssh USERNAME@odo.olcf.ornl.gov** or **ssh USERNAME@login1.odo.olcf.ornl.gov**',
+          'Crusher: **ssh USERNAME@crusher.olcf.ornl.gov**',
+        ]
+        hostErrorMessage += generateCmdList(listOfValidSSH, { numbered: true })
+        throw new Error(hostErrorMessage)
+      }
+      // Here we are sure that host they are trying to connect is valid ornl host.
+      // extracting just the machine name part by splitting by ornl host, ('frontier sample.olcf.ornl.gov' to ['frontier sample' '']) and taking first part
+      host = host.split('.olcf.ornl.gov')[0]
       let sshOutput = ''
       let listOfMachines = await api.Machine.getAllMachines()
       let askedHost = listOfMachines.findIndex(machine => machine.name == host)
       if (askedHost < 0) {
         throw new Error('Looks like there is no machine having name ' + host)
+      } else if (useUserStore().getUsername !== user) {
+        throw new Error(
+          'You are trying to log into machine with different username than yours. You should only login to your account in ORNL environment.',
+        )
       } else {
         // TODO: add special stylings here
         sshOutput += `Trying to connect to ${user} with username of ${host} ....! `
         sshOutput += loginInformation
         sshOutput +=
           'In ORNL environment, you will need to enter your password that you have been assigned!<br/>'
-
+        const CLIStore = useCLIStore()
+        CLIStore.selectMachine(listOfMachines[askedHost])
         return sshOutput
       }
     },

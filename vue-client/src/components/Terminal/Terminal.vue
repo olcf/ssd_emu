@@ -17,7 +17,8 @@
     </div>
     <div class="user-prompt flex items-center">
       <span
-        ><span class="username-prompt"> {{ userStore.username + '@emu' }}</span
+        ><span class="username-prompt">
+          {{ userStore.username + '@' + CLIStore.getMachineName }}</span
         ><b class="pr-2">$ </b>
       </span>
       <input
@@ -40,6 +41,7 @@ import { ref, useTemplateRef } from 'vue'
 import { validCommands } from './commandController'
 import { parseCommand } from './commandParser'
 import { useUserStore } from '@/stores/user'
+import { useCLIStore } from '@/stores/commandLine'
 
 let commandText = ref('')
 let commands = ref([
@@ -51,6 +53,7 @@ const previousCommandCounter = ref(commands.value.length)
 const commandInput = useTemplateRef('input')
 const inputWidth = ref('0ch')
 const userStore = useUserStore()
+const CLIStore = useCLIStore()
 
 const selectTerminal = function () {
   commandInput.value.focus()
