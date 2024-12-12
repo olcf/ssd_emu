@@ -35,6 +35,7 @@
 </template>
 <script setup>
 import { ref, useTemplateRef } from 'vue'
+import { validCommands } from './commandController'
 
 let commandText = ref('')
 const username = 'username'
@@ -83,23 +84,6 @@ const onKeyDown = function (event) {
 }
 
 const executeCommand = function (command) {
-  const validCommands = [
-    {
-      command: 'info',
-      docs: 'Info command is used to show information about this software!',
-      execute: () => {
-        return 'This application is EMU(Supercomputer emulation program)!'
-      },
-    },
-    {
-      command: 'ls',
-      docs: 'ls works similar to other `ls` command on other applications',
-      execute: () => {
-        throw new Error("Ls don't work with no params")
-      },
-    },
-  ]
-
   try {
     const givenMainCommand = command.split(' ')[0]
     const toBeExecuted = validCommands.find(
@@ -107,7 +91,7 @@ const executeCommand = function (command) {
     )
     let executedOutput = ''
     if (toBeExecuted) {
-      executedOutput = toBeExecuted.execute()
+      executedOutput = toBeExecuted.execute(command)
     } else {
       // error message for command not recognized
       executedOutput = 'Command not found' + command
@@ -115,7 +99,7 @@ const executeCommand = function (command) {
     return executedOutput
   } catch (error) {
     // This is place where we know there was problem with syntax/
-    return 'Error found within command! ' + error
+    return 'Error occurred while executing the command!<br/> ' + error
   }
 }
 </script>
