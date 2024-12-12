@@ -94,6 +94,10 @@ const onKeyDown = async function (event) {
 const executeCommand = async function (command) {
   try {
     const parsedCommand = parseCommand(command)
+    if (parsedCommand.name === 'clear') {
+      commands.value = []
+      return ''
+    }
     const toBeExecuted = validCommands.find(
       eachCommand => eachCommand.name == parsedCommand.name,
     )
@@ -102,7 +106,7 @@ const executeCommand = async function (command) {
       executedOutput = await toBeExecuted.execute(parsedCommand)
     } else {
       // error message for command not recognized
-      executedOutput = 'Command not found' + command
+      executedOutput = 'Command not found ' + command
     }
     return executedOutput
   } catch (error) {
