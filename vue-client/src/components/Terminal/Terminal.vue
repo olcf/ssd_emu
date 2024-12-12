@@ -42,6 +42,7 @@ import { validCommands } from './commandController'
 import { parseCommand } from './commandParser'
 import { useUserStore } from '@/stores/user'
 import { useCLIStore } from '@/stores/commandLine'
+import { beautifyTextToHTML } from './beautifyTextToHTML'
 
 let commandText = ref('')
 let commands = ref([
@@ -67,9 +68,10 @@ const onKeyDown = async function (event) {
     // execute command
 
     const commandResponse = await executeCommand(commandText.value)
+    const styledHTML = beautifyTextToHTML(commandResponse)
     commands.value.push({
       command: commandText.value,
-      response: commandResponse,
+      response: styledHTML,
     })
 
     // we will reset previous command counter to length  and input value to empty string as next prompt will be new command.
