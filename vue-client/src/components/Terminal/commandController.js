@@ -134,9 +134,11 @@ export const validCommands = [
   },
   {
     name: 'help',
-    docs: 'Use `man` or `man command` instead.',
-    execute: () => {
-      return 'Use `man` or `man command` instead.'
+    docs: 'Alias to man.',
+    execute: command => {
+      // find man
+      const manCommand = validCommands.find(command => command.name === 'man')
+      return manCommand.execute(command)
     },
   },
 ]
