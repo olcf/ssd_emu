@@ -74,13 +74,17 @@ const onKeyDown = function (event) {
     if (previousCommandCounter.value > 0) {
       previousCommandCounter.value--
     }
+    // update cursor and current command
     commandText.value = commands.value[previousCommandCounter.value].command
-    console.log(previousCommandCounter.value)
+    resizeInput()
   } else if (event.key === 'ArrowDown') {
     if (previousCommandCounter.value < commands.value.length - 1) {
       previousCommandCounter.value++
     }
+
+    // update cursor and current command
     commandText.value = commands.value[previousCommandCounter.value].command
+    resizeInput()
   }
 }
 
