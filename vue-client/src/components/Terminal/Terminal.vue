@@ -4,7 +4,7 @@
     style="background-color: #282a36"
     @click="selectTerminal"
   >
-    <span>Welcome to Emu Sim</span>
+    <AsciiEmu></AsciiEmu>
     <div v-for="(command, index) of commands" :key="index + '-' + command">
       <div class="command-response grid">
         <span>
@@ -44,6 +44,7 @@ import { parseCommand } from './commandParser'
 import { useUserStore } from '@/stores/user'
 import { useCLIStore } from '@/stores/commandLine'
 import { beautifyTextToHTML } from './beautifyTextToHTML'
+import AsciiEmu from './AsciiEmu.vue'
 
 let commandText = ref('')
 let commands = ref([
