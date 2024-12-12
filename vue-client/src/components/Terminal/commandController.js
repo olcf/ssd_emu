@@ -9,45 +9,56 @@
 
 export const validCommands = [
   {
-    command: 'info',
+    name: 'info',
     docs: 'Info command is used to show information about this software!',
     execute: () => {
       return 'This application is EMU(Supercomputer emulation program)!'
     },
   },
   {
-    command: 'ls',
+    name: 'ls',
     docs: 'ls works similar to other `ls` command on other applications',
     execute: command => {
-      throw new Error(command + ' Feature on progress')
+      throw new Error(command.name + ' Feature on progress')
     },
   },
   {
-    command: 'man',
+    name: 'man',
     docs: 'gives information for all commands',
     execute: command => {
-      const commandList = command.split(' ')
-      if (commandList.length <= 1) {
-        // create a list of everything in this command except man
+      // if only man is provided.
+      if (command._args.length === 0) {
+        // create a list of docs of each command
         let manOutput = ''
         validCommands.forEach(command => {
-          manOutput += command.command + '  --  ' + command.docs + '<br/>'
+          manOutput += command.name + '  --  ' + command.docs + '<br/>'
         })
         return manOutput
       }
-      const askedCommandDocs = validCommands.findIndex(
-        obj => obj.command == commandList[1],
-      )
-      if (askedCommandDocs == -1) {
-        throw new Error(
-          `Couldn't find documentation of given command '${command}'`,
-        )
+
+      // if asked for specific command
+      let manSpecificCommandOut = ''
+      if (command._args.length > 0) {
+        command._args.forEach(commandName => {
+          const askedCommandDocs = validCommands.findIndex(
+            command => command.name == commandName,
+          )
+
+          if (askedCommandDocs == -1) {
+            throw new Error(
+              `Couldn't find documentation of given command '${commandName}'`,
+            )
+          }
+          manSpecificCommandOut +=
+            validCommands[askedCommandDocs].docs + '<br/>'
+        })
       }
-      return validCommands[askedCommandDocs].docs
+
+      return manSpecificCommandOut
     },
   },
   {
-    command: 'help',
+    name: 'help',
     docs: 'Use `man` or `man command` instead.',
     execute: () => {
       return 'Use `man` or `man command` instead.'

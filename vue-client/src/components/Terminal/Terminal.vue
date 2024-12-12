@@ -36,6 +36,7 @@
 <script setup>
 import { ref, useTemplateRef } from 'vue'
 import { validCommands } from './commandController'
+import { parseCommand } from './commandParser'
 
 let commandText = ref('')
 const username = 'username'
@@ -85,13 +86,13 @@ const onKeyDown = function (event) {
 
 const executeCommand = function (command) {
   try {
-    const givenMainCommand = command.split(' ')[0]
+    const parsedCommand = parseCommand(command)
     const toBeExecuted = validCommands.find(
-      eachCommand => eachCommand.command == givenMainCommand,
+      eachCommand => eachCommand.name == parsedCommand.name,
     )
     let executedOutput = ''
     if (toBeExecuted) {
-      executedOutput = toBeExecuted.execute(command)
+      executedOutput = toBeExecuted.execute(parsedCommand)
     } else {
       // error message for command not recognized
       executedOutput = 'Command not found' + command
