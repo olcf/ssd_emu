@@ -14,6 +14,36 @@ const menuItems = ref([
     icon: 'pi pi-eye',
     route: '/machines/all',
   },
+  {
+    label: 'Missions',
+    icon: 'pi pi-bullseye',
+    items: [
+      {
+        label: 'Understand basics of HPC',
+      },
+      {
+        label: 'Understand basics architecture of machine',
+      },
+      {
+        label: 'Login to two different machines',
+      },
+      {
+        label: 'Create a new job',
+      },
+      {
+        label: 'Run a job from both GUI and CLI',
+      },
+      {
+        label: 'Create jobs for different scenarios',
+      },
+      {
+        label: 'Loading modules',
+      },
+      {
+        label: 'Final mission',
+      },
+    ],
+  },
 ])
 const userStore = useUserStore()
 onMounted(async () => {
