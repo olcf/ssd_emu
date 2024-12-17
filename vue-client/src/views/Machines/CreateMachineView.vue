@@ -89,6 +89,7 @@
 import { ref } from 'vue'
 import { useConfirm } from 'primevue/useconfirm'
 import { api } from '@/apis'
+import router from '@/router'
 
 export default {
   setup() {
@@ -114,6 +115,7 @@ export default {
       try {
         await api.Machine.create(this.machineData)
 
+        router.go()
         this.$toast.add({
           severity: 'success',
           summary: 'Success Message',
