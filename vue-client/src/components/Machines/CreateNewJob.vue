@@ -41,10 +41,12 @@
           id="job-nodes"
           input-id="integeronly"
           :min="1"
-          :max="this.machine.nodes"
           :use-grouping="false"
           v-model="newJob.nodes"
         />
+        <small v-if="newJob.nodes > this.machine.nodes"
+          >Looks like you are requesting nodes more than available!</small
+        >
       </div>
 
       <!-- Job Cores -->
