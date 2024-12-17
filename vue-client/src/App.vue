@@ -18,17 +18,22 @@ onMounted(async () => {
 
   <!-- Here we can create header -->
   <Splitter layout="vertical" class="h-screen">
-    <SplitterPanel :min-size="30">
+    <SplitterPanel :size="96" :min-size="30">
       <Splitter :gutter-size="3">
-        <SplitterPanel :size="10" :min-size="10">
+        <SplitterPanel :size="15" :min-size="10">
           <LeftNavigationMenu />
         </SplitterPanel>
-        <SplitterPanel :min-size="50" class="p-2" style="overflow-y: scroll">
+        <SplitterPanel
+          :size="85"
+          :min-size="50"
+          class="p-2"
+          style="overflow-y: scroll"
+        >
           <RouterView />
         </SplitterPanel>
       </Splitter>
     </SplitterPanel>
-    <SplitterPanel :min-size="15" class="p-0">
+    <SplitterPanel :size="4" :min-size="3" class="p-0">
       <TerminalEmulator></TerminalEmulator>
     </SplitterPanel>
   </Splitter>

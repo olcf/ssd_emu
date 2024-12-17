@@ -42,7 +42,7 @@ const maximizeMinimizeTerminal = function () {
 .max-min-icon {
   position: absolute !important;
   right: 1rem;
-  top: 1rem;
+  top: 3px;
   z-index: 3;
 }
 </style>
