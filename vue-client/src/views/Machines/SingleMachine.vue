@@ -115,7 +115,15 @@
           </div>
         </div>
       </template>
-      <Column field="name" header="Job Name"></Column>
+      <Column field="name" header="Job Name">
+        <template #body="slotProps">
+          <RouterLink
+            :to="'/machine/' + machine.id + '/job/' + slotProps.data.id"
+            class="underline"
+            >{{ slotProps.data.name }}</RouterLink
+          >
+        </template>
+      </Column>
       <Column field="project_name" header="Project Name"></Column>
       <Column field="nodes" header="Nodes"></Column>
       <Column field="script" header="Script">
