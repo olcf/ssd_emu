@@ -5,9 +5,10 @@ class JobsController < ApplicationController
   def index
     query_parameters = request.query_parameters;
     if query_parameters["machine_id"] != nil
-      @jobs = Job.joins(:project).where(machine_id: query_parameters["machine_id"]).select("jobs.*,projects.name as project_name").offset(5)
+      # REVIEW: understand about offset and why it obstructed some results
+      @jobs = Job.joins(:project).where(machine_id: query_parameters["machine_id"]).select("jobs.*,projects.name as project_name")
     else
-      @jobs = Job.joins(:project).select("jobs.*,projects.name as project_name").offset(5)
+      @jobs = Job.joins(:project).select("jobs.*,projects.name as project_name")
     end
 
 
@@ -57,10 +58,10 @@ class JobsController < ApplicationController
       machine_requested = job.machine
       errors = ""
 
-      if job.nodes >= machine_requested.nodes
+      if job.nodes > machine_requested.nodes
         errors += invalid_job_machine_available_generator("nodes",job,machine_requested)
       end
-      if job.cores >= machine_requested.cores
+      if job.cores > machine_requested.cores
         errors += invalid_job_machine_available_generator("cores",job,machine_requested)
       end
 
