@@ -46,6 +46,31 @@ export const create = async newJob => {
   }
 }
 
+export const update = async updatedJob => {
+  if (
+    updatedJob.cores &&
+    updatedJob.script &&
+    updatedJob.project_id &&
+    updatedJob.machine_id &&
+    updatedJob.name &&
+    updatedJob.walltime
+  ) {
+    const userStore = useUserStore()
+    updatedJob.user_id = userStore.user_id
+
+    const updateJobRequest = await axios.put(
+      `/jobs/${updatedJob.id}`,
+      updatedJob,
+    )
+    const updatedJobResult = await updateJobRequest.data
+    return updatedJobResult
+  } else {
+    throw new Error(
+      'Please provide all necessary fields for updating Jobs! It includes: Cores, Script, Project, Name, Time',
+    )
+  }
+}
+
 export const deleteById = async jobId => {
   if (jobId) {
     const userStore = useUserStore()

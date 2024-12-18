@@ -42,6 +42,11 @@ const router = createRouter({
       name: 'SingleJob',
       component: () => import('@/views/Jobs/SingleJob.vue'),
     },
+    {
+      path: '/machine/:id/job/:jobId/edit',
+      name: 'EditJob',
+      component: () => import('@/views/Jobs/EditJob.vue'),
+    },
   ],
 })
 

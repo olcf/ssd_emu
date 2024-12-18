@@ -187,6 +187,7 @@
               @click="viewExecution(slotProps.data.id)"
             />
             <Button
+              @click="navigateToEditJob(slotProps.data.id)"
               icon="pi pi-pencil"
               v-tooltip.bottom="'Edit this Job'"
               rounded
@@ -371,6 +372,18 @@ export default defineComponent({
         name: 'CreateNewJob',
         query: {
           machine: this.machine.name,
+          nodes: this.machine.nodes,
+          cores: this.machine.cores,
+        },
+      })
+    },
+    navigateToEditJob: function (jobId) {
+      this.$router.push({
+        name: 'EditJob',
+        params: {
+          jobId: jobId,
+        },
+        query: {
           nodes: this.machine.nodes,
           cores: this.machine.cores,
         },
