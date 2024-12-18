@@ -1,8 +1,16 @@
 <template>
   <p class="p-1">
-    <span v-if="job.out !== null"> The code ran successfully. </span>
+    <span v-if="job.out !== null">
+      The code ran successfully. Your output was
+      <i class="keyword">{{
+        job.out_file ? ' saved in ' + job.out_file : ' displayed in STDOUT'
+      }}</i>
+    </span>
     <span v-else-if="job.err !== null">
-      You code couldn't run successfully.
+      You code couldn't run successfully. Your output was
+      <i class="keyword">{{
+        job.err_file ? ' saved in ' + job.err_file : ' displayed in STDERR'
+      }}</i>
     </span>
     <span v-else
       >Your Job is currently in <i class="keyword">{{ job.state }} </i> state
