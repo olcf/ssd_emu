@@ -24,14 +24,17 @@
       <StyledScript :job="job"></StyledScript>
     </SplitterPanel>
     <SplitterPanel class="flex flex-col">
-      <span class="text-center p-1"> Output </span>
+      <span class="text-center p-1">
+        {{ job.out ? 'Output' : 'Error' }}
+      </span>
 
       <VCodeBlock
         highlightjs
-        v-if="job.out || job.err"
-        :code="job.out || job.err"
+        v-if="job.out"
+        :code="job.out"
         lang="bash"
       ></VCodeBlock>
+      <span v-else-if="job.err" class="p-2 text-red-500">{{ job.err }}</span>
       <span v-else class="text-center">
         Please run your code to see the output
       </span>
