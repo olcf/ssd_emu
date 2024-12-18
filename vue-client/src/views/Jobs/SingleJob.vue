@@ -23,7 +23,7 @@
         <div class="job-property">
           <span class="property-key">Script:</span>
           <span class="property-value">
-            <StyledScript :job="loadedJob"></StyledScript>
+            <StyledOutput :job="loadedJob"></StyledOutput>
           </span>
         </div>
         <div class="job-property">
@@ -58,10 +58,12 @@
 <script>
 import { api } from '@/apis'
 import StyledScript from '@/components/Jobs/StyledScript.vue'
+import StyledOutput from '@/components/Jobs/StyledOutput.vue'
 
 export default {
   components: {
     StyledScript,
+    StyledOutput,
   },
   data() {
     return {
