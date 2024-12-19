@@ -47,10 +47,8 @@ import { beautifyTextToHTML } from './beautifyTextToHTML'
 import AsciiEmu from './AsciiEmu.vue'
 
 let commandText = ref('')
-let commands = ref([
-  { command: 'hello', response: '<b>Printed new info</b>' },
-  { command: 'hi', response: 'hello' },
-])
+// commands will be an array of objects with format of {command:String, response: HTML String}
+let commands = ref([])
 
 const previousCommandCounter = ref(commands.value.length)
 const commandInput = useTemplateRef('input')
