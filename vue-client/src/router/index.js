@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-
+import AllMachines from '@/views/Machines/AllMachines.vue'
+// TODO: update homepage and re update components here
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: AllMachines,
     },
     {
       path: '/about',
@@ -46,6 +47,16 @@ const router = createRouter({
       path: '/machine/:id/job/:jobId/edit',
       name: 'EditJob',
       component: () => import('@/views/Jobs/EditJob.vue'),
+    },
+    {
+      path: '/missions/understandBasicsHPC',
+      name: 'UnderstandBasicsHPC',
+      component: () => import('@/views/Missions/UnderstandBasicsHPC.vue'),
+    },
+    {
+      path: '/missions/understandArchitecture',
+      name: 'UnderstandArchitecture',
+      component: () => import('@/views/Missions/UnderstandArchitecture.vue'),
     },
   ],
 })

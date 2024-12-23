@@ -20,9 +20,11 @@ const menuItems = ref([
     items: [
       {
         label: 'Understand basics of HPC',
+        route: '/missions/understandBasicsHPC',
       },
       {
         label: 'Understand basics architecture of machine',
+        route: '/missions/understandArchitecture',
       },
       {
         label: 'Login to two different machines',
