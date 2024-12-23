@@ -13,6 +13,12 @@ class MachinesController < ApplicationController
     render json: @machine
   end
 
+  def runCommand
+    givenId = params["id"]
+    # TODO: implement command running for each machine either using job/inside this function
+    
+  end
+
   # POST /machines
   def create
     @machine = Machine.new(machine_params)
