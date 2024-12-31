@@ -1,7 +1,22 @@
 # EMU: Software Services Development Group emulation project
 
 ## Project Description
-Emu is a simulation software designed to show the architecture and operational mechanics of supercomputers used in Oak Ridge National Laboratory. 
+Emu is a simulation software designed to show the architecture and operational mechanics of supercomputers used in Oak Ridge National Laboratory. This application helps beginners to familiarize with job submission, queue systems, and schedulers on HPC environment before actually using it in real HPC systems. 
+### Key Features:
+1. **Customizable Machine Creation and Configuration**  
+   - Users can create virtual HPC machines by specifying parameters like nodes, CPUs, cores, and GCDs per node.  
+   - Helps beginners understand HPC and supercomputer architecture concepts.
+
+2. **Job Creation and Execution**  
+   - Web Interface in each machine helps users to design and submit small HPC jobs, and understand `slurm` scripts.  
+   - Dynamically updates `slurm` scripts as users input each values in the GUI.
+
+3. **Command Line Support**  
+   - The CLI environment supports limited commands for users who haven’t logged in.  
+   - After logging in via SSH, users gain full CLI support created using websockets, replicating a real HPC environment.
+
+4. **Feedback**  
+   - Errors during job submission will provide detailed feedback, helping users understand and correct mistakes.
 
 
 ## How to install and setup Frontend and Backend
@@ -59,3 +74,7 @@ Emu is a simulation software designed to show the architecture and operational m
 @ssd_team
 
 ## TODOs
+ - [ ] Integrate docker component with slurm built inside.
+ - [ ] Use websocket to simulate ssh environment.
+ - [ ] Update missions page with documentation and challenge.
+ - [ ] Add architecture image on each machine page using mermaidJS 
