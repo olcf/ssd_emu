@@ -38,13 +38,14 @@
   </div>
 </template>
 <script setup>
-import { ref, useTemplateRef } from 'vue'
+import { onMounted, ref, useTemplateRef } from 'vue'
 import { validCommands } from './commandController'
 import { parseCommand } from './commandParser'
 import { useUserStore } from '@/stores/user'
 import { useCLIStore } from '@/stores/commandLine'
 import { beautifyTextToHTML } from './beautifyTextToHTML'
 import AsciiEmu from './AsciiEmu.vue'
+import axios from 'axios'
 
 let commandText = ref('')
 // commands will be an array of objects with format of {command:String, response: HTML String}
@@ -55,6 +56,39 @@ const commandInput = useTemplateRef('input')
 const inputWidth = ref('0ch')
 const userStore = useUserStore()
 const CLIStore = useCLIStore()
+let remoteMachineSocket
+
+// Websocket for connecting with remote machine!
+const setupWebSocket = function () {
+  remoteMachineSocket = new WebSocket(axios.defaults.baseURL + '/cable', 'ws')
+  remoteMachineSocket.onopen = () => {
+    const socketInitializerRequest = {
+      command: 'subscribe',
+      identifier: JSON.stringify({
+        id: userStore.user_id,
+        username: userStore.username,
+        channel: 'MachineCliChannel',
+      }),
+    }
+    remoteMachineSocket.send(JSON.stringify(socketInitializerRequest))
+  }
+  remoteMachineSocket.onmessage = event => {
+    const machineResponse = JSON.parse(event.data)
+    if (machineResponse.type === 'ping') {
+      return
+    }
+    console.log('Response from machine ', machineResponse)
+  }
+  remoteMachineSocket.onerror = event => {
+    alert('Error while communicating with remote machine!!' + event)
+  }
+  remoteMachineSocket.onclose = event => {
+    alert('Connection with remote machine closed!!!' + event)
+  }
+}
+onMounted(() => {
+  setupWebSocket()
+})
 
 const selectTerminal = function () {
   commandInput.value.focus()
@@ -63,16 +97,21 @@ const resizeInput = function () {
   const inputLength = commandText.value.length
   inputWidth.value = `${inputLength}ch`
 }
+
 const onKeyDown = async function (event) {
   if (event.key === 'Enter' && commandText.value) {
-    // execute command
-
-    const commandResponse = await executeCommand(commandText.value)
-    const styledHTML = beautifyTextToHTML(commandResponse)
-    commands.value.push({
-      command: commandText.value,
-      response: styledHTML,
-    })
+    // check if user is logged in machine, if so, then connect to machine and run command and print result here
+    if (CLIStore.hasValidMachine) {
+      executeCommandOnRemote(commandText.value)
+    } else {
+      // execute command
+      const commandResponse = await executeCommand(commandText.value)
+      const styledHTML = beautifyTextToHTML(commandResponse)
+      commands.value.push({
+        command: commandText.value,
+        response: styledHTML,
+      })
+    }
 
     // we will reset previous command counter to length  and input value to empty string as next prompt will be new command.
     previousCommandCounter.value = commands.value.length
@@ -118,6 +157,18 @@ const executeCommand = async function (command) {
     // This is place where we know there was problem with syntax/
     return 'Error occurred while executing the command!<br/> ' + error
   }
+}
+
+// TODO: make it work so that backend won't report received unrecognized message
+const executeCommandOnRemote = async function (command) {
+  const sendingMessage = {
+    command: 'execute_command',
+    data: {
+      cmd: command,
+      machine: useCLIStore.getMachineName,
+    },
+  }
+  remoteMachineSocket.send(JSON.stringify(sendingMessage))
 }
 </script>
 <style scoped>
