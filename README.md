@@ -22,6 +22,16 @@ Emu is a simulation software designed to show the architecture and operational m
 ## How to install and setup Frontend and Backend
 1. Download local copy of source code from `https://github.com/olcf/ssd_emu` using `git clone git@github.com:olcf/ssd_emu.git` 
 
+### Docker Setup
+1. Install and setup docker if you haven't already
+    - Install docker following the setup from [Docker Docs](https://docs.docker.com/engine/install/fedora/#install-using-the-repository)
+    - Create a user by `sudo usermod -aG docker $USER`
+    - `newgrp docker`
+    - Restart docker to apply changes `systemctl restart docker`
+2. Build docker components inside our application
+    - `cd ssd_emu/slurm-docker-cluster`
+    - Use `docker compose build` or follow the tutorials in the readme there. 
+    - Run `docker compose up -d` to deploy the containers. 
 ### Backend
 1. Install ruby with rbenv (Fedora)
     - Install rbenv dependency from [Fedora rbenv](https://developer.fedoraproject.org/start/sw/web-app/rails.html)
@@ -43,16 +53,11 @@ Emu is a simulation software designed to show the architecture and operational m
     - `cd ssd_emu/rails-server`
     - `rbenv local 3.2.2`
     - `bundle install`
-4. Install and setup docker if you haven't already
-    - Install docker following the setup from [Docker Docs](https://docs.docker.com/engine/install/fedora/#install-using-the-repository)
-    - Create a user by `sudo usermod -aG docker $USER`
-    - `newgrp docker`
-    - Restart docker to apply changes `systemctl restart docker`
-5. Setup databases
+4. Setup databases
     - Create database using `bin/rails db:create`
     - Load database seed using `bin/rails db:seed`
     - Migrate database `bin/rails db:migrate`
-6. Launch server
+5. Launch server
     - `bin/rails server`
 
 ### Frontend
