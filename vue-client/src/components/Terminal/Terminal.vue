@@ -56,6 +56,7 @@ const commandInput = useTemplateRef('input')
 const inputWidth = ref('0ch')
 const userStore = useUserStore()
 const CLIStore = useCLIStore()
+let socketIdentifier
 let remoteMachineSocket
 
 // Websocket for connecting with remote machine!
@@ -64,11 +65,7 @@ const setupWebSocket = function () {
   remoteMachineSocket.onopen = () => {
     const socketInitializerRequest = {
       command: 'subscribe',
-      identifier: JSON.stringify({
-        id: userStore.user_id,
-        username: userStore.username,
-        channel: 'MachineCliChannel',
-      }),
+      identifier: socketIdentifier,
     }
     remoteMachineSocket.send(JSON.stringify(socketInitializerRequest))
   }
@@ -87,6 +84,12 @@ const setupWebSocket = function () {
   }
 }
 onMounted(() => {
+  // identifies the current user with id and username (something unique about user)
+  socketIdentifier = JSON.stringify({
+    id: userStore.user_id,
+    username: userStore.username,
+    channel: 'MachineCliChannel',
+  })
   setupWebSocket()
 })
 
@@ -162,11 +165,12 @@ const executeCommand = async function (command) {
 // TODO: make it work so that backend won't report received unrecognized message
 const executeCommandOnRemote = async function (command) {
   const sendingMessage = {
-    command: 'execute_command',
-    data: {
+    command: 'message',
+    data: JSON.stringify({
       cmd: command,
       machine: useCLIStore.getMachineName,
-    },
+    }),
+    identifier: socketIdentifier,
   }
   remoteMachineSocket.send(JSON.stringify(sendingMessage))
 }
