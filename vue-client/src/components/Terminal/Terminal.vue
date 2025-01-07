@@ -84,7 +84,6 @@ const setupWebSocket = function () {
         machine: CLIStore.getMachineName,
       })
     }
-    console.log('Response from machine ', machineResponse)
   }
   remoteMachineSocket.onerror = event => {
     alert('Error while communicating with remote machine!!' + event)
