@@ -20,7 +20,7 @@ class MachineCliChannel < ApplicationCable::Channel
   def receive(data)
     # When we receive commands from user, we will perform a job to run that command in docker. 
     user_command = data["command"]
-    result_from_command = @serverContainer.exec(["#{user_command}"])
+    result_from_command = @serverContainer.exec(["bin/bash","-c","#{user_command}"])
     exit_code = result_from_command[2]
     
     # Exit Code of 0 means Success!!!!
