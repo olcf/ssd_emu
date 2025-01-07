@@ -9,7 +9,7 @@
       <div class="command-response grid">
         <span>
           <span class="username-prompt">
-            {{ userStore.username + '@emu' }}</span
+            {{ userStore.username + '@' + command.machine }}</span
           >
           <b class="pr-2">$</b>{{ command.command }}
         </span>
@@ -69,10 +69,20 @@ const setupWebSocket = function () {
     }
     remoteMachineSocket.send(JSON.stringify(socketInitializerRequest))
   }
-  remoteMachineSocket.onmessage = event => {
-    const machineResponse = JSON.parse(event.data)
+  remoteMachineSocket.onmessage = async event => {
+    const machineResponse = await JSON.parse(event.data)
     if (machineResponse.type === 'ping') {
       return
+    }
+
+    if (machineResponse.message) {
+      const machineMessage = await machineResponse.message
+
+      commands.value.push({
+        command: machineMessage.command,
+        response: machineMessage.output || machineMessage.error,
+        machine: CLIStore.getMachineName,
+      })
     }
     console.log('Response from machine ', machineResponse)
   }
@@ -83,15 +93,6 @@ const setupWebSocket = function () {
     alert('Connection with remote machine closed!!!' + event)
   }
 }
-onMounted(() => {
-  // identifies the current user with id and username (something unique about user)
-  socketIdentifier = JSON.stringify({
-    id: userStore.user_id,
-    username: userStore.username,
-    channel: 'MachineCliChannel',
-  })
-  setupWebSocket()
-})
 
 const selectTerminal = function () {
   commandInput.value.focus()
@@ -113,6 +114,7 @@ const onKeyDown = async function (event) {
       commands.value.push({
         command: commandText.value,
         response: styledHTML,
+        machine: 'emu',
       })
     }
 
@@ -151,6 +153,21 @@ const executeCommand = async function (command) {
     let executedOutput = ''
     if (toBeExecuted) {
       executedOutput = await toBeExecuted.execute(parsedCommand)
+
+      // only if executed command is ssh, then initialize websocket
+      if (parsedCommand.name === 'ssh') {
+        commands.value = []
+
+        // identifies the current user with id and username (something unique about user)
+        socketIdentifier = JSON.stringify({
+          id: userStore.user_id,
+          username: userStore.username,
+          channel: 'MachineCliChannel',
+          machine: CLIStore.getMachineName,
+        })
+        setupWebSocket()
+        return ''
+      }
     } else {
       // error message for command not recognized
       executedOutput = 'Command not found ' + command
@@ -167,8 +184,7 @@ const executeCommandOnRemote = async function (command) {
   const sendingMessage = {
     command: 'message',
     data: JSON.stringify({
-      cmd: command,
-      machine: useCLIStore.getMachineName,
+      command: command,
     }),
     identifier: socketIdentifier,
   }
