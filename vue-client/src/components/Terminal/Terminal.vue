@@ -76,11 +76,13 @@ const setupWebSocket = function () {
     }
 
     if (machineResponse.message) {
-      const machineMessage = await machineResponse.message
+      const machineMessage = machineResponse.message
+      const machineOutputError = machineMessage.output || machineMessage.error
 
+      const styledOutput = beautifyTextToHTML(machineOutputError)
       commands.value.push({
         command: machineMessage.command,
-        response: machineMessage.output || machineMessage.error,
+        response: styledOutput,
         machine: CLIStore.getMachineName,
       })
     }

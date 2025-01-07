@@ -4,7 +4,7 @@ const specialKeywords = ['is', 'for']
 
 // Inspired from https://github.com/dracula/notepad-plus-plus/blob/master/Dracula.xml powershell
 export const beautifyTextToHTML = response => {
-  let finalHTML = response
+  let finalHTML = String(response)
 
   // replace numbers with #BD93F9 color
   finalHTML = finalHTML.replace(
@@ -38,6 +38,7 @@ export const beautifyTextToHTML = response => {
     /\*\*(.*?)\*\*/g,
     '<cmd style="color:#BD93F9 !important; background-color:#3c3e4a">$1</cmd>',
   )
+  finalHTML = finalHTML.replace(/\n/g, '<br/>')
 
   return finalHTML
 }
