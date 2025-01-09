@@ -3,30 +3,6 @@ import { generateCmdList } from './styleCmdResponse'
 import { useCLIStore } from '@/stores/commandLine'
 import { useUserStore } from '@/stores/user'
 
-const loginInformation = `<br/>
-****************************************************************************<br/>
-                          NOTICE TO USERS<br/>
-<br/>
-This is a Federal computer system and is the property of the United States<br/>
-Government.  It is for authorized use only.  Users (authorized or<br/>
-unauthorized) have no explicit or implicit expectation of privacy.<br/>
-<br/>
-Any or all uses of this system and all files on this system may be<br/>
-intercepted, monitored, recorded, copied, audited, inspected, and disclosed<br/>
-to authorized site, Department of Energy, and law enforcement personnel, as<br/>
-well as authorized officials of other agencies, both domestic and foreign.<br/>
-By using this system, the user consents to such interception, monitoring,<br/>
-recording, copying, auditing, inspection, and disclosure at the discretion<br/>
-of authorized site or Department of Energy personnel.<br/>
-<br/>
-Unauthorized or improper use of this system may result in administrative<br/>
-disciplinary action and civil and criminal penalties.  By continuing to use<br/>
-this system you indicate your awareness of and consent to these terms and<br/>
-conditions of use.  LOG OFF IMMEDIATELY if you do not agree to the<br/>
-conditions stated in this warning.<br/>
-****************************************************************************<br/>
-`
-
 /**
  * All commands for command line are combined in this file. Every command should have following structure:
  * {
@@ -108,7 +84,6 @@ export const validCommands = [
       } else {
         // TODO: add special stylings here
         sshOutput += `Trying to connect to ${user} with username of ${host} ....! `
-        sshOutput += loginInformation
         sshOutput +=
           'In ORNL environment, you will need to enter your password that you have been assigned!<br/>'
         const CLIStore = useCLIStore()
