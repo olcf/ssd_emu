@@ -9,7 +9,9 @@
       <div class="command-response grid">
         <span>
           <span class="username-prompt">
-            {{ userStore.username + '@' + command.machine }}</span
+            {{
+              `${userStore.username}@${command.machine}${command.path}`
+            }}</span
           >
           <b class="pr-2">$</b>{{ command.command }}
         </span>
@@ -19,7 +21,9 @@
     <div class="user-prompt flex items-center">
       <span
         ><span class="username-prompt">
-          {{ userStore.username + '@' + CLIStore.getMachineName }}</span
+          {{
+            `${userStore.username}@${CLIStore.getMachineName}${commands[commands.length - 1]?.path || ''}`
+          }} </span
         ><b class="pr-2">$ </b>
       </span>
       <input
@@ -84,6 +88,7 @@ const setupWebSocket = function () {
         command: machineMessage.command,
         response: styledOutput,
         machine: CLIStore.getMachineName,
+        path: machineMessage.path,
       })
     }
   }
@@ -112,10 +117,13 @@ const onKeyDown = async function (event) {
       // execute command
       const commandResponse = await executeCommand(commandText.value)
       const styledHTML = beautifyTextToHTML(commandResponse)
+      // if commands array is empty, set it as empty string other wise put last path
+      const lastPath = commands.value.at(-2)?.path || ''
       commands.value.push({
         command: commandText.value,
         response: styledHTML,
         machine: 'emu',
+        path: lastPath,
       })
     }
 
@@ -182,10 +190,12 @@ const executeCommand = async function (command) {
 
 // TODO: make it work so that backend won't report received unrecognized message
 const executeCommandOnRemote = async function (command) {
+  const pathWhileExecute = commands.value.at(-1)?.path
   const sendingMessage = {
     command: 'message',
     data: JSON.stringify({
       command: command,
+      path: pathWhileExecute,
     }),
     identifier: socketIdentifier,
   }
