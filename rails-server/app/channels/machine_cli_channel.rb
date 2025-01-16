@@ -39,19 +39,36 @@ class MachineCliChannel < ApplicationCable::Channel
 WELCOME_TEXT
 
 
-    ActionCable.server.broadcast "MachineCliChannel", {command:"ssh",output:welcome_message}
+    ActionCable.server.broadcast "MachineCliChannel", {command:"ssh",output:welcome_message,error:"", path:"/"}
   end
   def receive(data)
     # When we receive commands from user, we will perform a job to run that command in docker. 
     user_command = data["command"]
-    result_from_command = @serverContainer.exec(["bin/bash","-c","#{user_command}"])
+    user_path = data["path"]
+    user_path = "/" if user_path.nil? || user_path.empty?
+
+    # Adding echo in command will result in array of output, where, first element is the executed output, second element is path obtained from pwd
+    # We will see the current directory using pwd.
+
+    result_from_command = @serverContainer.exec(["bin/bash","-c","cd #{user_path} && #{user_command} && echo ' ' && pwd"])
     exit_code = result_from_command[2]
     
     # Exit Code of 0 means Success!!!!
     if exit_code === 0
-      ActionCable.server.broadcast "MachineCliChannel",{command:user_command,output: result_from_command[0],error:""}
+      output = result_from_command[0]
+      
+      # since user commands may output in multiple length, we are executing pwd on end which is why we will take last
+      user_path = output.last
+      # remove whitespace if we have valid path string
+      user_path = user_path.strip unless user_path.nil?
+      
+      user_output = ""
+      # user will have output if and only if size of output is more than 1, since we will have at least 1 output always due to echo and pwd command 
+      user_output = output[0] if output.length > 1
+
+      ActionCable.server.broadcast "MachineCliChannel",{command:user_command,output: user_output,error:"",path:user_path}
     else
-      ActionCable.server.broadcast "MachineCliChannel",{command:user_command,output: "",error: result_from_command[1]}
+      ActionCable.server.broadcast "MachineCliChannel",{command:user_command,output: "",error: result_from_command[1],path:user_path}
     end
 
 
