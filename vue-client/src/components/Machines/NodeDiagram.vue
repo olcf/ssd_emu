@@ -109,5 +109,4 @@ block-beta
         ${addStyle()}
 
 `)
-alert(nodeDiagram.value)
 </script>
