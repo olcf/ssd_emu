@@ -134,6 +134,16 @@ RUN set -x \
     && ln -s /opt/apps/lmod/lmod/init/profile /etc/profile.d/z00_lmod.sh \
     && ln -s /opt/apps/lmod/lmod/init/cshrc /etc/profile.d/z00_lmod.csh
 
+# adding sample modulefiles for lmod 
+# Cloning sample modulefiles repo from github
+# moving everything inside modulefiles to default modulefiles/Core directory
+WORKDIR /data
+RUN set -x \
+    cd /data/ \
+    && git clone https://github.com/shawfdong/modulefiles.git && ls / \
+    && mv modulefiles/* /opt/apps/lmod/lmod/modulefiles/Core/ \
+    && rm -rf modulefiles
+
 # setting /data as the default directory when users login
 WORKDIR /data
 
