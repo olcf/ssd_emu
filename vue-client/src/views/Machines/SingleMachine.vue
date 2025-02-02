@@ -70,6 +70,7 @@
       </caption>
     </table>
   </div>
+  <NodeDiagram :cores="machine.cores" :gpus="machine.gpus" />
   <div class="p-10 flex gap-10">
     <Button
       icon="pi pi-plus"
@@ -214,10 +215,11 @@ import StyledScript from '@/components/Jobs/StyledScript.vue'
 import StyledOutput from '@/components/Jobs/StyledOutput.vue'
 import { defineComponent } from 'vue'
 import { useConfirm } from 'primevue/useconfirm'
+import NodeDiagram from '@/components/Machines/NodeDiagram.vue'
 
 export default defineComponent({
   name: 'SingleMachine',
-  components: { StyledScript, StyledOutput },
+  components: { StyledScript, StyledOutput, NodeDiagram },
   setup() {
     const confirmDeleteMachine = useConfirm()
     return { confirmDeleteMachine }
