@@ -110,21 +110,26 @@ const resizeInput = function () {
 
 const onKeyDown = async function (event) {
   if (event.key === 'Enter' && commandText.value) {
-    // check if user is logged in machine, if so, then connect to machine and run command and print result here
-    if (CLIStore.hasValidMachine) {
-      executeCommandOnRemote(commandText.value)
-    } else {
-      // execute command
-      const commandResponse = await executeCommand(commandText.value)
-      const styledHTML = beautifyTextToHTML(commandResponse)
-      // if commands array is empty, set it as empty string other wise put last path
-      const lastPath = commands.value.at(-2)?.path || ''
-      commands.value.push({
-        command: commandText.value,
-        response: styledHTML,
-        machine: 'emu',
-        path: lastPath,
-      })
+    // If user enters any command that is available as default commands
+    try {
+      executeGlobalCommand(commandText.value)
+    } catch (error) {
+      // check if user is logged in machine, if so, then connect to machine and run command and print result here
+      if (CLIStore.hasValidMachine) {
+        executeCommandOnRemote(commandText.value)
+      } else {
+        // execute command
+        const commandResponse = await executeCommand(commandText.value)
+        const styledHTML = beautifyTextToHTML(commandResponse)
+        // if commands array is empty, set it as empty string other wise put last path
+        const lastPath = commands.value.at(-2)?.path || ''
+        commands.value.push({
+          command: commandText.value,
+          response: styledHTML,
+          machine: 'emu',
+          path: lastPath,
+        })
+      }
     }
 
     // we will reset previous command counter to length  and input value to empty string as next prompt will be new command.
@@ -148,7 +153,21 @@ const onKeyDown = async function (event) {
     resizeInput()
   }
 }
+const executeGlobalCommand = function (command) {
+  const parsedCommand = parseCommand(command)
+  if (parsedCommand.name === 'clear') {
+    commands.value = []
+    return ''
+  } else if (parsedCommand.name === 'exit') {
+    commands.value = []
+    CLIStore.exitFromMachine()
 
+    return ''
+  } else {
+    // if it reaches to the end, it means we don't have a matching command name so throw a error
+    throw new Error('Unrecognized Command')
+  }
+}
 const executeCommand = async function (command) {
   try {
     const parsedCommand = parseCommand(command)

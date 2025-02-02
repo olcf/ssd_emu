@@ -21,5 +21,8 @@ export const useCLIStore = defineStore('CLIStore', {
     selectMachine(machine) {
       this.machine = machine
     },
+    exitFromMachine() {
+      this.machine = null
+    },
   },
 })
