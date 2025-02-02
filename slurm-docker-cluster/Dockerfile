@@ -126,12 +126,16 @@ RUN set -x \
     && mv /build/${LMOD_VER}.tar.gz /build/Lmod-${LMOD_VER}.tar.gz \
     && tar xvf Lmod-${LMOD_VER}.tar.gz
 
+# need to add WORKDIR to ensure correct installation of lmod
+WORKDIR /build/Lmod-${LMOD_VER}
 RUN set -x \
-    ./configure --prefix=/opt/apps && make install \
+    cd /build/Lmod-${LMOD_VER} \
+    && ./configure --prefix=/opt/apps && make install \
     && ln -s /opt/apps/lmod/lmod/init/profile /etc/profile.d/z00_lmod.sh \
     && ln -s /opt/apps/lmod/lmod/init/cshrc /etc/profile.d/z00_lmod.csh
 
-
+# setting /data as the default directory when users login
+WORKDIR /data
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
