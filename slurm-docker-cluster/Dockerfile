@@ -32,6 +32,27 @@ RUN set -ex \
        vim-enhanced \
        http-parser-devel \
        json-c-devel \
+       tar \
+       which \
+       xz \
+       epel-release \
+       automake \
+       zlib-devel \
+       openssl-devel \
+       unzip \
+       lua \
+       lua-devel \
+       lua-filesystem \
+       lua-json \
+       lua-lpeg \
+       lua-posix \
+       # Couldn't find these packages but lmod still works without them    
+       #    lua-bitop \
+       #    lua-term \
+       # procps provides utility of ps which is required for installing lmod 
+        procps \
+       tcl \
+       tcl-devel \
     && yum clean all \
     && rm -rf /var/cache/yum
 
@@ -91,6 +112,25 @@ COPY slurmdbd.conf /etc/slurm/slurmdbd.conf
 RUN set -x \
     && chown slurm:slurm /etc/slurm/slurmdbd.conf \
     && chmod 600 /etc/slurm/slurmdbd.conf
+
+# Installing lmod using the Dockerfile built by https://github.com/shahzebsiddiqui
+ENV LMOD_VER=8.7.5
+
+
+
+RUN set -x \
+    pwd \
+    && mkdir  /build \
+    && cd /build \
+    && curl -LO http://github.com/TACC/Lmod/archive/${LMOD_VER}.tar.gz \
+    && mv /build/${LMOD_VER}.tar.gz /build/Lmod-${LMOD_VER}.tar.gz \
+    && tar xvf Lmod-${LMOD_VER}.tar.gz
+
+RUN set -x \
+    ./configure --prefix=/opt/apps && make install \
+    && ln -s /opt/apps/lmod/lmod/init/profile /etc/profile.d/z00_lmod.sh \
+    && ln -s /opt/apps/lmod/lmod/init/cshrc /etc/profile.d/z00_lmod.csh
+
 
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
