@@ -9,6 +9,7 @@ const props = defineProps({
   cores: Number,
   gpus: Number,
 })
+// TODO: Ask SSD about the most efficient way to do this
 let lastCPUNames = []
 let CPUNames = []
 let NUMANames = []
@@ -45,11 +46,10 @@ class ${listOfNUMA} NUMA\n
 
   return defaultStyle
 }
-function updateCPU() {
+function addCPU() {
   let numberOfCores = props.cores || 64
   //TODO: remove the default cores
   let numberOfNUMA = numberOfCores / 16 // dividing by 16 will provide number of lines of cores to put in diagram since each line as 16 small cores inside it
-  let numberOfGPUs = props.gpus
   let output = ``
   let CPUctr = 0
 
@@ -98,7 +98,7 @@ block-beta
     columns 2
         block
         columns 1
-        ${updateCPU()}
+        ${addCPU()}
         end
 
         block
