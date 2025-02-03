@@ -49,10 +49,11 @@ WELCOME_TEXT
 
     # Adding echo in command will result in array of output, where, first element is the executed output, second element is path obtained from pwd
     # We will see the current directory using pwd.
-
-    result_from_command = @serverContainer.exec(["bin/bash","-c","cd #{user_path} && #{user_command} && echo ' ' && pwd"])
+    # we are using -l (login shell) to load module list and everything available in /etc/profile
+    # TODO: find a better way to allow user to use commands like module list 
+    # (command 2>&1 combines output and error)
+    result_from_command = @serverContainer.exec(["bin/bash","-l","-c","cd #{user_path} && (#{user_command} 2>&1);  echo ' ' && pwd"])
     exit_code = result_from_command[2]
-    
     # Exit Code of 0 means Success!!!!
     if exit_code === 0
       output = result_from_command[0]
@@ -68,7 +69,7 @@ WELCOME_TEXT
 
       ActionCable.server.broadcast "MachineCliChannel",{command:user_command,output: user_output,error:"",path:user_path}
     else
-      ActionCable.server.broadcast "MachineCliChannel",{command:user_command,output: "",error: result_from_command[1],path:user_path}
+      ActionCable.server.broadcast "MachineCliChannel",{command:user_command,output: "",error: result_from_command[1][0],path:user_path}
     end
 
 
