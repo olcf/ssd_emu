@@ -56,6 +56,39 @@ RUN set -ex \
     && yum clean all \
     && rm -rf /var/cache/yum
 
+# Installing lmod using the Dockerfile built by https://github.com/shahzebsiddiqui
+ENV LMOD_VER=8.7.5
+
+
+
+RUN set -x \
+    && pwd \
+    && mkdir -p /build \
+    && cd /build \
+    && curl -LO http://github.com/TACC/Lmod/archive/${LMOD_VER}.tar.gz \
+    && mv /build/${LMOD_VER}.tar.gz /build/Lmod-${LMOD_VER}.tar.gz \
+    && tar xvf Lmod-${LMOD_VER}.tar.gz
+
+# need to change to /build/Lmod-${LMOD_VER} to install everything in that directory using make
+RUN set -x \
+    && cd /build/Lmod-${LMOD_VER} \
+    && ./configure --prefix=/opt/apps && make install \
+    && ln -s /opt/apps/lmod/lmod/init/profile /etc/profile.d/z00_lmod.sh \
+    && ln -s /opt/apps/lmod/lmod/init/cshrc /etc/profile.d/z00_lmod.csh
+
+# adding sample modulefiles for lmod 
+# Cloning sample modulefiles repo from github
+# moving everything inside modulefiles to default modulefiles/Core directory
+# cleaning up build directories
+RUN set -x \
+    && mkdir -p /build/modules_install \
+    && cd /build/modules_install/ \
+    && git clone https://github.com/shawfdong/modulefiles.git && ls / \
+    && mv modulefiles/* /opt/apps/lmod/lmod/modulefiles/Core/ \
+    && rm -rf /build
+
+
+
 RUN alternatives --set python /usr/bin/python3
 
 RUN pip3 install Cython pytest
@@ -113,39 +146,7 @@ RUN set -x \
     && chown slurm:slurm /etc/slurm/slurmdbd.conf \
     && chmod 600 /etc/slurm/slurmdbd.conf
 
-# Installing lmod using the Dockerfile built by https://github.com/shahzebsiddiqui
-ENV LMOD_VER=8.7.5
 
-
-
-RUN set -x \
-    pwd \
-    && mkdir  /build \
-    && cd /build \
-    && curl -LO http://github.com/TACC/Lmod/archive/${LMOD_VER}.tar.gz \
-    && mv /build/${LMOD_VER}.tar.gz /build/Lmod-${LMOD_VER}.tar.gz \
-    && tar xvf Lmod-${LMOD_VER}.tar.gz
-
-# need to add WORKDIR to ensure correct installation of lmod
-WORKDIR /build/Lmod-${LMOD_VER}
-RUN set -x \
-    cd /build/Lmod-${LMOD_VER} \
-    && ./configure --prefix=/opt/apps && make install \
-    && ln -s /opt/apps/lmod/lmod/init/profile /etc/profile.d/z00_lmod.sh \
-    && ln -s /opt/apps/lmod/lmod/init/cshrc /etc/profile.d/z00_lmod.csh
-
-# adding sample modulefiles for lmod 
-# Cloning sample modulefiles repo from github
-# moving everything inside modulefiles to default modulefiles/Core directory
-WORKDIR /data
-RUN set -x \
-    cd /data/ \
-    && git clone https://github.com/shawfdong/modulefiles.git && ls / \
-    && mv modulefiles/* /opt/apps/lmod/lmod/modulefiles/Core/ \
-    && rm -rf modulefiles
-
-# setting /data as the default directory when users login
-WORKDIR /data
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
