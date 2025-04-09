@@ -4,7 +4,7 @@
     style="background-color: #282a36"
     @click="selectTerminal"
   >
-    <AsciiEmu></AsciiEmu>
+    <AsciiEmu v-if="commands.length < 1"></AsciiEmu>
     <div v-for="(command, index) of commands" :key="index + '-' + command">
       <div class="command-response grid">
         <span>
