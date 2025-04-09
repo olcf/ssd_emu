@@ -156,7 +156,11 @@ const onKeyDown = async function (event) {
 const executeGlobalCommand = function (command) {
   const parsedCommand = parseCommand(command)
   if (parsedCommand.name === 'clear') {
+    let lastCommand = commands.value.pop()
+    lastCommand.response = ''
+    lastCommand.command = 'clear'
     commands.value = []
+    commands.value.push(lastCommand)
     return ''
   } else if (parsedCommand.name === 'exit') {
     commands.value = []

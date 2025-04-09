@@ -36,7 +36,7 @@ class MachineCliChannel < ApplicationCable::Channel
     conditions of use.  LOG OFF IMMEDIATELY if you do not agree to the 
     conditions stated in this warning. 
     ############################################################################
-WELCOME_TEXT
+    WELCOME_TEXT
 
 
     ActionCable.server.broadcast "MachineCliChannel", {command:"ssh",output:welcome_message,error:"", path:"/"}
@@ -52,7 +52,11 @@ WELCOME_TEXT
     # we are using -l (login shell) to load module list and everything available in /etc/profile
     # TODO: find a better way to allow user to use commands like module list 
     # (command 2>&1 combines output and error)
-    result_from_command = @serverContainer.exec(["bin/bash","-l","-c","cd #{user_path} && (#{user_command} 2>&1);  echo ' ' && pwd"])
+    if user_command == "pwd"
+      result_from_command = @serverContainer.exec(["bin/bash","-l","-c","cd #{user_path} && (#{user_command} 2>&1);  echo ' ' && pwd"])
+    else
+      result_from_command = @serverContainer.exec(["bin/bash","-l","-c","cd #{user_path} && #{user_command} && echo ' ' && pwd"])
+    end
     exit_code = result_from_command[2]
     # Exit Code of 0 means Success!!!!
     if exit_code === 0
