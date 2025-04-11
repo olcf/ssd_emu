@@ -12,6 +12,9 @@ export const useUserStore = defineStore('user', {
     getUsername(state) {
       return state.username
     },
+    getUserId(state) {
+      return state.user_id
+    },
   },
   actions: {
     async login() {
