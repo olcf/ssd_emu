@@ -61,6 +61,15 @@ onMounted(async () => {
     route: '/createNewMachine',
   })
   menuItems.value[0].items = machines
+
+  // add all missions to menu items
+  const allMissions = await api.Mission.getAllMissions()
+  allMissions.forEach(mission => {
+    mission.icon = 'pi pi-bullseye'
+    mission.label = mission.title
+    mission.route = '/mission/' + mission.id
+  })
+  menuItems.value[2].items = allMissions
 })
 </script>
 

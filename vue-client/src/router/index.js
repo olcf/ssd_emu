@@ -49,6 +49,11 @@ const router = createRouter({
       component: () => import('@/views/Jobs/EditJob.vue'),
     },
     {
+      path: '/mission/:id',
+      name: 'SingleMission',
+      component: () => import('@/views/Missions/SingleMission.vue'),
+    },
+    {
       path: '/missions/understandBasicsHPC',
       name: 'UnderstandBasicsHPC',
       component: () => import('@/views/Missions/UnderstandBasicsHPC.vue'),
