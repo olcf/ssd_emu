@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resources :chapters
   resources :quizzes
   resources :missions
+  get 'mission_with_chapters/:id', to: 'missions#mission_with_chapters'
   resources :projects
 
   resources :jobs

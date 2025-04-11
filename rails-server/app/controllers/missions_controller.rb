@@ -13,6 +13,17 @@ class MissionsController < ApplicationController
     render json: @mission
   end
 
+  # GET /mission_with_chapters/1
+  def mission_with_chapters
+    missionId = params[:id]
+    missions = Mission.find(missionId)
+    render json: missions.as_json(include: {
+      chapters:{
+        except: [:content]
+      }
+    })
+  end
+
   # POST /missions
   def create
     @mission = Mission.new(mission_params)
