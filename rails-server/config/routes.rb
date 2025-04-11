@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :chapters
   resources :quizzes
   resources :missions
   resources :projects
