@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :quizzes
+  resources :missions
   resources :projects
 
   resources :jobs

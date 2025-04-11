@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_09_185616) do
+ActiveRecord::Schema[7.0].define(version: 2025_04_11_004735) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "chapters", force: :cascade do |t|
+    t.bigint "mission_id", null: false
+    t.string "title"
+    t.text "content"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mission_id"], name: "index_chapters_on_mission_id"
+  end
 
   create_table "jobs", force: :cascade do |t|
     t.integer "nodes"
@@ -53,11 +63,55 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_09_185616) do
     t.index ["user_id"], name: "index_machines_on_user_id"
   end
 
+  create_table "missions", force: :cascade do |t|
+    t.string "title"
+    t.text "content"
+    t.integer "difficulty_level"
+    t.boolean "is_completed"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "projects", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_projects_on_name", unique: true
+  end
+
+  create_table "quizzes", force: :cascade do |t|
+    t.bigint "chapter_id", null: false
+    t.text "question"
+    t.string "question_type"
+    t.jsonb "options"
+    t.integer "correct_option_index"
+    t.text "explanation"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chapter_id"], name: "index_quizzes_on_chapter_id"
+  end
+
+  create_table "user_chapters", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "chapter_id", null: false
+    t.boolean "completed"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chapter_id"], name: "index_user_chapters_on_chapter_id"
+    t.index ["user_id"], name: "index_user_chapters_on_user_id"
+  end
+
+  create_table "user_missions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "mission_id", null: false
+    t.boolean "completed"
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mission_id"], name: "index_user_missions_on_mission_id"
+    t.index ["user_id"], name: "index_user_missions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -72,8 +126,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_09_185616) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "chapters", "missions"
   add_foreign_key "jobs", "machines"
   add_foreign_key "jobs", "projects"
   add_foreign_key "jobs", "users"
   add_foreign_key "machines", "users"
+  add_foreign_key "quizzes", "chapters"
+  add_foreign_key "user_chapters", "chapters"
+  add_foreign_key "user_chapters", "users"
+  add_foreign_key "user_missions", "missions"
+  add_foreign_key "user_missions", "users"
 end
