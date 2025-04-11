@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  mission: one
+  completed: false
+  started_at: 2025-04-10 19:47:25
+  completed_at: 2025-04-10 19:47:25
+
+two:
+  user: two
+  mission: two
+  completed: false
+  started_at: 2025-04-10 19:47:25
+  completed_at: 2025-04-10 19:47:25

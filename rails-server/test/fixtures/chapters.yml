@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  mission: one
+  title: MyString
+  content: MyText
+  position: 1
+
+two:
+  mission: two
+  title: MyString
+  content: MyText
+  position: 1

@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  content: MyText
+  difficulty_level: 1
+  is_completed: false
+
+two:
+  title: MyString
+  content: MyText
+  difficulty_level: 1
+  is_completed: false

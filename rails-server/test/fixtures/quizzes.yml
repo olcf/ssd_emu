@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  chapter: one
+  question: MyText
+  question_type: MyString
+  options: 
+  correct_option_index: 1
+  explanation: MyText
+
+two:
+  chapter: two
+  question: MyText
+  question_type: MyString
+  options: 
+  correct_option_index: 1
+  explanation: MyText
