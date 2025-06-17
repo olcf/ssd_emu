@@ -16,7 +16,6 @@ export const getMissionWithChapters = async id => {
   const missionWithChapters = await axios.get(`/mission_with_chapters/${id}`, {
     headers: {
       user_id: userStore.getUserId,
-      lol: 'lol info',
     },
   })
   const currentMissionWithChapters = await missionWithChapters.data

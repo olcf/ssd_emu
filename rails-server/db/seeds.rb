@@ -64,5 +64,72 @@ end
 
 puts "Completed creating #{jobs.length()} jobs!"
 
+puts "\nCreating Quizzes, Chapters, and Missions! "
+
+# Create Missions
+understandBasicsHPCMission = "Understand the Basics of HPC"
+
+Mission.find_or_create_by(title: understandBasicsHPCMission, is_completed: false, content: "Description of the mission", difficulty_level: 1)
+
+# Create Chapters
+firstMissionId = Mission.find_by(title: understandBasicsHPCMission).id
+basicsHPCChapters = [
+  {title: "Introduction to HPC", mission_id: firstMissionId, content: "Introduction to HPC"},
+  {title: "Understand basic architecture of machine", mission_id: firstMissionId, content: "Understand basic architecture of machine"},
+  {title: "Login to two different machines", mission_id: firstMissionId, content: "Login to two different machines"},
+  {title: "Create a new job", mission_id: firstMissionId, content: "Create a new job"},
+  {title: "Run a job from both GUI and CLI", mission_id: firstMissionId, content: "Run a job from both GUI and CLI"},
+  {title: "Create jobs for different scenarios", mission_id: firstMissionId, content: "Create jobs for different scenarios"},
+  {title: "Loading modules", mission_id: firstMissionId, content: "Loading modules"},
+]
+basicsHPCChapters.each do |chapter|
+  Chapter.find_or_create_by(chapter)
+end
+
+intro_chapter = Chapter.find_by(title: "Introduction to HPC")
+Quiz.create!([
+  {
+    chapter: intro_chapter,
+    question: "What does HPC stand for?",
+    question_type: "mcq",
+    options: ["High Processing Capability", "High-Performance Computing", "Hybrid Parallel Cluster", "Hyper Precision Control"],
+    correct_option_index: 1,
+    explanation: "HPC stands for High-Performance Computing, used to solve complex problems with powerful computing systems."
+  },
+  {
+    chapter: intro_chapter,
+    question: "Which of the following is a common goal of HPC?",
+    question_type: "mcq",
+    options: ["Reducing monitor latency", "Maximizing FPS in games", "Solving large-scale computational problems", "Running social media apps faster"],
+    correct_option_index: 2,
+    explanation: "HPC is used to solve large-scale scientific, engineering, or data-intensive problems efficiently."
+  },
+  {
+    chapter: intro_chapter,
+    question: "Which area commonly uses HPC?",
+    question_type: "mcq",
+    options: ["Mobile App Development", "Genomic Sequencing", "UI Design", "Spreadsheet Formatting"],
+    correct_option_index: 1,
+    explanation: "Genomic sequencing, climate modeling, and simulations are major HPC use cases."
+  },
+  {
+    chapter: intro_chapter,
+    question: "Which of these best describes a supercomputer?",
+    question_type: "mcq",
+    options: ["A regular desktop with extra RAM", "A smartphone with AI features", "A high-speed computer system used for intensive tasks", "A web server running multiple sites"],
+    correct_option_index: 2,
+    explanation: "A supercomputer is designed to perform complex calculations at high speed, often used in HPC contexts."
+  },
+  {
+    chapter: intro_chapter,
+    question: "What kind of computing does HPC focus on?",
+    question_type: "mcq",
+    options: ["Serial computing", "Single-core processing", "Massively parallel processing", "Blockchain processing"],
+    correct_option_index: 2,
+    explanation: "HPC typically leverages massively parallel processing to achieve high performance."
+  }
+])
+
+
 
 puts "\nSeeding Completed!"

@@ -16,12 +16,19 @@ class MissionsController < ApplicationController
   # GET /mission_with_chapters/1
   def mission_with_chapters
     missionId = params[:id]
+    userId = request.headers['user_id']
+    
     missions = Mission.find(missionId)
-    render json: missions.as_json(include: {
-      chapters:{
-        except: [:content]
-      }
-    })
+    
+    # Get user chapter completion status for all chapters in this mission
+    chapters_with_completion = missions.chapters.map do |chapter|
+      userChapter = UserChapter.find_by(user_id: userId, chapter_id: chapter.id)
+      is_completed = userChapter&.completed || false
+      
+      chapter.as_json(except: [:content]).merge(is_completed: is_completed)
+    end
+    
+    render json: missions.as_json(except: [:chapters]).merge(chapters: chapters_with_completion)
   end
 
   # POST /missions

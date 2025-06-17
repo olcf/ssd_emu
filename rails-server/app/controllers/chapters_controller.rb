@@ -10,7 +10,17 @@ class ChaptersController < ApplicationController
 
   # GET /chapters/1
   def show
-    render json: @chapter
+    userId = request.headers['user_id']
+    
+    # Get user chapter completion status
+    userChapter = UserChapter.find_by(user_id: userId, chapter_id: @chapter.id)
+    is_completed = userChapter&.completed || false
+    
+    render json: @chapter.as_json(include: {
+      quizzes: {
+        except: [:created_at, :updated_at]
+      }
+    }).merge(is_completed: is_completed)
   end
 
   # POST /chapters

@@ -51,7 +51,13 @@ const router = createRouter({
     {
       path: '/mission/:id',
       name: 'SingleMission',
+      
       component: () => import('@/views/Missions/SingleMission.vue'),
+    },
+    {
+      path: '/mission/:missionId/chapter/:chapterId',
+      name: 'SingleChapter',
+      component: () => import('@/views/Missions/Chapters/SingleChapter.vue'),
     },
     {
       path: '/missions/understandBasicsHPC',

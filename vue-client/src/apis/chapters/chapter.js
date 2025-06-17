@@ -10,3 +10,25 @@ export const getAllChaptersByMissionId = async id => {
   const chaptersResult = await allChapters.data
   return chaptersResult
 }
+
+export const getChapterById = async id => {
+  const userStore = useUserStore()
+  const allChapters = await axios.get(`/chapters/${id}`, {
+    headers: {
+      user_id: userStore.getUserId,
+    },
+  })
+  const chaptersResult = await allChapters.data
+  return chaptersResult
+}
+
+export const getChapterWithQuizzes = async id => {
+  const userStore = useUserStore()
+  const chapterWithQuizzes = await axios.get(`/chapters/${id}`, {
+    headers: {
+      user_id: userStore.getUserId,
+    },
+  })
+  const currentChapterWithQuizzes = await chapterWithQuizzes.data
+  return currentChapterWithQuizzes
+}
