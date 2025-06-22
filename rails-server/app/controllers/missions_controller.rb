@@ -1,5 +1,5 @@
 class MissionsController < ApplicationController
-  before_action :set_mission, only: %i[ show update destroy ]
+  before_action :set_mission, only: %i[ show update destroy check_completion ]
 
   # GET /missions
   def index
@@ -16,7 +16,8 @@ class MissionsController < ApplicationController
   # GET /mission_with_chapters/1
   def mission_with_chapters
     missionId = params[:id]
-    userId = request.headers['user_id']
+    userId = request.headers['HTTP_USER_ID'] || params[:user_id]
+
     
     missions = Mission.find(missionId)
     
@@ -54,6 +55,53 @@ class MissionsController < ApplicationController
   # DELETE /missions/1
   def destroy
     @mission.destroy
+  end
+
+
+
+  # POST /missions/:id/check_completion
+  def check_completion
+    userId = request.headers['user_id']
+    
+    if userId.blank?
+      render json: { error: 'User ID is required' }, status: :bad_request
+      return
+    end
+    
+    # Check if all chapters are completed
+    all_chapters_completed = @mission.chapters.all? do |chapter|
+      userChapter = UserChapter.find_by(user_id: userId, chapter_id: chapter.id)
+      userChapter&.completed || false
+    end
+    
+    if all_chapters_completed
+      # Mark mission as completed
+      userMission = UserMission.find_or_create_by(
+        user_id: userId,
+        mission_id: @mission.id
+      )
+      
+      userMission.completed = true
+      userMission.completed_at = Time.current
+      userMission.save
+      
+      render json: { 
+        success: true, 
+        message: 'Mission completed!',
+        mission_id: @mission.id,
+        completed_at: userMission.completed_at
+      }
+    else
+      render json: { 
+        success: false, 
+        message: 'Mission not yet completed',
+        completed_chapters: @mission.chapters.count { |chapter|
+          userChapter = UserChapter.find_by(user_id: userId, chapter_id: chapter.id)
+          userChapter&.completed || false
+        },
+        total_chapters: @mission.chapters.count
+      }
+    end
   end
 
   private

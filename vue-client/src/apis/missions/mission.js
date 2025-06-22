@@ -2,10 +2,7 @@ import { useUserStore } from '@/stores/user'
 import axios from 'axios'
 
 export const getAllMissions = async () => {
-  const userStore = useUserStore()
-  const allMissions = await axios.get('/missions', {
-    user_id: userStore.user_id,
-  })
+  const allMissions = await axios.get('/missions')
   const missionsResult = await allMissions.data
   return missionsResult
 }
@@ -20,4 +17,14 @@ export const getMissionWithChapters = async id => {
   })
   const currentMissionWithChapters = await missionWithChapters.data
   return currentMissionWithChapters
+}
+
+export const checkMissionCompletion = async id => {
+  const userStore = useUserStore()
+  const response = await axios.post(`/missions/${id}/check_completion`, {}, {
+    headers: {
+      user_id: userStore.getUserId,
+    },
+  })
+  return response.data
 }

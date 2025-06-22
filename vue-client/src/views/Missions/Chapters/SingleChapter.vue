@@ -178,6 +178,9 @@ export default defineComponent({
     
     async handleAllQuizzesCompleted() {
       try {
+        // Call backend API to mark chapter as completed
+        await api.Chapter.completeChapter(this.$route.params.chapterId)
+        
         // Mark chapter as completed
         this.chapter.is_completed = true
         
@@ -187,12 +190,27 @@ export default defineComponent({
           detail: 'Chapter completed successfully!',
           life: 3000,
         })
+        
+        // Check if mission is completed
+        try {
+          const missionCompletion = await api.Mission.checkMissionCompletion(this.$route.params.missionId)
+          if (missionCompletion.success) {
+            this.$toast?.add({
+              severity: 'success',
+              summary: 'Mission Complete!',
+              detail: 'Congratulations! You have completed the entire mission!',
+              life: 5000,
+            })
+          }
+        } catch (missionError) {
+          console.error('Error checking mission completion:', missionError)
+        }
       } catch (error) {
         console.error('Error completing chapter:', error)
         this.$toast?.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Failed to complete chapter',
+          detail: 'Failed to complete chapter. Please try again.',
           life: 3000,
         })
       }

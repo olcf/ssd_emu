@@ -1,5 +1,5 @@
 class ChaptersController < ApplicationController
-  before_action :set_chapter, only: %i[ show update destroy ]
+  before_action :set_chapter, only: %i[ show update destroy complete ]
 
   # GET /chapters
   def index
@@ -21,6 +21,44 @@ class ChaptersController < ApplicationController
         except: [:created_at, :updated_at]
       }
     }).merge(is_completed: is_completed)
+  end
+
+  # POST /chapters/:id/complete
+  def complete
+    # Try to get user_id from headers first, then from params
+    userId = request.headers['user_id'] || params[:user_id]
+    
+    if userId.blank?
+      render json: { error: 'User ID is required' }, status: :bad_request
+      return
+    end
+    
+    # Convert to integer if it's a string
+    userId = userId.to_i if userId.is_a?(String) && userId.match?(/^\d+$/)
+    
+    # Find or create user chapter record
+    userChapter = UserChapter.find_or_create_by(
+      user_id: userId,
+      chapter_id: @chapter.id
+    )
+    # Mark chapter as completed
+    userChapter.completed = true
+    userChapter.completed_at = Time.current
+    
+    if userChapter.save
+      render json: { 
+        success: true, 
+        message: 'Chapter completed successfully!',
+        chapter_id: @chapter.id,
+        completed_at: userChapter.completed_at
+      }
+    else
+      render json: { 
+        success: false, 
+        error: 'Failed to complete chapter',
+        errors: userChapter.errors.full_messages
+      }, status: :unprocessable_entity
+    end
   end
 
   # POST /chapters

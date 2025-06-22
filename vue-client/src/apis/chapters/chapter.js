@@ -32,3 +32,17 @@ export const getChapterWithQuizzes = async id => {
   const currentChapterWithQuizzes = await chapterWithQuizzes.data
   return currentChapterWithQuizzes
 }
+
+export const completeChapter = async id => {
+  const userStore = useUserStore()
+  const userId = userStore.getUserId
+  
+  const response = await axios.post(`/chapters/${id}/complete`, {
+    user_id: userId
+  }, {
+    headers: {
+      user_id: userId,
+    },
+  })
+  return response.data
+}
