@@ -76,58 +76,55 @@ firstMissionId = Mission.find_by(title: understandBasicsHPCMission).id
 
 # Understand basic architecture of machines:
 understandBasicArchitectureOfMachines = <<~CONTENT
-    High-Performance Computing (HPC) systems rely on sophisticated architectures to perform complex simulations and data analysis efficiently. This chapter introduces three important machines at the Oak Ridge Leadership Computing Facility (OLCF): **Odo**, **Frontier**, and **Andes**.
+High-Performance Computing (HPC) systems rely on sophisticated architectures to perform complex simulations and data analysis efficiently. This chapter introduces three important machines at the Oak Ridge Leadership Computing Facility (OLCF): **Odo**, **Frontier**, and **Andes**.
+### 🖥️ Odo
+Odo is a 32-node training system designed to provide hands-on HPC experience through OLCF training events. Although it shares the same architecture as Frontier, Odo is not intended as a production resource and is located in the NCCS Open Security Enclave, which allows for streamlined access during training.
 
-    ### 🖥️ Odo
-    Odo is a 32-node training system designed to provide hands-on HPC experience through OLCF training events. Although it shares the same architecture as Frontier, Odo is not intended as a production resource and is located in the NCCS Open Security Enclave, which allows for streamlined access during training.
+**Key features of Odo nodes:**
+- 32 nodes total (2 login nodes, 30 compute nodes)
+- Each compute node has:
+  - 1× 64-core AMD “Optimized 3rd Gen EPYC” CPU (with 2 hardware threads per core)
+  - 4× AMD MI250X GPUs (each MI250X with 2 Graphics Compute Dies, totaling 8 GPUs per node)
+  - 512 GB DDR4 memory
+- File systems differ from Frontier due to enclave separation:
+  - NFS personal home directories: `/ccsopen/home/[userid]`
+  - NFS project directories: `/ccsopen/proj/[projid]`
+  - GPFS parallel file system (wolf2) with directories for project-shared, scratch, and world-shared data
+- Primarily used for training, so access is granted through OLCF events only
 
-    **Key features of Odo nodes:**
-    - 32 nodes total (2 login nodes, 30 compute nodes)
-    - Each compute node has:
-      - 1× 64-core AMD “Optimized 3rd Gen EPYC” CPU (with 2 hardware threads per core)
-      - 4× AMD MI250X GPUs (each MI250X with 2 Graphics Compute Dies, totaling 8 GPUs per node)
-      - 512 GB DDR4 memory
-    - File systems differ from Frontier due to enclave separation:
-      - NFS personal home directories: `/ccsopen/home/[userid]`
-      - NFS project directories: `/ccsopen/proj/[projid]`
-      - GPFS parallel file system (wolf2) with directories for project-shared, scratch, and world-shared data
-    - Primarily used for training, so access is granted through OLCF events only
+For detailed hardware architecture, the Frontier User Guide applies well to Odo compute nodes.
 
-    For detailed hardware architecture, the Frontier User Guide applies well to Odo compute nodes.
+### ⚡ Frontier – The Exascale Supercomputer
 
-    ### ⚡ Frontier – The Exascale Supercomputer
-    Frontier is the world’s first exascale supercomputer, a HPE Cray EX system delivering a peak of approximately 2 exaflops. It powers cutting-edge science with a hybrid CPU-GPU architecture.
+Frontier is the world’s first exascale supercomputer, a HPE Cray EX system delivering a peak of approximately 2 exaflops. It powers cutting-edge science with a hybrid CPU-GPU architecture.
 
-    **Key specs:**
-    - 9,856 compute nodes, each with:
-      - 1× 64-core AMD Optimized 3rd Gen EPYC CPU
-      - 4× AMD MI250X GPUs (8 GPUs total per node)
-      - 512 GB DDR4 RAM
-    - Advanced Infinity Fabric connections enabling high bandwidth CPU-GPU and GPU-GPU communication
-    - Slingshot interconnect providing up to 800 Gbps per node for fast node-to-node communication
-    - File systems:
-      - Orion Lustre parallel filesystem (679 PB usable)
-      - On-node NVMe burst buffer SSDs (2× 1.92 TB per node)
-    - Cray OS 2.4 based on SUSE Linux Enterprise Server 15.4
-    - Login nodes for job management; compute nodes run parallel jobs
+**Key specs:**
+- 9,856 compute nodes, each with:
+  - 1× 64-core AMD Optimized 3rd Gen EPYC CPU
+  - 4× AMD MI250X GPUs (8 GPUs total per node)
+  - 512 GB DDR4 RAM
+- Advanced Infinity Fabric connections enabling high bandwidth CPU-GPU and GPU-GPU communication
+- Slingshot interconnect providing up to 800 Gbps per node for fast node-to-node communication
+- File systems:
+  - Orion Lustre parallel filesystem (679 PB usable)
+  - On-node NVMe burst buffer SSDs (2× 1.92 TB per node)
+- Cray OS 2.4 based on SUSE Linux Enterprise Server 15.4
+- Login nodes for job management; compute nodes run parallel jobs
+More details: [Frontier User Guide](https://docs.olcf.ornl.gov/systems/frontier_user_guide.html)
+### 🧮 Andes – Pre/Post-Processing Cluster
+Andes supports pre- and post-processing tasks and complements Frontier by offering:
+- AMD EPYC processors
+- Large memory nodes
+- Access to Orion filesystem
+- Ideal for data analysis and preparation workflows
+### Summary
+These systems serve distinct roles in the HPC ecosystem:
+- **Odo:** Training and development with Frontier-like architecture
+- **Frontier:** Production exascale computing with hybrid CPU-GPU nodes
+- **Andes:** Data preparation and analysis with large memory nodes
+Understanding their architecture helps users select the best resource for their computational needs.
+CONTENT
 
-    More details: [Frontier User Guide](https://docs.olcf.ornl.gov/systems/frontier_user_guide.html)
-
-    ### 🧮 Andes – Pre/Post-Processing Cluster
-    Andes supports pre- and post-processing tasks and complements Frontier by offering:
-    - AMD EPYC processors
-    - Large memory nodes
-    - Access to Orion filesystem
-    - Ideal for data analysis and preparation workflows
-
-    ### Summary
-    These systems serve distinct roles in the HPC ecosystem:
-    - **Odo:** Training and development with Frontier-like architecture
-    - **Frontier:** Production exascale computing with hybrid CPU-GPU nodes
-    - **Andes:** Data preparation and analysis with large memory nodes
-
-    Understanding their architecture helps users select the best resource for their computational needs.
-  CONTENT
 
 basicsHPCChapters = [
   {title: "Introduction to HPC", mission_id: firstMissionId, content: "Introduction to HPC"},
