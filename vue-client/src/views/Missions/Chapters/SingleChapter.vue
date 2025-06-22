@@ -4,7 +4,7 @@
     <div class="text-center text-3xl mb-6">
       {{ chapter.title || 'Unavailable Chapter' }}
     </div>
-    
+
     <!-- Chapter Content -->
     <div class="flex flex-col gap-6">
       <!-- Chapter Description -->
@@ -13,9 +13,7 @@
           <i class="pi pi-book text-blue-400 text-2xl"></i>
           <h2 class="text-xl font-semibold text-white">Learn about {{ chapter.title }}</h2>
         </div>
-        <div class="text-lg text-gray-300">
-          {{ chapter.content || 'No content available for this chapter.' }}
-        </div>
+          <Markdown :source="chapter.content" class="markdown-body p-2" />
       </div>
 
       <!-- Chapter Progress -->
@@ -40,8 +38,8 @@
             </span>
           </div>
         </div>
-        <ProgressBar 
-          :value="progressPercentage" 
+        <ProgressBar
+          :value="progressPercentage"
           :showValue="true"
           class="h-3"
         />
@@ -64,7 +62,7 @@
           @click="goBackToMission"
           class="text-gray-300"
         />
-        
+
         <div class="flex gap-3">
           <Button
             v-if="hasPreviousChapter"
@@ -73,7 +71,7 @@
             outlined
             @click="goToPreviousChapter"
           />
-          
+
           <Button
             v-if="hasNextChapter"
             label="Next Chapter"
@@ -81,7 +79,7 @@
             @click="goToNextChapter"
             :disabled="!chapter.is_completed"
           />
-          
+
           <Button
             v-else-if="chapter.is_completed"
             label="Complete Mission"
@@ -99,11 +97,13 @@
 import { defineComponent } from 'vue'
 import { api } from '@/apis'
 import { QuizList } from '@/components/Quizzes'
+import Markdown from 'vue3-markdown-it'
 
 export default defineComponent({
   name: 'SingleChapter',
   components: {
     QuizList,
+    Markdown
   },
   data() {
     return {
@@ -117,7 +117,7 @@ export default defineComponent({
       if (!this.chapter.quizzes || this.chapter.quizzes.length === 0) {
         return this.chapter.is_completed ? 100 : 0
       }
-      
+
       const answeredQuizzes = this.chapter.quizzes.filter(quiz => quiz.is_answered).length
       return Math.round((answeredQuizzes / this.chapter.quizzes.length) * 100)
     },
@@ -144,13 +144,13 @@ export default defineComponent({
           this.$route.params.chapterId
         )
         this.chapter = currentChapter
-        
+
         // Get all chapters for this mission to enable navigation
         const allChapters = await api.Chapter.getAllChaptersByMissionId(
           this.$route.params.missionId
         )
         this.missionChapters = allChapters
-        
+
         // Find current chapter index
         this.currentChapterIndex = this.missionChapters.findIndex(
           chapter => chapter.id === parseInt(this.$route.params.chapterId)
@@ -165,7 +165,7 @@ export default defineComponent({
         })
       }
     },
-    
+
     handleQuizCompleted(quizData) {
       // Show result toast
       this.$toast?.add({
@@ -175,22 +175,22 @@ export default defineComponent({
         life: 3000,
       })
     },
-    
+
     async handleAllQuizzesCompleted() {
       try {
         // Call backend API to mark chapter as completed
         await api.Chapter.completeChapter(this.$route.params.chapterId)
-        
+
         // Mark chapter as completed
         this.chapter.is_completed = true
-        
+
         this.$toast?.add({
           severity: 'success',
           summary: 'Congratulations!',
           detail: 'Chapter completed successfully!',
           life: 3000,
         })
-        
+
         // Check if mission is completed
         try {
           const missionCompletion = await api.Mission.checkMissionCompletion(this.$route.params.missionId)
@@ -215,25 +215,25 @@ export default defineComponent({
         })
       }
     },
-    
+
     goBackToMission() {
       this.$router.push(`/mission/${this.$route.params.missionId}`)
     },
-    
+
     goToPreviousChapter() {
       if (this.hasPreviousChapter) {
         const previousChapter = this.missionChapters[this.currentChapterIndex - 1]
         this.$router.push(`/mission/${this.$route.params.missionId}/chapter/${previousChapter.id}`)
       }
     },
-    
+
     goToNextChapter() {
       if (this.hasNextChapter) {
         const nextChapter = this.missionChapters[this.currentChapterIndex + 1]
         this.$router.push(`/mission/${this.$route.params.missionId}/chapter/${nextChapter.id}`)
       }
     },
-    
+
     completeMission() {
       this.$router.push(`/mission/${this.$route.params.missionId}`)
     },

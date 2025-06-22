@@ -18,6 +18,7 @@
     "@primevue/themes": "^4.1.1",
     "@wdns/vue-code-block": "^2.3.3",
     "axios": "^1.7.7",
+    "github-markdown-css": "^5.8.1",
     "pinia": "^2.2.5",
     "primeicons": "^7.0.0",
     "primevue": "^4.1.1",
@@ -25,7 +26,8 @@
     "vue": "^3.5.12",
     "vue-axios": "^3.5.2",
     "vue-mermaid-string": "^7.0.0",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.4.5",
+    "vue3-markdown-it": "^1.0.10"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
