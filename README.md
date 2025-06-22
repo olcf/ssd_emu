@@ -82,6 +82,10 @@ Emu is a simulation software designed to show the architecture and operational m
  - [x] Integrate docker component with slurm built inside.
  - [x] Use websocket to simulate ssh environment.
  - [x] Preserve directory on each command in CLI on frontend and backend
+ - [x] Implement job submission via `slurm cluster sbatch` instead of regular `bash` scripts
+ - [x] Add architecture image on each machine page using mermaidJS(Basic version only)
  - [ ] Update missions page with documentation and challenge.
- - [ ] Implement job submission via `slurm cluster sbatch` instead of regular `bash` scripts
- - [ ] Add architecture image on each machine page using mermaidJS 
+   - [x] Implement certain chapters/mission for Demo
+   - [ ] Finalize all chapters along with quizzes
+ - [ ] Finalize the Command line that we will be using
+   - [ ] Explore options and show it to SSD group
