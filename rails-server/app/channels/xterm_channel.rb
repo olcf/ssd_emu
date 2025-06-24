@@ -37,7 +37,8 @@ class XtermChannel < ApplicationCable::Channel
 
     begin
       @read, @write, @pid = PTY.spawn("docker exec -it slurmctld bash")
-  
+      emu_welcome_message = "EMU is a software that emulates the supercomputer environment at Oak Ridge National Laboratory(ORNL), allowing beginners to familiarize with supercomputers and the job submission process.\n"
+        ActionCable.server.broadcast("xterm_output",emu_welcome_message)
       # Read in a Thread so it won't block other user's connection
       Thread.new do
         begin
