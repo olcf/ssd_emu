@@ -1,20 +1,26 @@
 <template>
-  <div id="xterm-terminal" >
-
+  <div id="xterm-terminal" class="w-full h-screen" >
   </div>
 </template>
 
 <script setup>
 import { onMounted } from 'vue';
 import { Terminal } from 'xterm';
+import { FitAddon } from '@xterm/addon-fit';
 import 'xterm/css/xterm.css'
 import axios from 'axios';
 import { useUserStore } from '@/stores/user';
 let currentUserIdentifier;
+
 onMounted(()=>{
-  const terminal = new Terminal();
   const xtermTerminal = document.getElementById("xterm-terminal");
+
+  const terminal = new Terminal();
+  const fitAddon = new FitAddon();
+  terminal.loadAddon(fitAddon);
   terminal.open(xtermTerminal)
+  fitAddon.fit();
+
   const userStore = useUserStore();
   currentUserIdentifier =  JSON.stringify({
     id: userStore.user_id,
