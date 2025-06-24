@@ -4,6 +4,8 @@ import { RouterView } from 'vue-router'
 import LeftNavigationMenu from './components/LeftNavigation/LeftNavigationMenu.vue'
 import { useUserStore } from './stores/user'
 import TerminalEmulator from './components/Terminal/TerminalEmulator.vue'
+import XtermTerminal from '@/components/Terminal/XtermTerminal.vue'
+
 
 const userStore = useUserStore()
 const isLoggedIn = ref(false)
@@ -51,7 +53,7 @@ onMounted(async () => {
         </Splitter>
       </SplitterPanel>
       <SplitterPanel :size="4" :min-size="3" class="p-0">
-        <TerminalEmulator></TerminalEmulator>
+        <XtermTerminal></XtermTerminal>
       </SplitterPanel>
     </Splitter>
   </div>
