@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO: Cleanup/Modification required as we are not using this file as Xterm handles most of the things now -->
   <div
     class="h-full flex flex-col p-1 font-mono overflow-y-scroll"
     style="background-color: #282a36"
