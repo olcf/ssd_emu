@@ -1,0 +1,9 @@
+[
+  {
+    "question": "A Sample Question",
+    "question_type": "mcq",
+    "options": ["High Processing Capability", "High-Performance Computing", "Hybrid Parallel Cluster", "Hyper Precision Control"],
+    "correct_option_index": 1,
+    "explanation": "Explanation of Why this Answer is correct!"
+  }
+]
