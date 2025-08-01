@@ -13,7 +13,9 @@
           <i class="pi pi-book text-blue-400 text-2xl"></i>
           <h2 class="text-xl font-semibold text-white">Learn about {{ chapter.title }}</h2>
         </div>
-          <Markdown :source="chapter.content" class="markdown-body p-2" />
+        <MilkdownProvider>
+          <MilkdownViewer :content="chapter.content" />
+        </MilkdownProvider>
       </div>
 
       <!-- Chapter Progress -->
@@ -97,13 +99,15 @@
 import { defineComponent } from 'vue'
 import { api } from '@/apis'
 import { QuizList } from '@/components/Quizzes'
-import Markdown from 'vue3-markdown-it'
+import MilkdownViewer from '@/components/Editor/MilkdownViewer.vue'
+import { MilkdownProvider } from '@milkdown/vue'
 
 export default defineComponent({
   name: 'SingleChapter',
   components: {
     QuizList,
-    Markdown
+    MilkdownViewer,
+    MilkdownProvider
   },
   data() {
     return {

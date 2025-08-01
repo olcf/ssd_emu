@@ -17,9 +17,9 @@ import ToastService from 'primevue/toastservice'
 // Importing Vue Code Block Package
 import { VCodeBlock } from '@wdns/vue-code-block'
 
-// Importing Vue3Markdown along with github markdown css
-import Markdown from 'vue3-markdown-it';
-import 'github-markdown-css/github-markdown.css';
+// Setup for Milkdown, which is used to edit markdown files for better experience
+import "@milkdown/crepe/theme/common/style.css";
+import "@milkdown/crepe/theme/frame-dark.css";
 
 // Fontawesome setup
 import FontAwesomeIcon from './FontAwesomeSetup'
@@ -48,8 +48,7 @@ app.use(ToastService)
 // Using VueCodeBlock
 app.component('VCodeBlock', VCodeBlock)
 
-// Using Vue3Markdown
-app.use(Markdown)
+
 
 // axios setup
 axios.defaults.baseURL = 'http://localhost:3000'

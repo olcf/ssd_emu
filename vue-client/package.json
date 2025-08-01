@@ -15,12 +15,14 @@
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/vue-fontawesome": "^3.0.8",
+    "@milkdown/crepe": "^7.15.2",
+    "@milkdown/kit": "^7.15.2",
+    "@milkdown/vue": "^7.15.2",
     "@primevue/themes": "^4.1.1",
     "@wdns/vue-code-block": "^2.3.3",
     "@xterm/addon-fit": "^0.10.0",
     "@xterm/xterm": "^5.5.0",
     "axios": "^1.7.7",
-    "github-markdown-css": "^5.8.1",
     "pinia": "^2.2.5",
     "primeicons": "^7.0.0",
     "primevue": "^4.1.1",
@@ -29,7 +31,6 @@
     "vue-axios": "^3.5.2",
     "vue-mermaid-string": "^7.0.0",
     "vue-router": "^4.4.5",
-    "vue3-markdown-it": "^1.0.10",
     "xterm": "^5.3.0"
   },
   "devDependencies": {
