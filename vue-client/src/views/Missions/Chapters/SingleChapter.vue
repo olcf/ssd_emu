@@ -18,6 +18,8 @@
         </MilkdownProvider>
         <p v-if="chapter.contributors" class="my-2 text-gray-300 leading-relaxed">
           <span>Contributors:</span> <span class="text-gray-400">{{ chapter.contributors }}</span>
+          <br/>
+          <span>Reading Time:</span> <span class="text-gray-400">{{ chapter.duration_minutes }} mins</span>
         </p>
       </div>
 

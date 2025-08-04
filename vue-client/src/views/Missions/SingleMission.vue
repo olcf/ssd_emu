@@ -33,7 +33,9 @@
               ></i>
             </div>
             <p class="text-sm text-gray-300 leading-relaxed">
-              {{ chapter.description }}
+                <span>Summary:</span> <span class="text-gray-400">{{ chapter.description }}</span>
+              <br/>
+                <span>Reading Time:</span> <span class="text-gray-400">{{ chapter.duration_minutes }} mins</span>
             </p>
           </router-link>
         </li>
