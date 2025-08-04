@@ -1,5 +1,7 @@
 ---
+title: Evolution of Linux
 description: A short summary of this chapter
+contributors: Bishwo Dahal
 duration_minutes: 10
 ---
 

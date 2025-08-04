@@ -1,5 +1,7 @@
 ---
+title: Basics of Unix
 description: A short summary of this chapter
+contributors: Bishwo Dahal
 duration_minutes: 10
 ---
 
