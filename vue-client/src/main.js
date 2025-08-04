@@ -17,9 +17,7 @@ import ToastService from 'primevue/toastservice'
 // Importing Vue Code Block Package
 import { VCodeBlock } from '@wdns/vue-code-block'
 
-// Setup for Milkdown, which is used to edit markdown files for better experience
-import "@milkdown/crepe/theme/common/style.css";
-import "@milkdown/crepe/theme/frame-dark.css";
+
 
 // Fontawesome setup
 import FontAwesomeIcon from './FontAwesomeSetup'

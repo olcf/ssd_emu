@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import MilkdownEditor from '@/components/Editor/MilkdownEditor.vue';
-import { MilkdownProvider } from '@milkdown/vue';
-
+import MarkdownEditor from '@/components/Markdown/MarkdownEditor.vue';
 </script>
 
 <template>
-<MilkdownProvider>
-  <MilkdownEditor/>
-</MilkdownProvider>
+<MarkdownEditor></MarkdownEditor>
 </template>
 
