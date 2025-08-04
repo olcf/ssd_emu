@@ -16,6 +16,9 @@
         <MilkdownProvider>
           <MilkdownViewer :content="chapter.content" />
         </MilkdownProvider>
+        <p v-if="chapter.contributors" class="my-2 text-gray-300 leading-relaxed">
+          <span>Contributors:</span> <span class="text-gray-400">{{ chapter.contributors }}</span>
+        </p>
       </div>
 
       <!-- Chapter Progress -->

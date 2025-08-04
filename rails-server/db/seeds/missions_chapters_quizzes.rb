@@ -64,7 +64,7 @@ Dir.children(missions_root).sort.each do |mission_folder_name|
     quiz_content = JSON.parse(quiz_content)
 
     currentChapter = Chapter.find_or_create_by(id: chapter_id_counter, mission: currentMission)
-    currentChapter.update!( title: chapter_content['title'] || chapter_name, duration_minutes: chapter_content['duration_minutes'] || 0, content: chapter_content['content'])
+    currentChapter.update!( title: chapter_content['title'] || chapter_name, duration_minutes: chapter_content['duration_minutes'] || 0, content: chapter_content['content'], contributors: chapter_content['contributors'])
 
 
     quiz_content.each do |quiz|

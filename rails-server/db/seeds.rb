@@ -66,7 +66,7 @@ puts "Completed creating #{jobs.length()} jobs!"
 
 # Missions, Chapters, Quizzes
 puts "\nCreating Quizzes, Chapters, and Missions! "
-require_relative 'missions_chapters_quizzes'
+require_relative 'seeds/missions_chapters_quizzes'
 
 
 puts "\nSeeding Completed!"

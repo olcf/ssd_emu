@@ -33,7 +33,7 @@
               ></i>
             </div>
             <p class="text-sm text-gray-300 leading-relaxed">
-              {{ chapter.short_description }}
+              {{ chapter.description }}
             </p>
           </router-link>
         </li>
