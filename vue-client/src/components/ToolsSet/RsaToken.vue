@@ -28,7 +28,7 @@
               :key="i"
               :class="[
                 'my-px  border rounded-sm',
-                i <= progressBars ? 'border-gray-300' : 'border-gray-900',
+                i <= 6 - progressBars ? 'border-gray-300' : 'border-gray-900',
               ]"
             ></div>
           </div>
@@ -53,38 +53,48 @@
 </template>
 
 <script setup>
+import { useToolsetStore } from '@/stores/toolsetStore'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-const token = ref(generateToken())
-const progressBars = ref(0)
+const toolsetStore = useToolsetStore()
+
+const token = ref('')
+const progressBars = ref(6) // has all the bars at first
 
 let interval
 
 function generateToken() {
-  return String(Math.floor(100000 + Math.random() * 900000)) // 6-digit token
+  const generatedToken = String(Math.floor(100000 + Math.random() * 900000)) // 6-digit token
+  toolsetStore.setRsaToken(generatedToken)
+  return generatedToken
 }
 
 function updateToken() {
   const now = new Date()
   const seconds = now.getSeconds()
+  const elapsedInCycle = seconds % 30
 
-  progressBars.value = Math.floor(seconds / 5)
+  // Decrease progress bars from 6 to 0 over 30 seconds
+  progressBars.value = 6 - Math.floor(elapsedInCycle / 5)
 
-  // Update token every 30 seconds (at seconds === 0)
-  if (seconds === 0) {
+  if (elapsedInCycle === 0) {
     token.value = generateToken()
   }
 }
 
+
 onMounted(() => {
+  token.value = generateToken()
   updateToken()
-  interval = setInterval(updateToken, 1000) // update every second
+  interval = setInterval(updateToken, 1000)
 })
 
 onBeforeUnmount(() => {
   clearInterval(interval)
 })
 </script>
+
+
 
 <style scoped>
 @keyframes blink {
