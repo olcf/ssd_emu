@@ -82,12 +82,11 @@ export const validCommands = [
           'You are trying to log into machine with different username than yours. You should only login to your account in ORNL environment.',
         )
       } else {
-        // TODO: add special stylings here
         sshOutput += `Trying to connect to ${user} with username of ${host} ....! `
         sshOutput +=
           'In ORNL environment, you will need to enter your password that you have been assigned!<br/>'
         const CLIStore = useCLIStore()
-        CLIStore.selectMachine(listOfMachines[askedHost])
+        CLIStore.setLoginHost(host)
         return sshOutput
       }
     },
