@@ -19,7 +19,14 @@
         <span v-html="command.response" class="response"> </span>
       </div>
     </div>
-    <div class="user-prompt flex items-center">
+  <!-- If CLI is expecting passcode, show the password prompt, else show regular prompt -->
+    <div v-if="CLIStore.isExpectingPasscode" class="user-prompt flex items-center">
+      <span class="username-prompt">
+        Enter Your Passcode::
+        </span>
+        <input ref="input" v-model="userPasscode" autocomplete="off" @keydown="onPasscodeEntered"  />
+    </div>
+    <div v-else class="user-prompt flex items-center">
       <span
         ><span class="username-prompt">
           {{
@@ -51,8 +58,11 @@ import { useCLIStore } from '@/stores/commandLine'
 import { beautifyTextToHTML } from './beautifyTextToHTML'
 import AsciiEmu from './AsciiEmu.vue'
 import axios from 'axios'
+import { useToolsetStore } from '@/stores/toolsetStore'
+import { api } from '@/apis'
 
 let commandText = ref('')
+let userPasscode = ref('')
 // commands will be an array of objects with format of {command:String, response: HTML String}
 let commands = ref([])
 
@@ -61,6 +71,7 @@ const commandInput = useTemplateRef('input')
 const inputWidth = ref('0ch')
 const userStore = useUserStore()
 const CLIStore = useCLIStore()
+const toolsetStore = useToolsetStore()
 let socketIdentifier
 let remoteMachineSocket
 
@@ -108,7 +119,21 @@ const resizeInput = function () {
   const inputLength = commandText.value.length
   inputWidth.value = `${inputLength}ch`
 }
-
+const onPasscodeEntered = async function(event) {
+  if(event.key === 'Enter'){
+    if(userPasscode.value == toolsetStore.getRsaToken){
+      const CLIStore = useCLIStore()
+      CLIStore.setExpectingPasscode(false)
+      let listOfMachines = await api.Machine.getAllMachines()
+      const loginHost = CLIStore.getLoginHost
+      let askedHost = listOfMachines.findIndex(machine => machine.name == loginHost)
+      CLIStore.selectMachine(listOfMachines[askedHost])
+    }else{
+      userPasscode.value = "";
+      alert("Please check RSA token through RSA button and re-enter your password!")
+    }
+  }
+}
 const onKeyDown = async function (event) {
   if (event.key === 'Enter' && commandText.value) {
     // If user enters any command that is available as default commands
@@ -191,6 +216,11 @@ const executeCommand = async function (command) {
       if (parsedCommand.name === 'ssh') {
         commands.value = []
 
+        let userPassword = "abc"
+        CLIStore.setExpectingPasscode(true)
+
+        if(userPassword == toolsetStore.getRsaToken){
+
         // identifies the current user with id and username (something unique about user)
         socketIdentifier = JSON.stringify({
           id: userStore.user_id,
@@ -199,7 +229,9 @@ const executeCommand = async function (command) {
           machine: CLIStore.getMachineName,
         })
         setupWebSocket()
-        return ''
+        }
+
+        return executedOutput
       }
     } else {
       // error message for command not recognized

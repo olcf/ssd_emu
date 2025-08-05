@@ -6,6 +6,7 @@ import { useUserStore } from './stores/user'
 import { useCLIStore} from './stores/commandLine'
 import TerminalEmulator from './components/Terminal/TerminalEmulator.vue'
 import XtermTerminal from '@/components/Terminal/XtermTerminal.vue'
+import ToolsSet from './components/ToolsSet/ToolsSet.vue'
 
 
 const userStore = useUserStore()
@@ -36,6 +37,7 @@ onMounted(async () => {
     <!-- Creating single Confirm Dialog so that it won't repeat for each call -->
     <ConfirmDialog></ConfirmDialog>
     <Toast></Toast>
+    <ToolsSet/>
 
     <!-- Here we can create header -->
     <Splitter layout="vertical" class="h-screen">
