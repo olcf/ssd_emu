@@ -70,6 +70,23 @@ onMounted(async () => {
     mission.route = '/mission/' + mission.id
   })
   menuItems.value[2].items = allMissions
+
+  // Add Columns if User is Admin
+  const adminItems = [{
+    label: 'Edit Chapter',
+    route: '/admin/editChapter'
+  }]
+
+  if(userStore.getUserRole == 'admin')
+  {
+    menuItems.value.push({
+    icon: 'pi pi-shield',
+    label: 'Admin',
+    items: adminItems
+  })
+  }
+
+
 })
 </script>
 

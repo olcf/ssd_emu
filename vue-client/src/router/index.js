@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AllMachines from '@/views/Machines/AllMachines.vue'
+import { useUserStore } from '@/stores/user'
 // TODO: update homepage and re update components here
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,7 +52,6 @@ const router = createRouter({
     {
       path: '/mission/:id',
       name: 'SingleMission',
-      
       component: () => import('@/views/Missions/SingleMission.vue'),
     },
     {
@@ -69,7 +69,25 @@ const router = createRouter({
       name: 'UnderstandArchitecture',
       component: () => import('@/views/Missions/UnderstandArchitecture.vue'),
     },
+    {
+      path: '/admin/editChapter',
+      name: 'editChapter',
+      component: ()=> import('@/views/admin/EditChapter.vue'),
+      meta:{
+        requiresAuth: true
+      }
+    }
   ],
+})
+
+router.beforeEach((to,from,next)=>{
+  const userStore = useUserStore()
+  // Return to Login if user is not admin
+  if(to.meta.requiresAuth && userStore.getUserRole != 'admin'){
+    next('/login')
+  }else{
+    next()
+  }
 })
 
 export default router

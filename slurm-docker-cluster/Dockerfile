@@ -105,6 +105,12 @@ RUN set -ex \
     && chmod +x /usr/local/bin/gosu \
     && gosu nobody true
 
+# Installing openmpi for accessing mpi
+RUN set -ex yum -y install openmpi openmpi-devel
+ENV LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:$LD_LIBRARY_PATH
+ENV PATH=/usr/lib64/openmpi/bin:$PATH
+
+
 ARG SLURM_TAG
 
 RUN set -x \

@@ -15,6 +15,9 @@ export const useUserStore = defineStore('user', {
     getUserId(state) {
       return state.user_id
     },
+    getUserRole(state) {
+      return state.role
+    }
   },
   actions: {
     async login() {
@@ -24,6 +27,7 @@ export const useUserStore = defineStore('user', {
         const singleUser = await loginApiRequest.data[0]
         this.username = singleUser.username
         this.user_id = singleUser.id
+        this.role = singleUser.role
       } catch (error) {
         alert(error)
       }

@@ -13,7 +13,12 @@
           <i class="pi pi-book text-blue-400 text-2xl"></i>
           <h2 class="text-xl font-semibold text-white">Learn about {{ chapter.title }}</h2>
         </div>
-          <Markdown :source="chapter.content" class="markdown-body p-2" />
+          <MarkdownViewer :content="chapter.content"></MarkdownViewer>
+        <p v-if="chapter.contributors" class="my-2 text-gray-300 leading-relaxed">
+          <span>Contributors:</span> <span class="text-gray-400">{{ chapter.contributors }}</span>
+          <br/>
+          <span>Reading Time:</span> <span class="text-gray-400">{{ chapter.duration_minutes }} mins</span>
+        </p>
       </div>
 
       <!-- Chapter Progress -->
@@ -97,13 +102,13 @@
 import { defineComponent } from 'vue'
 import { api } from '@/apis'
 import { QuizList } from '@/components/Quizzes'
-import Markdown from 'vue3-markdown-it'
+import MarkdownViewer from '@/components/Markdown/MarkdownViewer.vue'
 
 export default defineComponent({
   name: 'SingleChapter',
   components: {
     QuizList,
-    Markdown
+    MarkdownViewer,
   },
   data() {
     return {

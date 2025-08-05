@@ -26,7 +26,7 @@ This setup consists of the following containers:
 - **mysql**: Stores job and cluster data.
 - **slurmdbd**: Manages the Slurm database.
 - **slurmctld**: The Slurm controller responsible for job and resource management.
-- **c1, c2**: Compute nodes (running `slurmd`).
+- **c1, c2, c3, c4**: Compute nodes (running `slurmd`).
 
 ### Persistent Volumes:
 
