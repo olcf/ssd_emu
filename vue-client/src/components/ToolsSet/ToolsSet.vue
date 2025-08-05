@@ -9,31 +9,44 @@
     <div
       class=" flex overflow-hidden bg-gray-900 rounded-full px-2 py-2 shadow-lg"
     >
-      <Button
-        v-for="btn in buttons"
-        :key="btn.id"
-        :label="btn.label"
-        :title="btn.title"
-        @click="btn.show = !btn.show"
-        style="width: 50px; height: 50px; border-radius: 100%;"
-      />
+      <Button label="RSA" @click="toggleComponent('rsa')" style="width: 50px; height: 50px; border-radius: 100%;"/>
     </div>
 
     <div class="flex flex-col space-y-4 mt-4">
-      <template v-for="btn in buttons" :key="btn.id + '-component'">
-        <component v-if="btn.show" :is="btn.component" />
-      </template>
+      <component :is="currentComponent" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import RsaToken from './RsaToken.vue'
 
-const buttons = reactive([
-  { id: 'rsa', label: 'RSA', show: false, title: 'Toggle RSA Token', component: RsaToken },
-])
+
+const activeComponent = ref(null)
+const isVisible = ref(false)
+
+// To add new component, add a button and element inside this object as, "name": ComponentName
+const componentMap = {
+  rsa: RsaToken,
+}
+
+const currentComponent = computed(() => {
+  return activeComponent.value ? componentMap[activeComponent.value] : null
+})
+
+function toggleComponent(id) {
+  if (activeComponent.value === id && isVisible.value) {
+    // Collapse if already open
+    isVisible.value = false
+    activeComponent.value = null
+  } else {
+    // Show another component
+    activeComponent.value = id
+    isVisible.value = true
+  }
+}
+
 
 const posY = ref(window.innerHeight - 150) // initial vertical position near bottom
 const dragWrapper = ref(null)
