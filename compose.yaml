@@ -1,0 +1,9 @@
+services:
+  frontend:
+    build:
+      context: ./vue-client
+      dockerfile: Dockerfile
+    image: emu_frontend_prod
+    restart: on-failure
+    ports:
+      - "8080:8080"

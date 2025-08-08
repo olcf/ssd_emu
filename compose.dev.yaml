@@ -1,0 +1,14 @@
+services:
+  frontend:
+    build:
+      context: ./vue-client
+      dockerfile: Dockerfile.dev
+    image: emu_frontend_dev
+    ports:
+    - "5173:5173"
+    volumes:
+      - ./vue-client/src:/app/src
+      - ./vue-client/package.json:/app/package.json
+      - ./vue-client/vite.config.js:/app/vite.config.js
+
+  
