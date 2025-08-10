@@ -14,10 +14,10 @@ services:
       - slurm-network
 
   slurmdbd:
-    image: slurm-docker-cluster:${IMAGE_TAG}
     build:
       context: .
-      args:
+      dockerfile: Dockerfile
+      args: 
         SLURM_TAG: ${SLURM_TAG}
     command: ["slurmdbd"]
     container_name: slurmdbd
@@ -34,7 +34,11 @@ services:
       - slurm-network
 
   slurmctld:
-    image: slurm-docker-cluster:${IMAGE_TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: 
+        SLURM_TAG: ${SLURM_TAG}
     command: ["slurmctld"]
     container_name: slurmctld
     hostname: slurmctld
@@ -51,7 +55,11 @@ services:
       - slurm-network
 
   c1:
-    image: slurm-docker-cluster:${IMAGE_TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: 
+        SLURM_TAG: ${SLURM_TAG}
     command: ["slurmd"]
     hostname: c1
     container_name: c1
@@ -68,7 +76,11 @@ services:
       - slurm-network
 
   c2:
-    image: slurm-docker-cluster:${IMAGE_TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: 
+        SLURM_TAG: ${SLURM_TAG}
     command: ["slurmd"]
     hostname: c2
     container_name: c2
@@ -85,7 +97,11 @@ services:
       - slurm-network
   
   c3:
-    image: slurm-docker-cluster:${IMAGE_TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: 
+        SLURM_TAG: ${SLURM_TAG}
     command: ["slurmd"]
     hostname: c3
     container_name: c3
@@ -102,7 +118,12 @@ services:
       - slurm-network
 
   c4:
-    image: slurm-docker-cluster:${IMAGE_TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: 
+        SLURM_TAG: ${SLURM_TAG}
+        MPICH_VERSION: ${MPICH_VERSION}
     command: ["slurmd"]
     hostname: c4
     container_name: c4
