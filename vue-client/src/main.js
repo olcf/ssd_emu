@@ -17,8 +17,6 @@ import ToastService from 'primevue/toastservice'
 // Importing Vue Code Block Package
 import { VCodeBlock } from '@wdns/vue-code-block'
 
-
-
 // Fontawesome setup
 import FontAwesomeIcon from './FontAwesomeSetup'
 
@@ -46,10 +44,14 @@ app.use(ToastService)
 // Using VueCodeBlock
 app.component('VCodeBlock', VCodeBlock)
 
-
-
 // axios setup
-axios.defaults.baseURL = 'http://localhost:3000'
+const currentEnvironment = process.env.NODE_ENV
+if (currentEnvironment === 'production') {
+  axios.defaults.baseURL = 'http://localhost:3030'
+} else {
+  // development uses 3000 port
+  axios.defaults.baseURL = 'http://localhost:3000'
+}
 app.use(VueAxios, axios)
 
 // Pinia setup
