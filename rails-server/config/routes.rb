@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  
+  # Root route
+  root to: 'welcome#index'
+
   resources :chapters do
     member do
       post :complete
