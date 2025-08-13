@@ -84,3 +84,4 @@ production:
   database: emu_server_production
   username: emu_server
   password: <%= ENV["EMU_SERVER_DATABASE_PASSWORD"] %>
+  host: <%= ENV["EMU_SERVER_DATABASE_HOST"] %>
