@@ -2,8 +2,8 @@
 FROM rockylinux:8 AS hpc_libraries_base
 
 # Copy everything built here to main container after setting up lmod down at the bottom
-
-ARG MPICH_VERSION=4.3.1
+WORKDIR /
+ENV MPICH_VERSION=4.3.1
 # Installing mpich ${MPICH_VERSION} and adding it in modules.
 # It also requires other modules but we have already installed it before
 RUN set -ex \

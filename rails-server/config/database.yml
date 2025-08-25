@@ -24,6 +24,9 @@ default: &default
 development:
   <<: *default
   database: emu_server_development
+  username: emu_server
+  host: <%= ENV.fetch("EMU_SERVER_DATABASE_HOST", "localhost") %>
+  password: <%= ENV.fetch("EMU_SERVER_DATABASE_PASSWORD", "MyNewPass") %>
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
