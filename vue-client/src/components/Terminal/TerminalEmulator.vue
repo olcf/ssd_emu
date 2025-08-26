@@ -113,7 +113,7 @@ const setupWebSocket = function () {
 }
 
 const selectTerminal = function () {
-  commandInput.value.focus()
+  commandInput.value.focus({preventScroll: true})
 }
 const resizeInput = function () {
   const inputLength = commandText.value.length
