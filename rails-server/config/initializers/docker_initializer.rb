@@ -1,7 +1,9 @@
 require 'docker'
 
 DOCKER_MAIN_CONTAINER_NAME = "slurmctld"
+DOCKER_URL="unix:///var/run/docker.sock"
 
+Docker.url = DOCKER_URL
 
 # Check if the the image that we are using is available or not; If there is not, we can pull it
 begin

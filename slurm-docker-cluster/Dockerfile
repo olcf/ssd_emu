@@ -1,10 +1,30 @@
+
+FROM rockylinux:8 AS hpc_libraries_base
+
+# Copy everything built here to main container after setting up lmod down at the bottom
+WORKDIR /
+ENV MPICH_VERSION=4.3.1
+# Installing mpich ${MPICH_VERSION} and adding it in modules.
+# It also requires other modules but we have already installed it before
+RUN set -ex \
+    && yum -y update \
+    && yum -y install wget gcc gcc-c++ gcc-gfortran ucx make perl python3
+
+RUN wget https://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz
+
+RUN tar -xzf mpich-${MPICH_VERSION}.tar.gz
+
+RUN cd /mpich-${MPICH_VERSION} && ./configure --prefix=/opt/mpich/${MPICH_VERSION} --with-device=ch4:ucx --with-pmi=pmi2 && make install
+
+RUN rm -r /mpich-${MPICH_VERSION}*
+
 FROM rockylinux:8
 
-LABEL org.opencontainers.image.source="https://github.com/giovtorres/slurm-docker-cluster" \
-      org.opencontainers.image.title="slurm-docker-cluster" \
-      org.opencontainers.image.description="Slurm Docker cluster on Rocky Linux 8" \
+LABEL org.opencontainers.image.source="https://github.com/olcf/ssd_emu" \
+      org.opencontainers.image.title="bishwodahal/slurm-hpc-docker" \
+      org.opencontainers.image.description="Containerized Slurm-based HPC cluster with MPI and module system support" \
       org.label-schema.docker.cmd="docker-compose up -d" \
-      maintainer="Giovanni Torres"
+      maintainer="Bishwo Dahal bishwodahal1@gmail.com"
 
 RUN set -ex \
     && yum makecache \
@@ -76,17 +96,12 @@ RUN set -x \
     && ln -s /opt/apps/lmod/lmod/init/profile /etc/profile.d/z00_lmod.sh \
     && ln -s /opt/apps/lmod/lmod/init/cshrc /etc/profile.d/z00_lmod.csh
 
-# adding sample modulefiles for lmod 
-# Cloning sample modulefiles repo from github
-# moving everything inside modulefiles to default modulefiles/Core directory
-# cleaning up build directories
-RUN set -x \
-    && mkdir -p /build/modules_install \
-    && cd /build/modules_install/ \
-    && git clone https://github.com/shawfdong/modulefiles.git && ls / \
-    && mv modulefiles/* /opt/apps/lmod/lmod/modulefiles/Core/ \
-    && rm -rf /build
 
+# Copy built modules/folders inside current container
+COPY --from=hpc_libraries_base /opt/mpich/ /opt/mpich
+
+# Adding default module files to opt/apps/lmod/lmod/modulefiles/Core/
+COPY defaults/modulefiles /opt/apps/lmod/lmod/modulefiles/Core/
 
 
 RUN alternatives --set python /usr/bin/python3
@@ -105,10 +120,7 @@ RUN set -ex \
     && chmod +x /usr/local/bin/gosu \
     && gosu nobody true
 
-# Installing openmpi for accessing mpi
-RUN set -ex yum -y install openmpi openmpi-devel
-ENV LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:$LD_LIBRARY_PATH
-ENV PATH=/usr/lib64/openmpi/bin:$PATH
+
 
 
 ARG SLURM_TAG

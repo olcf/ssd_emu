@@ -1,0 +1,30 @@
+ARG NODE_VERSION=22.15.1-alpine
+
+# Node js for development
+FROM node:${NODE_VERSION} AS dev
+
+# Setting node environment to development
+ENV NODE_ENV=development
+
+# putting the app inside /app directory
+WORKDIR /app
+
+# Copying package files to install
+COPY package.json package-lock.json ./
+
+# Install packages along with cache (vuejs docs)
+RUN --mount=type=cache,target=/root/.npm npm install
+
+# Copy everything to container /app directory
+COPY . .
+
+# Changing ownership of the application to the node user so that `USER node` will actually work
+RUN chown -R node:node /app
+
+# Switching user to node
+USER node
+
+EXPOSE 5173
+
+# We are using CMD here so that we can override these commands if we need to
+CMD [ "npm", "run", "dev", "--","--host" ]

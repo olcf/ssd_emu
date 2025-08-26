@@ -1,0 +1,35 @@
+services:
+  database:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: emu_server
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: emu_server_production
+    volumes:
+      - database_volume:/var/lib/postgresql/data
+  frontend:
+    build:
+      context: ./vue-client
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - "8080:8080"
+  backend:
+    build:
+      context: ./rails-server
+      dockerfile: Dockerfile
+    restart: on-failure
+    depends_on:
+      - database
+    environment:
+      EMU_SERVER_DATABASE_PASSWORD: password
+      EMU_SERVER_DATABASE_HOST: database
+    ports:
+      - "3030:3000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: bash -c "bin/rails db:migrate && bin/rails db:seed && ./bin/rails server"
+
+volumes:
+  database_volume:
+

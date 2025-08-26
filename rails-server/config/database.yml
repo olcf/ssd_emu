@@ -24,6 +24,13 @@ default: &default
 development:
   <<: *default
   database: emu_server_development
+  host: <%= ENV.fetch("EMU_SERVER_DATABASE_HOST", "localhost") %>
+  password: <%= ENV.fetch("EMU_SERVER_DATABASE_PASSWORD", "MyNewPass") %>
+  # If this application is inside docker, it will have .dockerenv file on root directory
+  # On development environment without docker, username could be different based on user's configuration
+  <% if File.exist?("/.dockerenv") %>
+  username: emu_server
+  <% end %>
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -84,3 +91,4 @@ production:
   database: emu_server_production
   username: emu_server
   password: <%= ENV["EMU_SERVER_DATABASE_PASSWORD"] %>
+  host: <%= ENV["EMU_SERVER_DATABASE_HOST"] %>
