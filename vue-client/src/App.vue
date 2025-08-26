@@ -3,14 +3,10 @@ import { onMounted, ref } from 'vue'
 import { RouterView } from 'vue-router'
 import LeftNavigationMenu from './components/LeftNavigation/LeftNavigationMenu.vue'
 import { useUserStore } from './stores/user'
-import { useCLIStore} from './stores/commandLine'
-import TerminalEmulator from './components/Terminal/TerminalEmulator.vue'
-import XtermTerminal from '@/components/Terminal/XtermTerminal.vue'
 import ToolsSet from './components/ToolsSet/ToolsSet.vue'
 
 
 const userStore = useUserStore()
-const machineStore = useCLIStore()
 const isLoggedIn = ref(false)
 
 onMounted(async () => {
@@ -57,9 +53,7 @@ onMounted(async () => {
         </Splitter>
       </SplitterPanel>
       <SplitterPanel :size="4" :min-size="3" class="p-0">
-        <!-- If there exists a machine in CLI store, then show xterm, else show Regular Terminal -->
-        <XtermTerminal v-if="machineStore.hasValidMachine" />
-         <TerminalEmulator v-else/>
+        <Terminal/>
       </SplitterPanel>
     </Splitter>
   </div>
