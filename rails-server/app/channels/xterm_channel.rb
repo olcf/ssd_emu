@@ -36,14 +36,21 @@ class XtermChannel < ApplicationCable::Channel
     require 'pty'
 
     begin
-      @read, @write, @pid = PTY.spawn("docker exec -it slurmctld bash")
+      @read, @write, @pid = PTY.spawn("docker exec -it slurmctld bin/bash")
+      # @read and @write are File which inherits from IO
+      # These behave exactly like linux sockets
+      # @write.write("Hi! this is awesome")
+      # @read.readpartial(4) => Hi!
+      # @read.readpartial(2) => th
+      
       emu_welcome_message = "EMU is a software that emulates the supercomputer environment at Oak Ridge National Laboratory(ORNL), allowing beginners to familiarize with supercomputers and the job submission process.\n"
         ActionCable.server.broadcast("xterm_output",emu_welcome_message)
       # Read in a Thread so it won't block other user's connection
       Thread.new do
         begin
-          @read.each_char do |char|
-            ActionCable.server.broadcast("xterm_output", char)
+          # reading 1024 characters (1KB) so each websocket chunk is not too big and too small
+          while (output = @read.readpartial(1024))
+            ActionCable.server.broadcast("xterm_output", output)
           end
         rescue Errno::EIO
           Rails.logger.info("XtermChannel PTY read closed")
