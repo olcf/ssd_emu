@@ -72,21 +72,43 @@ const router = createRouter({
     {
       path: '/admin/editChapter',
       name: 'editChapter',
-      component: ()=> import('@/views/admin/EditChapter.vue'),
-      meta:{
-        requiresAuth: true
-      }
-    }
+      component: () => import('@/views/admin/EditChapter.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/user/setup',
+      name: 'SetupUser',
+      component: () => import('@/views/user/SetupUser.vue'),
+      meta: {
+        requiresLogin: true,
+      },
+    },
   ],
 })
 
-router.beforeEach((to,from,next)=>{
+router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
-  // Return to Login if user is not admin
-  if(to.meta.requiresAuth && userStore.getUserRole != 'admin'){
-    next('/login')
-  }else{
-    next()
+
+  // If username is 'default_username', then it forces the user to change their username
+  console.log('USERNAME IS ', userStore.getUsername)
+  if (
+    userStore.getUsername == 'default_username' &&
+    to.path !== '/user/setup'
+  ) {
+    next('/user/setup')
+  } else {
+    // Return to Login if user is not admin
+    if (to.meta.requiresAuth && userStore.getUserRole != 'admin') {
+      // Users who are not admin,
+      if (to.meta.requiresLogin && userStore.getUserId != null) {
+        next()
+      }
+      next('/login')
+    } else {
+      next()
+    }
   }
 })
 
