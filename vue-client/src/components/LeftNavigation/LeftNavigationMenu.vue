@@ -97,9 +97,11 @@ onMounted(async () => {
       <span>
         <img src="@/assets/images/logo.png" class="h-12" />
       </span>
-      <Button>
-        <FontAwesomeIcon icon="fa-regular fa-user" />
+      <Button >
+        <RouterLink to="/user/setup">
+                  <FontAwesomeIcon icon="fa-regular fa-user" />
         {{ userStore.username }}
+        </RouterLink>
       </Button>
     </div>
   </div>

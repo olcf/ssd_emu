@@ -8,17 +8,16 @@
 
 puts "Seeding Started!"
 
-firstUser = User.find_or_create_by(first_name: "Bishwo", last_name: "Dahal", username: "bishwodahal", email: "someemail@gmail.com", password: "abcd")
-secondUser = User.find_or_create_by(first_name: "John", last_name: "doe", username: "doejohn", email: "johndoe@gmail.com", password: "strong")
+firstUser = User.find_or_create_by(first_name: "First", last_name: "Last", username: "default_username", email: "someemail@gmail.com", password: "abcd")
 
 
 # For Machines:
 default_machines = [
-{  name: "Frontier 2nd sample", storage: 9999999, cores:64, cpus:1, nodes:9402, gpus: 8, user_id:firstUser.id},
-{  name: "Odo Sample", storage: 9999999, cores:64, cpus:1, nodes:32, gpus: 8,  user_id:firstUser.id},
-{  name: "Andes Sample", storage: 9999999, cores:32, cpus:1, nodes:504, gpus: 8, user_id:secondUser.id},
-{  name: "Summit Sample", storage: 9999999, cores:32, cpus:3, nodes:5000, gpus: 8, user_id:firstUser.id},
-{  name: "Defiant Sample", storage: 9999999, cores:16, cpus:1, nodes:64, gpus: 8, user_id:firstUser.id}
+{  name: "frontier", storage: 9999999, cores:64, cpus:1, nodes:9856, gpus: 8, user_id:firstUser.id},
+{  name: "odo", storage: 9999999, cores:64, cpus:1, nodes:32, gpus: 8,  user_id:firstUser.id},
+{  name: "andes", storage: 9999999, cores:16, cpus:1, nodes:704, gpus: 8, user_id:firstUser.id},
+{  name: "summit", storage: 9999999, cores:32, cpus:1, nodes:4608, gpus: 6, user_id:firstUser.id},
+{  name: "defiant", storage: 9999999, cores:16, cpus:1, nodes:64, gpus: 8, user_id:firstUser.id}
 ]
 machines = []
 puts "\nCreating Machines!"
