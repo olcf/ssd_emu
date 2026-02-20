@@ -1,18 +1,19 @@
 <template>
   <div
     ref="dragWrapper"
-    class="fixed left-3 z-50 cursor-move"
+    class="fixed left-3 z-50 cursor-move bg-transparent"
     :style="{ top: posY + 'px' }"
     @mousedown="startDrag"
     @touchstart="startDrag"
   >
+    <!-- White background only on the button , not on the expanded component -->
     <div
-      class=" flex overflow-hidden bg-gray-900 rounded-full px-2 py-2 shadow-lg"
+      class="flex overflow-hidden bg-white rounded-full px-1 py-1 shadow-lg w-fit"
     >
       <Button label="RSA" @click="toggleComponent('rsa')" style="width: 50px; height: 50px; border-radius: 100%;"/>
-    </div>
+    </div> 
 
-    <div class="flex flex-col space-y-4 mt-4">
+    <div class="flex flex-col space-y-4 mt-4 bg-transparent">
       <component :is="currentComponent" />
     </div>
   </div>
