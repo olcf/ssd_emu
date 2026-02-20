@@ -94,9 +94,9 @@ onMounted(async () => {
   <!-- This will serve as user top menu and won't change when changing router -->
   <div class="menu p-2">
     <div class="flex justify-between">
-      <span>
+      <RouterLink to="/" class="inline-block cursor-pointer">
         <img src="@/assets/images/logo.png" class="h-12" />
-      </span>
+      </RouterLink>
       <Button>
         <FontAwesomeIcon icon="fa-regular fa-user" />
         {{ userStore.username }}

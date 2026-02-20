@@ -6,6 +6,10 @@ export const useUserStore = defineStore('user', {
     return {
       username: '',
       user_id: '',
+      first_name: '',
+      last_name: '',
+      email: '',
+      role: '',
     }
   },
   getters: {
@@ -17,7 +21,13 @@ export const useUserStore = defineStore('user', {
     },
     getUserRole(state) {
       return state.role
-    }
+    },
+    getFullName(state) {
+      return `${state.first_name} ${state.last_name}`
+    },
+    getEmail(state) {
+      return state.email
+    },
   },
   actions: {
     async login() {
@@ -28,6 +38,9 @@ export const useUserStore = defineStore('user', {
         this.username = singleUser.username
         this.user_id = singleUser.id
         this.role = singleUser.role
+        this.first_name = singleUser.first_name
+        this.last_name = singleUser.last_name
+        this.email = singleUser.email
       } catch (error) {
         alert(error)
       }
