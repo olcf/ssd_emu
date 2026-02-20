@@ -35,27 +35,26 @@ onMounted(async () => {
     <Toast></Toast>
     <ToolsSet/>
 
-    <!-- Here we can create header -->
-    <Splitter layout="vertical" class="h-screen">
-      <SplitterPanel :size="96" :min-size="30">
-        <Splitter :gutter-size="3">
-          <SplitterPanel :size="15" :min-size="10">
-            <LeftNavigationMenu />
-          </SplitterPanel>
-          <SplitterPanel
-            :size="85"
-            :min-size="50"
-            class="p-2"
-            style="overflow-y: scroll"
-          >
-            <RouterView />
-          </SplitterPanel>
-        </Splitter>
-      </SplitterPanel>
-      <SplitterPanel :size="4" :min-size="3" class="p-0">
-        <Terminal/>
-      </SplitterPanel>
-    </Splitter>
+    <div class="flex flex-col h-screen">
+      <Splitter layout="vertical" class="flex-1 min-h-0">
+        <SplitterPanel :size="96" :min-size="30">
+          <Splitter :gutter-size="3">
+            <SplitterPanel :size="15" :min-size="10">
+              <LeftNavigationMenu />
+            </SplitterPanel>
+            <SplitterPanel
+              :size="85"
+              :min-size="50"
+              class="p-2"
+              style="overflow-y: scroll"
+            >
+              <RouterView />
+            </SplitterPanel>
+          </Splitter>
+        </SplitterPanel>
+      </Splitter>
+      <Terminal />
+    </div>
   </div>
 
   <!-- Here we can create footer -->
