@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center">
+  <div class="space-y-6">
     <Dialog
       maximizable
       v-model:visible="VIEW_SCRIPT"
@@ -24,79 +24,100 @@
         :job="jobs[CURRENT_VIEWING_ID]"
       ></StyledOutput>
     </Dialog>
-    <table class="text-left">
-      <thead>
-        <tr>
-          <th scope="col">Fields</th>
-          <th scope="col">Values</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>Machine Name</th>
-          <td>{{ machine.name }}</td>
-        </tr>
-        <tr>
-          <th>Storage in GB</th>
-          <td>{{ (machine.storage / 1024).toFixed(2) }}</td>
-        </tr>
-        <tr>
-          <th>Total Cores in one Node</th>
-          <td>{{ machine.cores }}</td>
-        </tr>
-        <tr>
-          <th>Total CPUs in Machine</th>
-          <td>{{ machine.cpus }}</td>
-        </tr>
-        <tr>
-          <th>Total Nodes in machine</th>
-          <td>{{ machine.nodes }}</td>
-        </tr>
-        <tr>
-          <th>Total GPUs in one Node</th>
-          <td>{{ machine.gpus }}</td>
-        </tr>
-        <tr>
-          <th>Total GPUs in machine</th>
-          <td>node * gpu = {{ machine.nodes * machine.gpus }} GPUs</td>
-        </tr>
-        <tr>
-          <th>Module List</th>
-          <td>{{ machine.module_list }}</td>
-        </tr>
-      </tbody>
-      <caption>
-        Machine details
-      </caption>
-    </table>
-  </div>
-  <NodeDiagram :cores="machine.cores" :gpus="machine.gpus" />
-  <div class="p-10 flex gap-10">
-    <Button
-      icon="pi pi-plus"
-      iconPos="top"
-      label="Create new Job"
-      class="max-w-64"
-      @click="navigateToCreateNewJob"
+    <Dialog
+      v-model:visible="VIEW_ARCHITECTURE"
+      modal
+      header="Machine architecture"
+      :style="{ width: '85rem', minHeight: '50rem' }"
     >
-      <i class="pi pi-plus"></i>
-      <span>Create a Job</span>
-      <small>
-        Create a new job for this machine. You can alternatively use `this
-        command` to do manually through command line.</small
+      <div class="space-y-4">
+        <div class="text-surface-600 dark:text-surface-300 text-sm">
+          <p><strong>GPU:</strong> {{ machine.gpus }} per node, {{ (machine.nodes * machine.gpus) }} total</p>
+          <p><strong>Cores:</strong> {{ machine.cores }} per node</p>
+          <p><strong>CPUs:</strong> {{ machine.cpus }}</p>
+          <p><strong>Nodes:</strong> {{ machine.nodes }}</p>
+          <p><strong>Storage:</strong> {{ (machine.storage / 1024).toFixed(2) }} GB</p>
+          <p v-if="machine.module_list"><strong>Modules:</strong> {{ machine.module_list }}</p>
+        </div>
+        <NodeDiagram :cores="machine.cores" :gpus="machine.gpus" />
+      </div>
+    </Dialog>
+
+    <h1 class="text-2xl font-bold text-surface-700 dark:text-surface-0 text-center">{{ machine.name }}</h1>
+
+    
+    <div class="flex justify-center">
+      <table class="text-left">
+        <thead>
+          <tr>
+            <th scope="col">Fields</th>
+            <th scope="col">Values</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Machine Name</th>
+            <td>{{ machine.name }}</td>
+          </tr>
+          <tr>
+            <th>Storage in GB</th>
+            <td>{{ (machine.storage / 1024).toFixed(2) }}</td>
+          </tr>
+          <tr>
+            <th>Total Cores in one Node</th>
+            <td>{{ machine.cores }}</td>
+          </tr>
+          <tr>
+            <th>Total CPUs in Machine</th>
+            <td>{{ machine.cpus }}</td>
+          </tr>
+          <tr>
+            <th>Total Nodes in machine</th>
+            <td>{{ machine.nodes }}</td>
+          </tr>
+          <tr>
+            <th>Total GPUs in one Node</th>
+            <td>{{ machine.gpus }}</td>
+          </tr>
+          <tr>
+            <th>Total GPUs in machine</th>
+            <td>node * gpu = {{ machine.nodes * machine.gpus }} GPUs</td>
+          </tr>
+          <tr>
+            <th>Module List</th>
+            <td>{{ machine.module_list }}</td>
+          </tr>
+        </tbody>
+        <caption>Machine details</caption>
+      </table>
+    </div>
+
+    
+    <div class="flex justify-center gap-2">
+      <Button
+        label="View architecture"
+        icon="pi pi-sitemap"
+        outlined
+        @click="VIEW_ARCHITECTURE = true"
+      />
+      <Button
+        icon="pi pi-plus"
+        label="Create job"
+        class="p-button-sm"
+        v-tooltip.bottom="'Create a new job for this machine. You can also use the command line.'"
+        @click="navigateToCreateNewJob"
+      />
+    </div>
+
+    
+    <div class="flex gap-10">
+      <DataTable
+        :value="jobs"
+        tableStyle="min-width: 50rem"
       >
-    </Button>
-  </div>
-  <div class="p-10 flex gap-10">
-    <DataTable
-      :value="jobs"
-      tableStyle="min-width: 50rem"
-      scrollable
-      scrollHeight="400px"
-    >
       <template #header>
         <div class="flex flex-wrap items-center justify-between gap-2">
-          <span class="text-xl font-bold">List of Jobs</span>
+          <span class="text-xl font-bold">List of Jobs ({{ jobs.length }})</span>
           <div class="flex gap-4">
             <Button
               icon="pi pi-plus"
@@ -110,7 +131,6 @@
               rounded
               raised
               @click="updateNecessaryData"
-              tooltip="Refresh"
               v-tooltip.bottom="'Refresh jobs list'"
             />
           </div>
@@ -206,6 +226,7 @@
         </template>
       </Column>
     </DataTable>
+    </div>
   </div>
 </template>
 
@@ -228,6 +249,7 @@ export default defineComponent({
     return {
       VIEW_SCRIPT: false,
       VIEW_EXECUTION: false,
+      VIEW_ARCHITECTURE: false,
       CURRENT_VIEWING_ID: null,
       machine: {},
       jobs: [],
