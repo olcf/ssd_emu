@@ -51,6 +51,9 @@ install_user_key_local() {
 Host c1 c2 c3 c4
   User ${user}
   IdentityFile ${home}/.ssh/id_ed25519
+  PreferredAuthentications publickey
+  PasswordAuthentication no
+  GSSAPIAuthentication no
 EOF
   chmod 600 "${home}/.ssh/config"
   chown -R "${user}:${user}" "${home}/.ssh"

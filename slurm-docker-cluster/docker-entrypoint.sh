@@ -43,10 +43,19 @@ EOF
         fi
     fi
 
-    mkdir -p /etc/ssh/sshd_config.d
-    cat > /etc/ssh/sshd_config.d/emu.conf <<'EOF'
-PasswordAuthentication no
+    cat > /etc/ssh/sshd_config <<'EOF'
+Port 22
+Protocol 2
+
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+
 PermitRootLogin yes
+PasswordAuthentication no
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+
 UsePAM no
 PrintMotd no
 Subsystem sftp /usr/libexec/openssh/sftp-server

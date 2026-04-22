@@ -33,6 +33,7 @@ end
 # Deleting everything and starting from scratch
 Quiz.delete_all
 UserChapter.delete_all
+UserMission.delete_all
 Chapter.delete_all
 Mission.delete_all
 
