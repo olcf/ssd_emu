@@ -22,6 +22,9 @@ export const useUserStore = defineStore('user', {
     getUserRole(state) {
       return state.role
     },
+    getUserInfo(state) {
+      return state
+    },
     getFullName(state) {
       return `${state.first_name} ${state.last_name}`
     },

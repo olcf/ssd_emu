@@ -98,8 +98,10 @@ onMounted(async () => {
         <img src="@/assets/images/logo.png" class="h-12" />
       </RouterLink>
       <Button>
-        <FontAwesomeIcon icon="fa-regular fa-user" />
-        {{ userStore.username }}
+        <RouterLink to="/user/setup">
+          <FontAwesomeIcon icon="fa-regular fa-user" />
+          {{ userStore.username }}
+        </RouterLink>
       </Button>
     </div>
   </div>
