@@ -1,6 +1,59 @@
 #!/bin/bash
 set -e
 
+start_sshd() {
+    mkdir -p /var/run/sshd
+    if [ ! -f /etc/ssh/ssh_host_rsa_key ]; then
+        ssh-keygen -A >/dev/null 2>&1 || true
+    fi
+
+    # Create a shared "login key" once, and use it for passwordless SSH.
+    # We use /data because it's already a shared volume across the cluster.
+    mkdir -p /data/ssh
+    mkdir -p /root/.ssh
+    chmod 700 /root/.ssh
+
+    if [ "$(hostname)" = "slurmctld" ]; then
+        if [ ! -f /data/ssh/login_ed25519 ]; then
+            ssh-keygen -t ed25519 -N '' -f /data/ssh/login_ed25519 >/dev/null 2>&1
+        fi
+        cp -f /data/ssh/login_ed25519 /root/.ssh/id_ed25519
+        cp -f /data/ssh/login_ed25519.pub /root/.ssh/id_ed25519.pub
+        chmod 600 /root/.ssh/id_ed25519
+        chmod 644 /root/.ssh/id_ed25519.pub
+
+        # For`ssh root@c1` to use the key automatically.
+        cat > /root/.ssh/config <<'EOF'
+Host c1 c2 c3 c4
+  User root
+  IdentityFile /root/.ssh/id_ed25519
+EOF
+        chmod 600 /root/.ssh/config
+    fi
+
+    # Trust the login public key for root on every node (including slurmctld).
+    if [ -f /data/ssh/login_ed25519.pub ]; then
+        touch /root/.ssh/authorized_keys
+        chmod 600 /root/.ssh/authorized_keys
+        if ! grep -qF "$(cat /data/ssh/login_ed25519.pub)" /root/.ssh/authorized_keys; then
+            cat /data/ssh/login_ed25519.pub >> /root/.ssh/authorized_keys
+        fi
+    fi
+
+    mkdir -p /etc/ssh/sshd_config.d
+    cat > /etc/ssh/sshd_config.d/emu.conf <<'EOF'
+PasswordAuthentication no
+PermitRootLogin yes
+UsePAM no
+PrintMotd no
+Subsystem sftp /usr/libexec/openssh/sftp-server
+EOF
+
+    if ! pgrep -x sshd >/dev/null 2>&1; then
+        /usr/sbin/sshd
+    fi
+}
+
 if [ "$1" = "slurmdbd" ]
 then
     echo "---> Starting the MUNGE Authentication service (munged) ..."
@@ -23,6 +76,9 @@ fi
 
 if [ "$1" = "slurmctld" ]
 then
+    echo "---> Starting SSH service ..."
+    start_sshd
+
     echo "---> Starting the MUNGE Authentication service (munged) ..."
     gosu munge /usr/sbin/munged
 
@@ -45,6 +101,8 @@ fi
 
 if [ "$1" = "slurmd" ]
 then
+    start_sshd
+
     echo "---> Starting the MUNGE Authentication service (munged) ..."
     gosu munge /usr/sbin/munged
 
