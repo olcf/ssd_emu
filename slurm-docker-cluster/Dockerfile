@@ -42,6 +42,8 @@ RUN set -ex \
        make \
        munge \
        munge-devel \
+       openssh-server \
+       openssh-clients \
        python3-devel \
        python3-pip \
        python3 \
