@@ -7,6 +7,9 @@ start_sshd() {
         ssh-keygen -A >/dev/null 2>&1 || true
     fi
 
+    # Avoid nologin blocking unprivileged SSH sessions in containers.
+    rm -f /run/nologin /var/run/nologin >/dev/null 2>&1 || true
+
     # Create a shared "login key" once, and use it for passwordless SSH.
     # We use /data because it's already a shared volume across the cluster.
     mkdir -p /data/ssh
@@ -50,7 +53,7 @@ Subsystem sftp /usr/libexec/openssh/sftp-server
 EOF
 
     if ! pgrep -x sshd >/dev/null 2>&1; then
-        /usr/sbin/sshd
+        /usr/sbin/sshd -E /var/log/sshd.log
     fi
 }
 
