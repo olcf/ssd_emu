@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import AllMachines from '@/views/Machines/AllMachines.vue'
 import { useUserStore } from '@/stores/user'
 // TODO: update homepage and re update components here
 const router = createRouter({
@@ -9,7 +8,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: AllMachines,
+      component: HomeView,
     },
     {
       path: '/about',
@@ -58,16 +57,6 @@ const router = createRouter({
       path: '/mission/:missionId/chapter/:chapterId',
       name: 'SingleChapter',
       component: () => import('@/views/Missions/Chapters/SingleChapter.vue'),
-    },
-    {
-      path: '/missions/understandBasicsHPC',
-      name: 'UnderstandBasicsHPC',
-      component: () => import('@/views/Missions/UnderstandBasicsHPC.vue'),
-    },
-    {
-      path: '/missions/understandArchitecture',
-      name: 'UnderstandArchitecture',
-      component: () => import('@/views/Missions/UnderstandArchitecture.vue'),
     },
     {
       path: '/admin/editChapter',

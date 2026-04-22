@@ -1,5 +1,5 @@
 <template>
-  <div id="xterm-terminal" class="w-full h-screen" >
+  <div id="xterm-terminal" class="w-full h-full min-h-0" >
   </div>
 </template>
 
