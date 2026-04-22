@@ -36,7 +36,19 @@ class XtermChannel < ApplicationCable::Channel
     require 'pty'
 
     begin
-      @read, @write, @pid = PTY.spawn("docker exec -it slurmctld bin/bash")
+      username = params[:username] || params["username"] || "emu"
+      safe_username = username.to_s.downcase.gsub(/[^a-z0-9_-]/, "")
+      safe_username = "emu" if safe_username.empty?
+
+      @read, @write, @pid = PTY.spawn(
+        "docker",
+        "exec",
+        "-it",
+        "slurmctld",
+        "bash",
+        "-lc",
+        "/usr/local/bin/emu-user #{safe_username}; exec su - #{safe_username}",
+      )
       # @read and @write are File which inherits from IO
       # These behave exactly like linux sockets
       # @write.write("Hi! this is awesome")

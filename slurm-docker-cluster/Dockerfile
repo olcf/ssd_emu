@@ -166,6 +166,9 @@ RUN set -x \
     && chown slurm:slurm /etc/slurm/slurmdbd.conf \
     && chmod 600 /etc/slurm/slurmdbd.conf
 
+COPY emu-user.sh /usr/local/bin/emu-user
+RUN chmod +x /usr/local/bin/emu-user
+
 
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
